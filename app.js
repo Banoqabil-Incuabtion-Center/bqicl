@@ -66,6 +66,7 @@ app.use((req, res, next) => {
 });
 
 // 7. Custom Pathing & Routes
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(currentPath);
 app.use("/", indexroute);

@@ -5,7 +5,7 @@
       "src": "app.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["node_modules/mysql2/**", "node_modules/sequelize/**"]
+        "includeFiles": ["views/**", "public/**", "node_modules/mysql2/**", "node_modules/sequelize/**"]
       }
     }
   ],
