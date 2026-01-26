@@ -1,12 +1,11 @@
 import dotenv from 'dotenv';
 import { Sequelize, DataTypes, Model } from 'sequelize';
+import mysql2 from 'mysql2';
 dotenv.config();
 
 const DB_NAME = process.env.DB_NAME;
 const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
-
-import mysql2 from 'mysql2';
 
 const config = {
     DB_NAME,
