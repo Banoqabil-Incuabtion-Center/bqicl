@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Live Bidding | AuctionPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-900 text-white font-sans antialiased">
+    <div class="flex h-screen overflow-hidden">
+
+        <%- include('partials/ownerNavbar') %>
+
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <header class="h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-8">
+                    <h2 class="text-xl font-bold">Live Auction Console</h2>
+
+                    <div class="flex items-center gap-4">
+                        <div id="connection-status" class="flex items-center gap-2">
+                            <span class="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-tighter">Live
+                                Connection</span>
+                        </div>
+                    </div>
+                </header>
+
+                <main class="flex-1 p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 overflow-hidden">
+
+                    <div
+                        class="lg:col-span-2 bg-gray-800 rounded-3xl border border-gray-700 p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-8 opacity-5">
+                            <i class="fas fa-gavel text-9xl"></i>
+                        </div>
+
+                        <div id="bid-display-active">
+                            <div class="flex flex-col md:flex-row gap-8 items-start">
+                                <div
+                                    class="h-64 w-64 rounded-2xl bg-gray-700 border-4 border-gray-600 overflow-hidden shadow-2xl group flex items-center justify-center">
+                                    <img id="display-img" src="" class="h-full w-full object-cover hidden">
+                                    <i id="placeholder-icon" class="fas fa-user text-6xl text-gray-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <span id="display-cat"
+                                        class="inline-block bg-blue-600/20 text-blue-400 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4">---</span>
+                                    <h1 id="display-name" class="text-6xl font-black mb-2 tracking-tight">---</h1>
+                                    <div class="flex gap-4 text-gray-400 text-sm font-medium">
+                                        <span id="display-campus"><i class="fas fa-university mr-2"></i>---</span>
+                                        <span id="display-base"><i class="fas fa-tag mr-2"></i>Base: $0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <div class="flex justify-between items-end mb-6">
+                                <div>
+                                    <p class="text-gray-500 uppercase text-xs font-black tracking-widest mb-1">Current
+                                        Bid Status</p>
+                                    <div class="flex items-baseline gap-4">
+                                        <p id="current-bid-amount"
+                                            class="text-8xl font-black text-green-400 leading-none">$0</p>
+                                        <span id="highest-bidder-name"
+                                            class="text-gray-400 text-sm font-bold uppercase border-l-2 border-gray-700 pl-4">No
+                                            Bids Yet</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <button id="bid-btn" disabled
+                                    class="py-6 rounded-2xl bg-gray-700 text-gray-500 text-3xl font-black uppercase cursor-not-allowed transition-all transform active:scale-95 flex items-center justify-center gap-3">
+                                    <span>Place Bid</span>
+                                </button>
+                                <div
+                                    class="bg-gray-900/50 rounded-2xl border border-gray-700 p-4 flex flex-col justify-center">
+                                    <p class="text-gray-500 text-[10px] font-bold uppercase mb-1 text-center">Next
+                                        Minimum Bid</p>
+                                    <p id="next-bid-val" class="text-2xl font-black text-white text-center">$0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 flex flex-col">
+                        <div
+                            class="bg-gradient-to-br from-emerald-900/40 to-gray-800 border border-emerald-500/30 rounded-3xl p-6 shadow-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <p class="text-emerald-400 text-xs font-bold uppercase tracking-widest">Available Funds
+                                </p>
+                                <i class="fas fa-wallet text-emerald-500/50"></i>
+                            </div>
+                            <p class="text-4xl font-black text-white">$<%= team.remainingBudget.toLocaleString() %>
+                            </p>
+                            <div class="mt-4 h-2 w-full bg-gray-700 rounded-full overflow-hidden">
+                                <% const percent=(team.remainingBudget / team.totalBudget) * 100; %>
+                                    <div class="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+                                        style="width: <%= percent %>%"></div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-gray-800 rounded-3xl border border-gray-700 p-6 flex-1 flex flex-col overflow-hidden shadow-xl">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest">Recent Activity
+                                </h3>
+                                <span class="text-[10px] bg-gray-700 px-2 py-1 rounded text-gray-400 font-bold">LIVE
+                                    FEED</span>
+                            </div>
+                            <div id="bid-logs" class="space-y-3 overflow-y-auto pr-2 custom-scrollbar">
+                                <div class="text-center py-8 text-gray-600 italic text-sm">
+                                    Waiting for auction activity...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+    </div>
+
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 2px;
+        }
+    </style>
+
+    <script>
+        const teamId = <%= team.id %>;
+        let remainingBudget = <%= team.remainingBudget %>;
+        let currentBidAmount = 0;
+        const bidIncrement = 100000;
+
+        const displayImg = document.getElementById('display-img');
+        const placeholderIcon = document.getElementById('placeholder-icon');
+        const displayName = document.getElementById('display-name');
+        const displayCat = document.getElementById('display-cat');
+        const displayCampus = document.getElementById('display-campus');
+        const displayBase = document.getElementById('display-base');
+        const currentBidDisplay = document.getElementById('current-bid-amount');
+        const highestBidderDisplay = document.getElementById('highest-bidder-name');
+        const bidBtn = document.getElementById('bid-btn');
+        const nextBidVal = document.getElementById('next-bid-val');
+        const bidLogs = document.getElementById('bid-logs');
+
+        async function placeBid() {
+            const nextBid = currentBidAmount + bidIncrement;
+
+            if (nextBid > remainingBudget) {
+                alert('Insufficient funds!');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/auction/bid', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ bidAmount: nextBid })
+                });
+                const data = await res.json();
+                if (!data.success) alert(data.message);
+            } catch (err) {
+                console.error('Bid error:', err);
+            }
+        }
+
+        function updateUI(data) {
+            if (!data.isSessionActive || !data.auction) {
+                displayName.textContent = !data.isSessionActive ? 'System Offline' : 'Waiting...';
+                displayCat.textContent = '---';
+                displayImg.classList.add('hidden');
+                placeholderIcon.classList.remove('hidden');
+                bidBtn.disabled = true;
+                bidBtn.className = "py-6 rounded-2xl bg-gray-700 text-gray-500 text-3xl font-black uppercase cursor-not-allowed w-full";
+                highestBidderDisplay.textContent = "Standby";
+                return;
+            }
+
+            const player = data.auction.player;
+            if (player) {
+                displayName.textContent = player.name;
+                displayCat.textContent = player.category || 'PLAYER';
+                displayBase.innerHTML = `<i class="fas fa-tag mr-2"></i>Base: $${player.basePrice.toLocaleString()}`;
+                if (player.playerImage) {
+                    displayImg.src = player.playerImage;
+                    displayImg.classList.remove('hidden');
+                    placeholderIcon.classList.add('hidden');
+                }
+            }
+
+            currentBidAmount = data.auction.currentBid;
+            currentBidDisplay.textContent = '$' + currentBidAmount.toLocaleString();
+            highestBidderDisplay.textContent = data.auction.highestBidder ? data.auction.highestBidder.name : "Starting Bid";
+
+            const nextBid = currentBidAmount + bidIncrement;
+            nextBidVal.textContent = '$' + nextBid.toLocaleString();
+
+            if (nextBid <= remainingBudget && data.auction.highestBidder?.id !== teamId) {
+                bidBtn.disabled = false;
+                bidBtn.innerHTML = `<span>BID $${nextBid.toLocaleString()}</span>`;
+                bidBtn.className = "py-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-3xl font-black uppercase cursor-pointer transition-all transform active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] w-full";
+            } else {
+                bidBtn.disabled = true;
+                if (data.auction.highestBidder?.id === teamId) {
+                    bidBtn.textContent = 'Winning!';
+                    bidBtn.className = "py-6 rounded-2xl bg-emerald-950/40 text-emerald-500 border border-emerald-500/30 text-3xl font-black uppercase cursor-not-allowed w-full";
+                } else {
+                    bidBtn.textContent = nextBid > remainingBudget ? 'LOW BUDGET' : 'Standby';
+                    bidBtn.className = "py-6 rounded-2xl bg-gray-700 text-gray-500 text-3xl font-black uppercase cursor-not-allowed w-full";
+                }
+            }
+
+            if (data.recentBids?.length > 0) {
+                bidLogs.innerHTML = data.recentBids.map(bid => `
+                    <div class="flex justify-between items-center p-3 ${bid.teamName === '<%= team.name %>' ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-gray-700/30 border border-gray-600/50'} rounded-xl transition-all">
+                        <div class="flex items-center gap-3">
+                            <div class="h-2 w-2 rounded-full ${bid.teamName === '<%= team.name %>' ? 'bg-emerald-500' : 'bg-blue-500'}"></div>
+                            <span class="font-bold text-sm tracking-tight">${bid.teamName}</span>
+                        </div>
+                        <span class="text-white font-black">$${bid.amount.toLocaleString()}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function poll() {
+            try {
+                const res = await fetch('/api/auction/state');
+                updateUI(await res.json());
+            } catch (e) { }
+        }
+
+        bidBtn.addEventListener('click', placeBid);
+        setInterval(poll, 1000);
+        poll();
+    </script>
+</body>
+
+</html>

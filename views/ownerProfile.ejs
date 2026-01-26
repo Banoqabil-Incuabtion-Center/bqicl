@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= owner.name %> - Profile | AuctionPro
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        details>summary {
+            list-style: none;
+        }
+
+        details>summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details[open] summary~* {
+            animation: sweep .3s ease-in-out;
+        }
+
+        @keyframes sweep {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px)
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-gray-100 font-sans antialiased">
+
+    <div class="flex h-screen overflow-hidden">
+
+        <% if (locals.userType==='admin' ) { %>
+            <%- include('partials/adminNavbar') %>
+                <% } else { %>
+                    <%- include('partials/ownerNavbar') %>
+                        <% } %>
+
+                            <div class="flex-1 flex flex-col overflow-hidden relative w-screen">
+
+                                <header
+                                    class="h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-8">
+                                    <div class="flex items-center gap-4">
+                                        <a href="<%= locals.userType === 'admin' ? '/owner/ownerslist' : '/owner/dashboard' %>"
+                                            class="text-gray-400 hover:text-white transition-colors">
+                                            <i class="fas fa-arrow-left text-xl"></i>
+                                        </a>
+                                        <h2 class="text-xl font-semibold text-gray-200">Owner Profile</h2>
+                                    </div>
+
+                                    <% if (locals.userType==='admin' ) { %>
+                                        <div class="flex gap-3">
+                                            <a href="/owner/profile/edit/<%= owner.hashedId %>"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-md flex items-center gap-2">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+
+                                            <form action="/owner/profile/delete/<%= owner.hashedId %>" method="POST">
+                                                <input type="hidden" name="_csrf"
+                                                    value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                                                <button type="button"
+                                                    class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/50 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
+                                                    onclick="document.getElementById('deleteModal-<%= owner.hashedId %>').classList.remove('hidden')">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </button>
+
+                                                <%- include('partials/deleteModal', { itemName: owner.name,
+                                                    deleteUrl: '/owner/profile/delete/' + owner.hashedId,
+                                                    modalId: 'deleteModal-' + owner.hashedId }) %>
+                                            </form>
+                                        </div>
+                                        <% } %>
+                                </header>
+
+                                <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900 p-8">
+                                    <div class="max-w-5xl mx-auto space-y-8">
+
+                                        <div
+                                            class="bg-gray-800 rounded-3xl border border-gray-700 shadow-2xl overflow-hidden">
+
+                                            <div
+                                                class="h-40 bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 border-b border-gray-700 relative">
+                                                <div class="absolute top-6 right-8">
+                                                    <span
+                                                        class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest border bg-blue-500/10 text-blue-400 border-blue-500/30 shadow-lg backdrop-blur-sm">
+                                                        Owner
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="px-8 pb-10">
+                                                <div class="flex flex-col md:flex-row gap-8 items-start -mt-16">
+
+                                                    <div class="relative group">
+                                                        <div
+                                                            class="h-40 w-40 md:h-48 md:w-48 rounded-full border-4 border-gray-900 shadow-2xl overflow-hidden bg-gray-800 flex items-center justify-center">
+                                                            <% if (owner.image) { %>
+                                                                <img src="<%= owner.image %>" alt="<%= owner.name %>"
+                                                                    class="h-full w-full object-cover">
+                                                                <% } else { %>
+                                                                    <span
+                                                                        class="text-5xl font-bold text-gray-600 select-none">
+                                                                        <%= owner.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() %>
+                                            </span>
+                                        <% } %>
+                                    </div>
+                                    <div class="absolute bottom-4 right-4 h-6 w-6 rounded-full border-4 border-gray-900 bg-green-500 shadow-lg" title="Active"></div>
+                                </div>
+
+                                <div class="flex-1 pt-4 md:pt-16">
+                                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                        <div>
+                                            <h1 class="text-4xl md:text-5xl font-black text-white mb-2 tracking-tight"><%= owner.name %></h1>
+                                            <div class="flex flex-wrap items-center gap-3">
+                                                <div class="flex items-center gap-2 text-gray-400 text-sm">
+                                                    <i class="fas fa-envelope text-blue-500"></i>
+                                                    <%= owner.email %>
+                                                </div>
+                                                <span class="text-gray-600">•</span>
+                                                <div class="flex items-center gap-2 text-gray-400 text-sm">
+                                                    <i class="far fa-calendar-alt text-blue-500"></i>
+                                                    Joined <%= new Date(owner.createdAt).toLocaleDateString() %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="border-gray-700/50 my-10">
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="bg-gray-700/20 p-6 rounded-2xl border border-gray-700/50 hover:bg-gray-700/30 transition-colors">
+                                    <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
+                                        <i class="fas fa-shield-alt text-blue-500"></i> Team Details
+                                    </h3>
+                                    <% const team = owner.Team || owner.team; %>
+                                    <% if (team) { %>
+                                        <div class="flex items-center gap-6">
+                                            <div class="h-20 w-20 rounded-xl bg-gray-800 border-2 border-gray-600 flex items-center justify-center overflow-hidden shadow-lg">
+                                                <% if (team.teamLogo) { %>
+                                                    <img src="<%= team.teamLogo %>" class="h-full w-full object-cover">
+                                                <% } else { %>
+                                                    <span class="text-2xl font-bold text-gray-500"><%= team.name.charAt(0) %></span>
+                                                <% } %>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-2xl font-bold text-white mb-1"><%= team.name %></h4>
+                                                <a href="/team/profile/<%= owner.teamId %>" class="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center gap-1 transition-colors">
+                                                    View Team <i class="fas fa-arrow-right text-xs"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    <% } else { %>
+                                        <div class="h-32 flex flex-col items-center justify-center text-center border-2 border-dashed border-gray-700 rounded-xl">
+                                            <div class="h-10 w-10 rounded-full bg-gray-700 flex items-center justify-center mb-3 text-gray-500">
+                                                <i class="fas fa-plus"></i>
+                                            </div>
+                                            <p class="text-gray-400 font-medium">No Team Assigned</p>
+                                            <p class="text-xs text-gray-500 mt-1">This owner has not purchased a franchise yet.</p>
+                                        </div>
+                                    <% } %>
+                                </div>
+
+                                <div class="bg-gray-700/20 p-6 rounded-2xl border border-gray-700/50">
+                                    <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
+                                        <i class="fas fa-chart-pie text-purple-500"></i> Portfolio Snapshot
+                                    </h3>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+                                            <p class="text-xs text-gray-500 uppercase mb-1">Squad Size</p>
+                                            <p class="text-2xl font-bold text-white">
+                                                <%= (team && team.playerCount) ? team.playerCount : 0 %>
+                                            </p>
+                                        </div>
+                                        <div class="p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+                                            <p class="text-xs text-gray-500 uppercase mb-1">Status</p>
+                                            <p class="text-lg font-bold text-green-400 flex items-center gap-2">
+                                                <span class="h-2 w-2 rounded-full bg-green-500"></span> Active
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <% if (team && team.players && team.players.length > 0) { %>
+                            <div class="bg-gray-800/50 rounded-3xl border border-gray-700/50 overflow-hidden shadow-xl mt-8">
+                                <div class="px-8 py-5 border-b border-gray-700/50 bg-gray-800/30 flex justify-between items-center">
+                                    <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                                        <i class="fas fa-running text-emerald-500"></i> Purchased Players
+                                    </h3>
+                                    <span class="text-xs font-mono text-emerald-400"><%= team.players.length %> TOTAL</span>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left">
+                                        <thead class="bg-gray-900/40 text-[10px] uppercase text-gray-500 font-bold">
+                                            <tr>
+                                                <th class="px-8 py-4">Player</th>
+                                                <th class="px-8 py-4">Category</th>
+                                                <th class="px-8 py-4">Purchase Price</th>
+                                                <th class="px-8 py-4 text-right">Profile</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-gray-700/30">
+                                            <% team.players.forEach(player => { %>
+                                                <tr class="hover:bg-gray-700/10 transition-colors">
+                                                    <td class="px-8 py-4 text-sm text-white font-medium">
+                                                        <%= player.name %>
+                                                    </td>
+                                                    <td class="px-8 py-4 text-[10px]">
+                                                        <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded uppercase font-bold">
+                                                            <%= player.category %>
+                                                        </span>
+                                                    </td>
+                                                    <td class="px-8 py-4 text-sm font-bold text-white">
+                                                        <% if (player.soldPrice) { %>
+                                                            $<%= player.soldPrice.toLocaleString() %>
+                                                        <% } else { %>
+                                                            $0
+                                                        <% } %>
+                                                    </td>
+                                                    <td class="px-8 py-4 text-right">
+                                                        <a href="/player/profile/<%= encodeId(player.id) %>"
+                                                            class="text-emerald-400 hover:underline text-xs">View</a>
+                                                    </td>
+                                                </tr>
+                                            <% }) %>
+                                                                                </tbody>
+                                                                                </table>
+                                                        </div>
+                                                    </div>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </main>
+                            </div>
+    </div>
+</body>
+
+</html>

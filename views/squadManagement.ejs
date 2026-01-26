@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squad Management | AuctionPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-gray-100 font-sans antialiased">
+
+    <%- include('partials/alert') %>
+
+        <div class="flex h-screen overflow-hidden">
+            <%- include('partials/ownerNavbar') %>
+
+                <div class="flex-1 flex flex-col overflow-hidden relative w-screen">
+                    <header class="h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-8">
+                        <h2 class="text-xl font-semibold text-gray-200">Squad Management</h2>
+
+                        <div class="flex items-center space-x-4">
+                            <div class="text-right hidden sm:block">
+                                <p class="text-sm font-medium text-white">
+                                    <%= owner.name %>
+                                </p>
+                                <p class="text-xs text-gray-400">
+                                    <%= team ? team.name : 'No Team' %> Owner
+                                </p>
+                            </div>
+                            <div
+                                class="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold border-2 border-gray-600 overflow-hidden">
+                                <% if (owner.image) { %>
+                                    <img src="<%= owner.image %>" class="h-full w-full object-cover">
+                                    <% } else { %>
+                                        <%= owner.name.charAt(0).toUpperCase() %>
+                                            <% } %>
+                            </div>
+                        </div>
+                    </header>
+
+                    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900 p-8">
+                        <!-- Team Header -->
+                        <div class="mb-8">
+                            <div class="flex items-center gap-4">
+                                <% if (team.teamLogo) { %>
+                                    <div class="h-16 w-16 rounded-xl overflow-hidden border-2 border-emerald-500/30">
+                                        <img src="<%= team.teamLogo %>" class="h-full w-full object-cover">
+                                    </div>
+                                    <% } else { %>
+                                        <div
+                                            class="h-16 w-16 rounded-xl bg-emerald-500/20 flex items-center justify-center border-2 border-emerald-500/30">
+                                            <i class="fas fa-shield-alt text-2xl text-emerald-400"></i>
+                                        </div>
+                                        <% } %>
+                                            <div>
+                                                <h3 class="text-3xl font-bold text-white">
+                                                    <%= team.name %>
+                                                </h3>
+                                                <p class="text-gray-400 mt-1">Manage your squad, captain and
+                                                    vice-captain</p>
+                                            </div>
+                            </div>
+                        </div>
+
+                        <!-- Stats Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                            <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+                                <p class="text-gray-400 text-xs font-bold uppercase mb-1">Remaining Budget</p>
+                                <p class="text-3xl font-black text-green-400">$<%= team.remainingBudget ?
+                                        team.remainingBudget.toLocaleString() : '0' %>
+                                </p>
+                            </div>
+                            <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+                                <p class="text-gray-400 text-xs font-bold uppercase mb-1">Squad Size</p>
+                                <p class="text-3xl font-black text-blue-400">
+                                    <%= players.length %>
+                                </p>
+                            </div>
+                            <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+                                <p class="text-gray-400 text-xs font-bold uppercase mb-1">Total Budget</p>
+                                <p class="text-3xl font-black text-purple-400">$<%= team.totalBudget ?
+                                        team.totalBudget.toLocaleString() : '0' %>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Squad Table -->
+                        <div class="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden shadow-lg">
+                            <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                                <h3
+                                    class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                                    <i class="fas fa-users text-emerald-500"></i> My Squad
+                                </h3>
+                                <span class="bg-gray-700 text-emerald-400 text-xs px-2 py-1 rounded-md font-mono">
+                                    <%= players.length %> Players
+                                </span>
+                            </div>
+
+                            <% if (players && players.length> 0) { %>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left border-collapse">
+                                        <thead
+                                            class="bg-gray-700/30 text-[10px] uppercase text-gray-400 font-semibold tracking-wider">
+                                            <tr>
+                                                <th class="px-6 py-3">Player</th>
+                                                <th class="px-6 py-3">Category</th>
+                                                <th class="px-6 py-3">Role</th>
+                                                <th class="px-6 py-3">Price</th>
+                                                <th class="px-6 py-3 text-right">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-gray-700/50">
+                                            <% players.forEach(player=> { %>
+                                                <tr class="hover:bg-gray-700/20 transition-colors">
+                                                    <td class="px-6 py-4">
+                                                        <div class="flex items-center gap-3">
+                                                            <div
+                                                                class="h-10 w-10 rounded-full bg-gray-700 flex-shrink-0 overflow-hidden border border-gray-600">
+                                                                <% if (player.playerImage) { %>
+                                                                    <img src="<%= player.playerImage %>"
+                                                                        class="h-full w-full object-cover">
+                                                                    <% } else { %>
+                                                                        <div
+                                                                            class="h-full w-full flex items-center justify-center text-xs font-bold text-gray-500">
+                                                                            <%= player.name.charAt(0) %>
+                                                                        </div>
+                                                                        <% } %>
+                                                            </div>
+                                                            <div>
+                                                                <div class="text-sm font-medium text-white">
+                                                                    <%= player.name %>
+                                                                </div>
+                                                                <div class="text-xs text-gray-500">
+                                                                    <%= player.playingStyle %>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        <span
+                                                            class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 uppercase font-bold">
+                                                            <%= player.category %>
+                                                        </span>
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        <% if (player.isCaptain) { %>
+                                                            <span
+                                                                class="inline-flex items-center gap-1 text-[10px] text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded border border-yellow-500/20 uppercase font-bold">
+                                                                <i class="fas fa-crown"></i> Captain
+                                                            </span>
+                                                            <% } else if (player.isViceCaptain) { %>
+                                                                <span
+                                                                    class="inline-flex items-center gap-1 text-[10px] text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 uppercase font-bold">
+                                                                    <i class="fas fa-star"></i> Vice-Captain
+                                                                </span>
+                                                                <% } else { %>
+                                                                    <span class="text-xs text-gray-500">-</span>
+                                                                    <% } %>
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        <div class="text-sm font-bold text-white">
+                                                            $<%= player.soldPrice ? player.soldPrice.toLocaleString()
+                                                                : '0' %>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        <div class="flex items-center justify-end gap-2">
+                                                            <% if (!player.isCaptain) { %>
+                                                                <form
+                                                                    action="/owner/squad/captain/<%= player.hashedId %>"
+                                                                    method="POST" class="inline">
+                                                                    <input type="hidden" name="_csrf"
+                                                                        value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                                                                    <button type="submit" title="Set as Captain"
+                                                                        class="p-2 text-yellow-500 hover:bg-yellow-500/20 rounded-lg transition-colors">
+                                                                        <i class="fas fa-crown"></i>
+                                                                    </button>
+                                                                </form>
+                                                                <% } %>
+                                                                    <% if (!player.isViceCaptain) { %>
+                                                                        <form
+                                                                            action="/owner/squad/vice-captain/<%= player.hashedId %>"
+                                                                            method="POST" class="inline">
+                                                                            <input type="hidden" name="_csrf"
+                                                                                value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                                                                            <button type="submit"
+                                                                                title="Set as Vice-Captain"
+                                                                                class="p-2 text-blue-500 hover:bg-blue-500/20 rounded-lg transition-colors">
+                                                                                <i class="fas fa-star"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                        <% } %>
+                                                                            <% if (player.isCaptain ||
+                                                                                player.isViceCaptain) { %>
+                                                                                <form
+                                                                                    action="/owner/squad/remove-role/<%= player.hashedId %>"
+                                                                                    method="POST" class="inline">
+                                                                                    <input type="hidden" name="_csrf"
+                                                                                        value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                                                                                    <button type="submit"
+                                                                                        title="Remove Role"
+                                                                                        class="p-2 text-red-500 hover:bg-red-500/20 rounded-lg transition-colors">
+                                                                                        <i class="fas fa-times"></i>
+                                                                                    </button>
+                                                                                </form>
+                                                                                <% } %>
+                                                                                    <a href="/player/profile/<%= player.hashedId %>"
+                                                                                        class="p-2 text-gray-500 hover:text-emerald-400 transition-colors">
+                                                                                        <i
+                                                                                            class="fas fa-external-link-alt text-xs"></i>
+                                                                                    </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <% } else { %>
+                                    <div class="p-12 text-center text-gray-500">
+                                        <div
+                                            class="h-12 w-12 bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-3 text-gray-600">
+                                            <i class="fas fa-user-plus text-xl"></i>
+                                        </div>
+                                        <p class="font-medium">No players in your squad yet.</p>
+                                        <p class="text-xs mt-1">Start bidding in the Live Auction to build your team!
+                                        </p>
+                                    </div>
+                                    <% } %>
+                        </div>
+
+                        <!-- Legend -->
+                        <div class="mt-6 bg-gray-800/50 rounded-xl p-4 border border-gray-700/50">
+                            <p class="text-xs text-gray-500 font-semibold uppercase mb-3">Actions Guide</p>
+                            <div class="flex flex-wrap gap-4 text-sm text-gray-400">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-crown text-yellow-500"></i>
+                                    <span>Set as Captain</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-star text-blue-500"></i>
+                                    <span>Set as Vice-Captain</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-times text-red-500"></i>
+                                    <span>Remove Role</span>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+        </div>
+
+</body>
+
+</html>

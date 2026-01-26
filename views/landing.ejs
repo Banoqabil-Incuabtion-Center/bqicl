@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gray-900 text-gray-100 min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-400">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass border-b-0 border-white/5">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-gavel text-emerald-500 text-2xl"></i>
+                <span class="text-xl font-bold tracking-tight text-white">AUCTION<span
+                        class="text-emerald-500">PRO</span></span>
+            </div>
+            <% if (typeof user !=='undefined' && user) { %>
+                <a href="/<%= user.role === 'admin' ? 'admin' : 'owner' %>/dashboard"
+                    class="px-5 py-2 text-sm font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-full transition-all shadow-lg shadow-emerald-900/20">
+                    Dashboard <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                </a>
+                <% } else { %>
+                    <div class="flex gap-4">
+                        <a href="/auth/owner/signin"
+                            class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Owner Login</a>
+                        <a href="/auth/admin/signin"
+                            class="text-sm font-medium text-emerald-500 hover:text-emerald-400 transition-colors">Admin
+                            Login</a>
+                    </div>
+                    <% } %>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center relative overflow-hidden pt-20">
+
+        <!-- Ambient Background Glow -->
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] -z-10">
+        </div>
+
+        <div class="max-w-5xl mx-auto px-6 py-12 text-center relative z-10">
+
+            <!-- Live Auction Status -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 border border-white/10">
+                <% if (isAuctionLive) { %>
+                    <span class="relative flex h-3 w-3">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+                    <span class="text-xs font-semibold tracking-wider uppercase text-red-400">Live Auction In
+                        Progress</span>
+                    <% } else { %>
+                        <span class="h-2 w-2 rounded-full bg-gray-500"></span>
+                        <span class="text-xs font-semibold tracking-wider uppercase text-gray-500">Auction
+                            Offline</span>
+                        <% } %>
+            </div>
+
+            <!-- Hero Text -->
+            <h1 class="text-5xl md:text-7xl font-bold text-white tracking-tight mb-6 leading-tight">
+                Build Your <span
+                    class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Legacy</span><br>
+                One Bid at a Time.
+            </h1>
+
+            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
+                The most advanced platform for managing professional cricket auctions. Real-time bidding, squad
+                management, and comprehensive analytics.
+            </p>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-16">
+                <div class="glass p-4 rounded-2xl text-center">
+                    <div class="text-2xl font-bold text-white">
+                        <%= stats.totalTeams %>
+                    </div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider font-medium mt-1">Teams</div>
+                </div>
+                <div class="glass p-4 rounded-2xl text-center">
+                    <div class="text-2xl font-bold text-white">
+                        <%= stats.totalPlayers %>
+                    </div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider font-medium mt-1">Players</div>
+                </div>
+                <div class="glass p-4 rounded-2xl text-center">
+                    <div class="text-2xl font-bold text-white">4</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider font-medium mt-1">Campuses</div>
+                </div>
+                <div class="glass p-4 rounded-2xl text-center">
+                    <div class="text-2xl font-bold text-white">∞</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider font-medium mt-1">Possibilities</div>
+                </div>
+            </div>
+
+            <!-- Action Cards -->
+            <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                <a href="/auth/owner/signin"
+                    class="group relative glass p-8 rounded-3xl hover:bg-white/5 transition-all text-left">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl">
+                    </div>
+                    <div
+                        class="h-12 w-12 bg-gray-800 rounded-xl flex items-center justify-center mb-4 group-hover:bg-emerald-500/20 group-hover:text-emerald-400 transition-colors">
+                        <i class="fas fa-user-tie text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Franchise Owner</h3>
+                    <p class="text-sm text-gray-400">Login to manage your squad, view budget, and participate in
+                        bidding.</p>
+                </a>
+
+                <a href="/auth/admin/signin"
+                    class="group relative glass p-8 rounded-3xl hover:bg-white/5 transition-all text-left">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl">
+                    </div>
+                    <div
+                        class="h-12 w-12 bg-gray-800 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-500/20 group-hover:text-blue-400 transition-colors">
+                        <i class="fas fa-shield-alt text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Administrator</h3>
+                    <p class="text-sm text-gray-400">Access system controls, manage teams, and oversee the auction
+                        process.</p>
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Simple Footer -->
+    <footer class="py-8 text-center text-xs text-gray-600 border-t border-white/5">
+        <p>&copy; <%= new Date().getFullYear() %> BICC Auction System. All rights reserved.</p>
+    </footer>
+
+</body>
+
+</html>

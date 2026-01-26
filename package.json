@@ -1,0 +1,44 @@
+{
+  "name": "auction",
+  "version": "1.0.0",
+  "description": "backend auction project for inter-incubation cricket championship",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node -r dotenv/config app.js",
+    "dev": "nodemon -r dotenv/config app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NehalMemon/Auction-.git"
+  },
+  "author": "Nehal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NehalMemon/Auction-/issues"
+  },
+  "homepage": "https://github.com/NehalMemon/Auction-#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^1.41.3",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.7",
+    "crypt": "^0.0.2",
+    "csurf": "^1.11.0",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^5.2.1",
+    "express-session": "^1.18.2",
+    "hashids": "^2.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
+    "mysql2": "^3.16.0",
+    "nodemon": "^3.1.11",
+    "sequelize": "^6.37.7",
+    "zod": "^4.0.5"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.3"
+  }
+}

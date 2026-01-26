@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>LIVE AUCTION | PROJECTOR VIEW</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glow {
+            text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
+        }
+
+        .bg-animate {
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        }
+    </style>
+</head>
+
+<body class="bg-animate h-screen w-screen flex flex-col items-center justify-center text-white overflow-hidden">
+
+    <div id="waiting-ui" class="text-center">
+        <h1 class="text-8xl font-black tracking-tighter animate-pulse mb-4 text-gray-700">AUCTIONPRO</h1>
+        <p class="text-2xl text-blue-500 font-mono tracking-widest uppercase">Waiting for Session to Begin</p>
+    </div>
+
+    <div id="active-ui" class="hidden w-full max-w-7xl px-12 grid grid-cols-2 gap-16 items-center">
+        <div class="relative">
+            <div class="absolute -inset-4 bg-blue-500/20 blur-3xl rounded-full"></div>
+            <img id="proj-img" src=""
+                class="relative h-[600px] w-full object-cover rounded-3xl border-8 border-white/10 shadow-2xl">
+        </div>
+        <div class="space-y-8">
+            <div>
+                <h2 id="proj-name" class="text-8xl font-black leading-none mb-4 uppercase">---</h2>
+                <p id="proj-cat" class="text-3xl text-blue-400 font-bold uppercase tracking-widest">---</p>
+            </div>
+            <div class="bg-black/40 backdrop-blur-md p-10 rounded-3xl border border-white/10">
+                <p class="text-gray-400 text-xl font-bold uppercase mb-2">Current Bid</p>
+                <p id="proj-bid" class="text-9xl font-black text-green-400 glow">$0</p>
+                <div id="proj-bidder" class="mt-4 text-3xl font-bold text-white uppercase italic">---</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const waitingUI = document.getElementById('waiting-ui');
+        const activeUI = document.getElementById('active-ui');
+        const projImg = document.getElementById('proj-img');
+        const projName = document.getElementById('proj-name');
+        const projCat = document.getElementById('proj-cat');
+        const projBid = document.getElementById('proj-bid');
+        const projBidder = document.getElementById('proj-bidder');
+
+        // Update UI from state
+        function updateUI(data) {
+            if (!data.isSessionActive || !data.auction) {
+                // Show waiting state
+                waitingUI.classList.remove('hidden');
+                activeUI.classList.add('hidden');
+                return;
+            }
+
+            // Show active state
+            waitingUI.classList.add('hidden');
+            activeUI.classList.remove('hidden');
+
+            // Update player info
+            const player = data.auction.player;
+            if (player) {
+                projName.textContent = player.name;
+                projCat.textContent = player.category || '---';
+                projImg.src = player.playerImage || '';
+            }
+
+            // Update bid info
+            projBid.textContent = '$' + data.auction.currentBid.toLocaleString();
+
+            // Update highest bidder
+            if (data.auction.highestBidder) {
+                projBidder.textContent = data.auction.highestBidder.name;
+            } else {
+                projBidder.textContent = 'No bids yet';
+            }
+        }
+
+        // Poll for state updates
+        async function pollState() {
+            try {
+                const res = await fetch('/api/auction/state');
+                const data = await res.json();
+                updateUI(data);
+            } catch (err) {
+                console.error('Polling error:', err);
+            }
+        }
+
+        // Start polling
+        pollState(); // Initial fetch
+        setInterval(pollState, 1000);
+    </script>
+</body>
+
+</html>

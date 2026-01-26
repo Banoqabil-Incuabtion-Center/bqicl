@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | Auction System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-gray-100 font-sans antialiased">
+
+    <!-- <div class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4 space-y-4">
+        <% if (locals.success_msg && locals.success_msg.length > 0) { %>
+            <div class="bg-green-500/10 border-l-4 border-green-500 text-green-400 p-4 rounded shadow-2xl backdrop-blur-sm flex items-center justify-between animate-bounce" role="alert">
+                <div><span class="font-bold">Success:</span> <%= success_msg %></div>
+            </div>
+        <% } %>
+        <% if (locals.error_msg && locals.error_msg.length > 0) { %>
+            <div class="bg-red-500/10 border-l-4 border-red-500 text-red-400 p-4 rounded shadow-2xl backdrop-blur-sm flex items-center justify-between" role="alert">
+                <div><span class="font-bold">Error:</span> <%= error_msg %></div>
+            </div>
+        <% } %>
+    </div> -->
+
+     <%- include('partials/alert') %>
+
+    <div class="flex h-screen overflow-hidden">
+
+        <%- include('partials/navbar') %>
+
+        <div class="flex-1 flex flex-col overflow-hidden relative w-screen">
+
+            <header class="h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-8">
+                <h2 class="text-xl font-semibold text-gray-200">Manage Owners</h2>
+                <a href="/auth/owner/register" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-md">
+                    <i class="fas fa-plus mr-2"></i> Add Owner
+                </a>
+            </header>
+
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900 p-8">
+
+                <div class="bg-gray-800 rounded-xl border border-gray-700 shadow-xl overflow-hidden">
+                    
+                    <% if (owners.length === 0) { %>
+                        <div class="p-12 text-center text-gray-500">
+                            <div class="mb-4 bg-gray-700/50 h-20 w-20 rounded-full flex items-center justify-center mx-auto">
+                                <i class="fas fa-users-slash text-3xl"></i>
+                            </div>
+                            <h4 class="text-xl font-medium text-white">No Owners Found</h4>
+                            <p class="mt-2 text-sm">Get started by adding a new team owner to the system.</p>
+                        </div>
+                    <% } else { %>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-700/50 text-xs uppercase text-gray-400 font-semibold tracking-wider">
+                                    <tr>
+                                        <th class="px-6 py-4">Owner Name</th>
+                                        <th class="px-6 py-4">Team</th>
+                                        <th class="px-6 py-4"> Email</th>
+                                        <th class="px-6 py-4 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-700">
+                                    <% owners.forEach(owner => { %>
+                                        <% const assignedTeam = owner.Team || owner.team; %>
+
+                                        <tr class="hover:bg-gray-700/30 transition-colors">
+                                            
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md bg-gray-700 border border-gray-600 overflow-hidden">
+                                                        <% if (owner.image) { %>
+                                                            <img src="<%= owner.image %>" class="h-full w-full object-cover" alt="<%= owner.name %>">
+                                                        <% } else { %>
+                                                            <%= owner.name.charAt(0).toUpperCase() %>
+                                                        <% } %>
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-white"><%= owner.name %></div>
+                                                    
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <% if (assignedTeam) { %>
+                                                    <div class="flex items-center gap-2">
+                                                        <div class="h-6 w-6 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden border border-gray-600">
+                                                            <% if (assignedTeam.teamLogo) { %>
+                                                                <img src="<%= assignedTeam.teamLogo %>" class="h-full w-full object-cover">
+                                                            <% } else { %>
+                                                                <span class="text-[10px] font-bold"><%= assignedTeam.name.charAt(0) %></span>
+                                                            <% } %>
+                                                        </div>
+                                                        <span class="text-sm text-gray-300 font-medium"><%= assignedTeam.name %></span>
+                                                    </div>
+                                                <% } else { %>
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-900/30 text-red-400 border border-red-800">
+                                                        Unassigned
+                                                    </span>
+                                                <% } %>
+                                            </td>
+
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-300"><%= owner.email %></div>
+                                            </td>
+
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <a href="/owner/profile/<%= owner.hashedId %>" class="text-white bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded-lg text-xs transition-colors border border-gray-600 inline-block">
+                                                    View Profile
+                                                </a>
+                                            </td>
+
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } %>
+                </div>
+
+            </main>
+        </div>
+    </div>
+</body>
+</html>

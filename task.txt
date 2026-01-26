@@ -1,0 +1,52 @@
+🛠 Project Tech StackBackend:
+ Node.js with Express.js.Database:
+  MySQL/MariaDB using Sequelize ORM.
+  Real-Time Engine: Socket.io (WebSocket) for bi-directional, event-driven communication.
+  Frontend: EJS (Embedded JavaScript) templating engine and Tailwind CSS for styling.
+  Security: CSRF protection, session management with express-session, and cookie-parser.
+
+.
+
+🏗 System Architecture & Workflow
+The system utilizes a State-Driven 3-Screen Architecture.
+All clients are synchronized via a central Node.js server.
+
+Screen,Route,Primary Objective
+Admin  /admin/auction    Session control, player queue management, and final sales.
+Owner /owner/auction      Real-time bidding interface with budget tracking.
+Audience  /audience/auction   Cinematic projector view for public display of live bids.
+
+
+
+2. The Operational Lifecycle
+Global Initialization: Admin triggers session_initialized. This toggles global.auctionActive, sends a Socket.io broadcast to all owners, and enables the "Join Auction" UI.
+
+The Call to Block: Admin selects a player. The server updates the Auction model (ID: 1) and emits the player's metadata (image, name, base price) to all rooms.
+
+Live Bidding: Owners emit place_bid. The server validates the bid against the team's remainingBudget and the current Auction.currentBid. If valid, it updates the DB and broadcasts a bid_update.
+
+Finalization: Admin closes bidding. On "Sold," the server updates the Player model (links teamId), decrements the team's remainingBudget, and resets the Auction state for the next player.
+
+
+🧠 Database Logic & Schemas
+The database is structured to maintain integrity even if a user refreshes their browser.
+
+Player Model: Tracks individual stats, basePrice, soldPrice, and auction status (available, bidding, sold, unsold).
+
+Team Model: Manages financial limits with totalBudget and remainingBudget (Data Type: BIGINT to prevent overflow).
+
+Auction Model: Stores the "Active State" of the current bid. Includes playerId, currentBid, and lastBidTeamId.
+
+BidHistory Model: An immutable log of every bid placed for audit trails and UI logs.
+
+
+🧠 Database Logic & Schemas
+The database is structured to maintain integrity even if a user refreshes their browser.
+
+Player Model: Tracks individual stats, basePrice, soldPrice, and auction status (available, bidding, sold, unsold).
+
+Team Model: Manages financial limits with totalBudget and remainingBudget (Data Type: BIGINT to prevent overflow).
+
+Auction Model: Stores the "Active State" of the current bid. Includes playerId, currentBid, and lastBidTeamId.
+
+BidHistory Model: An immutable log of every bid placed for audit trails and UI logs.
