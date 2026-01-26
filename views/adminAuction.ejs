@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Admin Auction Control | AuctionPro</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -154,36 +155,59 @@
         }
     </style>
     <script>
-        // Polling-based auction control
-        let pollingInterval = null;
+        // Init Pusher
+        const pusherKey = "<%= process.env.PUSHER_KEY %>";
+        const pusher = new Pusher(pusherKey, { cluster: '<%= process.env.PUSHER_CLUSTER || "ap2" %>' });
+        const channel = pusher.subscribe('auction-channel');
 
-        // Initialize session
+        // Elements
+        const bidDisplay = document.querySelector('[id="current-bid-display"]'); // Need to ensure IDs match
+        const bidderDisplay = document.querySelector('[id="highest-bidder"]');
+        const mainDisplay = document.getElementById('main-display-area');
+
+        // --- Event Listeners ---
+
+        channel.bind('bid-placed', (data) => {
+            // Update Current Bid
+            const bidValEl = document.querySelector('.text-green-400'); // using class based selection if ID fails or specifically aiming for the big number
+            // Updating UI directly:
+            const bidText = document.evaluate("//p[contains(text(), '$')]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            if (bidText) bidText.textContent = '$' + Number(data.amount).toLocaleString();
+
+            // To be safe, let's just re-fetch state which is fast enough and reliable
+            pollState();
+        });
+
+        channel.bind('new-player', (data) => {
+            location.reload();
+        });
+
+        channel.bind('player-sold', (data) => {
+            alert(`${data.name} sold to ${data.teamName} for $${data.amount.toLocaleString()}`);
+            location.reload();
+        });
+
+        channel.bind('player-unsold', (data) => {
+            location.reload();
+        });
+
+        // Keep existing API calls
         async function initSession() {
             try {
                 const res = await fetch('/api/auction/session/start', { method: 'POST' });
                 const data = await res.json();
-                if (data.success) {
-                    location.reload();
-                }
-            } catch (err) {
-                console.error('Failed to start session:', err);
-            }
+                if (data.success) location.reload();
+            } catch (err) { console.error(err); }
         }
 
-        // End session
         async function endSession() {
             try {
                 const res = await fetch('/api/auction/session/end', { method: 'POST' });
                 const data = await res.json();
-                if (data.success) {
-                    location.reload();
-                }
-            } catch (err) {
-                console.error('Failed to end session:', err);
-            }
+                if (data.success) location.reload();
+            } catch (err) { console.error(err); }
         }
 
-        // Call player to auction block
         async function pushToAuction(playerId) {
             try {
                 const res = await fetch('/api/auction/player/call', {
@@ -193,74 +217,47 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    location.reload();
+                    // Start of auction - UI will reload via Pusher event 'new-player' usually,
+                    // but we can reload here to be sure the admin sees it instantly.
                 } else {
                     alert(data.message);
                 }
-            } catch (err) {
-                console.error('Failed to call player:', err);
-            }
+            } catch (err) { console.error(err); }
         }
 
-        // Mark player as sold
         async function markSold() {
             try {
                 const res = await fetch('/api/auction/sold', { method: 'POST' });
                 const data = await res.json();
-                if (data.success) {
-                    alert(data.message);
-                    location.reload();
-                } else {
-                    alert(data.message);
-                }
-            } catch (err) {
-                console.error('Failed to mark sold:', err);
-            }
+                if (!data.success) alert(data.message);
+            } catch (err) { console.error(err); }
         }
 
-        // Mark player as unsold
         async function markUnsold() {
             try {
                 const res = await fetch('/api/auction/unsold', { method: 'POST' });
                 const data = await res.json();
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert(data.message);
-                }
-            } catch (err) {
-                console.error('Failed to mark unsold:', err);
-            }
+                if (!data.success) alert(data.message);
+            } catch (err) { console.error(err); }
         }
 
-        // Poll for state updates
+        // We can keep a slow poll just as a fallback
         async function pollState() {
             try {
                 const res = await fetch('/api/auction/state');
                 const data = await res.json();
 
-                // Update current bid display if there's an active auction
-                const bidDisplay = document.querySelector('[id="current-bid-display"]');
-                if (bidDisplay && data.auction) {
-                    bidDisplay.textContent = '$' + data.auction.currentBid;
+                if (data.auction) {
+                    // Update Price
+                    const bidEl = document.evaluate("//p[contains(@class, 'text-green-400')]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                    if (bidEl) bidEl.textContent = '$' + data.auction.currentBid.toLocaleString();
                 }
-
-                // Update highest bidder display
-                const bidderDisplay = document.querySelector('[id="highest-bidder"]');
-                if (bidderDisplay && data.auction && data.auction.highestBidder) {
-                    bidderDisplay.textContent = data.auction.highestBidder.name;
-                }
-            } catch (err) {
-                console.error('Polling error:', err);
-            }
+            } catch (err) { }
         }
 
-        // Start polling when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            <% if (isSessionActive && activeAuction) { %>
-                pollingInterval = setInterval(pollState, 1000);
-            <% } %>
-        });
+        // Just checks status every 5s instead of 1s to save resources
+        setInterval(pollState, 5000);
+
     </script>
 </body>
 

@@ -1,6 +1,7 @@
 import db from '../models/index.js';
 const { Auction, Player, Team, BidHistory } = db;
 import { decodeId, encodeId } from '../utils/idHasher.js';
+import pusher from '../config/pusher.js';
 
 const auctionApiController = {};
 
@@ -135,6 +136,15 @@ auctionApiController.callPlayer = async (req, res) => {
         // Update player status
         await player.update({ status: 'bidding' });
 
+        // Trigger Pusher Event
+        pusher.trigger('auction-channel', 'new-player', {
+            playerId: player.id,
+            name: player.name,
+            image: player.playerImage,
+            basePrice: player.basePrice,
+            category: player.category
+        });
+
         res.json({
             success: true,
             message: `${player.name} called to auction block`,
@@ -208,6 +218,13 @@ auctionApiController.placeBid = async (req, res) => {
             bidAmount: bidAmount
         });
 
+        // Trigger Pusher Event
+        pusher.trigger('auction-channel', 'bid-placed', {
+            amount: bidAmount,
+            teamName: team.name,
+            time: new Date()
+        });
+
         res.json({
             success: true,
             message: 'Bid placed successfully',
@@ -262,6 +279,14 @@ auctionApiController.markSold = async (req, res) => {
         // Complete the auction
         await auction.update({ status: 'completed' });
 
+        // Trigger Pusher Event
+        pusher.trigger('auction-channel', 'player-sold', {
+            playerId: player.id,
+            name: player.name,
+            teamName: team.name,
+            amount: auction.currentBid
+        });
+
         res.json({
             success: true,
             message: `${player.name} sold to ${team.name} for ${auction.currentBid}`,
@@ -296,6 +321,12 @@ auctionApiController.markUnsold = async (req, res) => {
 
         // Complete the auction
         await auction.update({ status: 'completed' });
+
+        // Trigger Pusher Event
+        pusher.trigger('auction-channel', 'player-unsold', {
+            playerId: player.id,
+            name: player.name
+        });
 
         res.json({
             success: true,
