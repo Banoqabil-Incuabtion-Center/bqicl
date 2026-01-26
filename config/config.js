@@ -6,6 +6,8 @@ const DB_NAME = process.env.DB_NAME;
 const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 
+import mysql2 from 'mysql2';
+
 const config = {
     DB_NAME,
     DB_USER,
@@ -18,6 +20,7 @@ const config = {
 const sequelizeTZ = new Sequelize(config.DB_NAME, config.DB_USER, config.DB_PASSWORD, {
     host: config.host,
     dialect: config.dialect,
+    dialectModule: mysql2, // Fix for Vercel/Lambda
     port: config.port,
     logging: false,
 
