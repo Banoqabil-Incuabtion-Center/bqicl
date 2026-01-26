@@ -6,23 +6,14 @@ import teamController from '../controllers/teamController.js';
 import { registerSchema, loginSchema, playerRegisterSchema, teamRegisterSchema } from '../validators/authValidation.js'
 import validator from '../middlewares/formValidator.js';
 import { requireAdminAuth, requireOwnerAuth } from "../middlewares/authMiddleware.js";
-import csrfProtection from '../middlewares/csrfProtection.js';
 import blockInProduction from '../middlewares/productionBlock.js';
 import upload from '../middlewares/uploadMiddleware.js';
 
 const router = Router();
 
-const parseCsrf = (req, res, next) => {
-    res.locals.csrfToken = req.csrfToken();
-    next();
-};
-
-// ADMIN REGISTER - DISABLED (admin@bqicl.com is the only admin)
-// To add a new admin, add directly to database
-
 // 2. ADMIN SIGN IN
-router.get('/admin/signin', csrfProtection, parseCsrf, authController.renderSignin);
-router.post('/admin/signin', csrfProtection, parseCsrf, validator(loginSchema, 'adminSignin'), authController.handleSignin);
+router.get('/admin/signin', authController.renderSignin);
+router.post('/admin/signin', validator(loginSchema, 'adminSignin'), authController.handleSignin);
 // 3. ADMIN SIGN OUT 
 router.post('/admin/signout', requireAdminAuth, authController.handleSignout);
 

@@ -8,6 +8,8 @@ import "./config/config.js";
 import session from 'express-session';
 import flash from 'connect-flash';
 import cookieParser from "cookie-parser";
+import csrf from "csurf";
+import { checkAuth } from "./middlewares/authMiddleware.js";
 import currentPath from "./middlewares/currentPath.js"
 import db from './models/index.js';
 
@@ -49,7 +51,7 @@ app.use(
   })
 );
 
-// 5. Flash Messages (Depends on Session)
+// 5. Flash Messages & Local Variables (Depends on Session)
 app.use(flash());
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success');
@@ -57,29 +59,51 @@ app.use((req, res, next) => {
   next();
 });
 
-// 6. CSRF & Security (Must be AFTER Session)
+// 6. Security & CSRF
+const csrfProtection = csrf({ cookie: false });
+app.use((req, res, next) => {
+  // Exempt API from CSRF if using Bearer tokens, or handle specifically
+  if (req.path.startsWith('/api/')) return next();
+  csrfProtection(req, res, next);
+});
 
 app.use((req, res, next) => {
-
-  res.locals.csrfToken = req.csrfToken ? req.csrfToken() : null;
+  if (req.csrfToken) {
+    res.locals.csrfToken = req.csrfToken();
+  }
   next();
 });
 
-// 7. Custom Pathing & Routes
+// 7. Global Auth Detection
+app.use(checkAuth);
+
+// 8. Custom Pathing & Views
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(currentPath);
 app.use("/", indexroute);
 app.use("/api/auction", auctionApiRouter);
 
-// 8. Error Handlers (Always last)
+// 10. Error Handlers (Always last)
+app.use((req, res, next) => {
+  res.status(404).render('404', { title: '404 - Not Found' });
+});
+
 app.use((err, req, res, next) => {
+  console.error("Global Error Handler:", err);
+
   if (err.code === "EBADCSRFTOKEN") {
-    req.flash("error", "Form expired or invalid CSRF token");
-    const backURL = req.get("Referrer") || "/auth/admin/signin";
+    req.flash("error", "Form expired or invalid security token. Please try again.");
+    const backURL = req.get("Referrer") || "/";
     return res.redirect(backURL);
   }
-  next(err);
+
+  const statusCode = err.status || 500;
+  res.status(statusCode).render('error', {
+    title: 'Error | AuctionPro',
+    message: process.env.NODE_ENV === 'production' ? 'Something went wrong on our end.' : err.message,
+    error: process.env.NODE_ENV === 'production' ? {} : err
+  });
 });
 
 
@@ -113,5 +137,5 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port http://localhost:${PORT}`);
 });
