@@ -28,23 +28,24 @@
 
     <!-- Navbar -->
     <nav class="fixed w-full z-50 glass border-b-0 border-white/5">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-gavel text-emerald-500 text-2xl"></i>
-                <span class="text-xl font-bold tracking-tight text-white">AUCTION<span
-                        class="text-emerald-500">PRO</span></span>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 md:h-20 flex items-center justify-between">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <i class="fas fa-gavel text-emerald-500 text-xl sm:text-2xl"></i>
+                <span class="text-lg sm:text-xl font-bold tracking-tight text-white uppercase">Auction<span
+                        class="text-emerald-500">Pro</span></span>
             </div>
             <% if (typeof user !=='undefined' && user) { %>
                 <a href="/<%= user.role === 'admin' ? 'admin' : 'owner' %>/dashboard"
-                    class="px-5 py-2 text-sm font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-full transition-all shadow-lg shadow-emerald-900/20">
-                    Dashboard <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                    class="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-full transition-all shadow-lg shadow-emerald-900/20">
+                    Dashboard <i class="fas fa-arrow-right ml-1 sm:ml-2 text-[10px]"></i>
                 </a>
                 <% } else { %>
-                    <div class="flex gap-4">
+                    <div class="flex gap-3 sm:gap-4">
                         <a href="/auth/owner/signin"
-                            class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Owner Login</a>
+                            class="text-xs sm:text-sm font-medium text-gray-400 hover:text-white transition-colors">Owner
+                            Login</a>
                         <a href="/auth/admin/signin"
-                            class="text-sm font-medium text-emerald-500 hover:text-emerald-400 transition-colors">Admin
+                            class="text-xs sm:text-sm font-medium text-emerald-500 hover:text-emerald-400 transition-colors">Admin
                             Login</a>
                     </div>
                     <% } %>

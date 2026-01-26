@@ -14,103 +14,125 @@
         <%- include('partials/ownerNavbar') %>
 
             <div class="flex-1 flex flex-col overflow-hidden">
-                <header class="h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-8">
-                    <h2 class="text-xl font-bold">Live Auction Console</h2>
+                <header
+                    class="h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4 md:px-8 shrink-0">
+                    <div class="flex items-center gap-4">
+                        <button class="mobile-toggle p-2 text-gray-400 hover:text-white md:hidden">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h2 class="text-lg md:text-xl font-bold truncate">Live Auction</h2>
+                    </div>
 
                     <div class="flex items-center gap-4">
                         <div id="connection-status" class="flex items-center gap-2">
                             <span class="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
-                            <span class="text-xs font-bold text-gray-400 uppercase tracking-tighter">Live
-                                Connection</span>
+                            <span
+                                class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter hidden xs:block">Live</span>
                         </div>
                     </div>
                 </header>
 
-                <main class="flex-1 p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 overflow-hidden">
+                <main
+                    class="flex-1 p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 overflow-y-auto lg:overflow-hidden">
 
+                    <!-- Bidding Card -->
                     <div
-                        class="lg:col-span-2 bg-gray-800 rounded-3xl border border-gray-700 p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+                        class="lg:col-span-2 bg-gray-800 rounded-3xl border border-gray-700 p-6 md:p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden min-h-[500px]">
                         <div class="absolute top-0 right-0 p-8 opacity-5">
-                            <i class="fas fa-gavel text-9xl"></i>
+                            <i class="fas fa-gavel text-7xl md:text-9xl"></i>
                         </div>
 
                         <div id="bid-display-active">
-                            <div class="flex flex-col md:flex-row gap-8 items-start">
+                            <div
+                                class="flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-start text-center md:text-left">
                                 <div
-                                    class="h-64 w-64 rounded-2xl bg-gray-700 border-4 border-gray-600 overflow-hidden shadow-2xl group flex items-center justify-center">
+                                    class="h-48 w-48 md:h-64 md:w-64 rounded-2xl bg-gray-700 border-4 border-gray-600 overflow-hidden shadow-2xl group flex items-center justify-center shrink-0">
                                     <img id="display-img" src="" class="h-full w-full object-cover hidden">
-                                    <i id="placeholder-icon" class="fas fa-user text-6xl text-gray-600"></i>
+                                    <i id="placeholder-icon" class="fas fa-user text-5xl md:text-6xl text-gray-600"></i>
                                 </div>
-                                <div class="flex-1">
+                                <div class="flex-1 min-w-0">
                                     <span id="display-cat"
-                                        class="inline-block bg-blue-600/20 text-blue-400 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4">---</span>
-                                    <h1 id="display-name" class="text-6xl font-black mb-2 tracking-tight">---</h1>
-                                    <div class="flex gap-4 text-gray-400 text-sm font-medium">
-                                        <span id="display-campus"><i class="fas fa-university mr-2"></i>---</span>
-                                        <span id="display-base"><i class="fas fa-tag mr-2"></i>Base: $0</span>
+                                        class="inline-block bg-blue-600/20 text-blue-400 px-4 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4">---</span>
+                                    <h1 id="display-name"
+                                        class="text-4xl md:text-5xl lg:text-6xl font-black mb-3 tracking-tight truncate">
+                                        ---</h1>
+                                    <div
+                                        class="flex flex-wrap justify-center md:justify-start gap-4 text-gray-400 text-xs md:text-sm font-medium">
+                                        <span id="display-campus" class="truncate"><i
+                                                class="fas fa-university mr-2"></i>---</span>
+                                        <span id="display-base" class="truncate"><i class="fas fa-tag mr-2"></i>Base:
+                                            $0</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="mt-8">
-                            <div class="flex justify-between items-end mb-6">
-                                <div>
-                                    <p class="text-gray-500 uppercase text-xs font-black tracking-widest mb-1">Current
-                                        Bid Status</p>
-                                    <div class="flex items-baseline gap-4">
+                            <div class="flex flex-col sm:flex-row justify-between items-center sm:items-end gap-6 mb-8">
+                                <div class="text-center sm:text-left">
+                                    <p
+                                        class="text-gray-500 uppercase text-[10px] md:text-xs font-black tracking-widest mb-2">
+                                        Current Bid Status</p>
+                                    <div
+                                        class="flex flex-col sm:flex-row items-center sm:items-baseline gap-2 sm:gap-4">
                                         <p id="current-bid-amount"
-                                            class="text-8xl font-black text-green-400 leading-none">$0</p>
+                                            class="text-6xl md:text-7xl lg:text-8xl font-black text-green-400 leading-none">
+                                            $0</p>
                                         <span id="highest-bidder-name"
-                                            class="text-gray-400 text-sm font-bold uppercase border-l-2 border-gray-700 pl-4">No
-                                            Bids Yet</span>
+                                            class="text-gray-400 text-xs md:text-sm font-bold uppercase sm:border-l-2 sm:border-gray-700 sm:pl-4">No
+                                            Bids</span>
                                     </div>
+                                </div>
+
+                                <div class="bg-gray-900/50 rounded-2xl border border-gray-700 p-4 min-w-[160px]">
+                                    <p class="text-gray-500 text-[10px] font-bold uppercase mb-1 text-center">Next Min
+                                        Bid</p>
+                                    <p id="next-bid-val" class="text-xl md:text-2xl font-black text-white text-center">
+                                        $0</p>
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <button id="bid-btn" disabled
-                                    class="py-6 rounded-2xl bg-gray-700 text-gray-500 text-3xl font-black uppercase cursor-not-allowed transition-all transform active:scale-95 flex items-center justify-center gap-3">
-                                    <span>Place Bid</span>
-                                </button>
-                                <div
-                                    class="bg-gray-900/50 rounded-2xl border border-gray-700 p-4 flex flex-col justify-center">
-                                    <p class="text-gray-500 text-[10px] font-bold uppercase mb-1 text-center">Next
-                                        Minimum Bid</p>
-                                    <p id="next-bid-val" class="text-2xl font-black text-white text-center">$0</p>
-                                </div>
-                            </div>
+                            <button id="bid-btn" disabled
+                                class="w-full py-5 md:py-6 rounded-2xl bg-gray-700 text-gray-500 text-2xl md:text-3xl font-black uppercase cursor-not-allowed transition-all transform active:scale-95 flex items-center justify-center gap-3 shadow-xl">
+                                <span>Place Bid</span>
+                            </button>
                         </div>
                     </div>
 
+                    <!-- Market Info / Activity -->
                     <div class="space-y-6 flex flex-col">
                         <div
                             class="bg-gradient-to-br from-emerald-900/40 to-gray-800 border border-emerald-500/30 rounded-3xl p-6 shadow-lg">
                             <div class="flex justify-between items-center mb-2">
-                                <p class="text-emerald-400 text-xs font-bold uppercase tracking-widest">Available Funds
+                                <p class="text-emerald-400 text-[10px] font-bold uppercase tracking-widest">Available
+                                    Funds
                                 </p>
-                                <i class="fas fa-wallet text-emerald-500/50"></i>
+                                <i class="fas fa-wallet text-emerald-500/50 text-sm"></i>
                             </div>
-                            <p class="text-4xl font-black text-white">$<%= team.remainingBudget.toLocaleString() %>
+                            <p class="text-3xl md:text-4xl font-black text-white">$<%=
+                                    team.remainingBudget.toLocaleString() %>
                             </p>
-                            <div class="mt-4 h-2 w-full bg-gray-700 rounded-full overflow-hidden">
+                            <div class="mt-4 h-1.5 w-full bg-gray-700 rounded-full overflow-hidden">
                                 <% const percent=(team.remainingBudget / team.totalBudget) * 100; %>
-                                    <div class="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+                                    <div class="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] transition-all duration-500"
                                         style="width: <%= percent %>%"></div>
                             </div>
                         </div>
 
                         <div
-                            class="bg-gray-800 rounded-3xl border border-gray-700 p-6 flex-1 flex flex-col overflow-hidden shadow-xl">
+                            class="bg-gray-800 rounded-3xl border border-gray-700 p-6 flex-1 flex flex-col min-h-[300px] lg:overflow-hidden shadow-xl">
                             <div class="flex items-center justify-between mb-6">
-                                <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest">Recent Activity
+                                <h3 class="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Recent
+                                    Activity
                                 </h3>
-                                <span class="text-[10px] bg-gray-700 px-2 py-1 rounded text-gray-400 font-bold">LIVE
-                                    FEED</span>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                                    <span class="text-[10px] text-gray-400 font-bold">LIVE</span>
+                                </div>
                             </div>
-                            <div id="bid-logs" class="space-y-3 overflow-y-auto pr-2 custom-scrollbar">
+                            <div id="bid-logs" class="space-y-3 lg:overflow-y-auto lg:pr-2 custom-scrollbar">
                                 <div class="text-center py-8 text-gray-600 italic text-sm">
-                                    Waiting for auction activity...
+                                    Waiting for bids...
                                 </div>
                             </div>
                         </div>
