@@ -7,7 +7,7 @@ import { registerSchema, loginSchema, playerRegisterSchema } from '../validators
 const router = Router();
 
 
-router.get('/playerslist', requireAdminAuth, playerController.renderAllPlayers);
+router.get('/playerslist', requireAdminOrOwner, playerController.renderAllPlayers);
 router.get('/profile/:id', requireAdminOrOwner, playerController.renderPlayerProfile);
 // router.get('/profile/delete/:id', requireAdminOrOwner, playerController.renderDelete);
 router.post('/profile/delete/:id', requireAdminOrOwner, playerController.handleDelete);
