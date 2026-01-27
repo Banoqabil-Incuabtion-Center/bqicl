@@ -1,21 +1,23 @@
-import { DataTypes } from 'sequelize';
 import dbConfig from '../config/config.js';
+const { sequelizeTZ, DataTypes, Model } = dbConfig;
 
-const sequelize = dbConfig.sequelizeTZ;
+class settingModel extends Model { }
 
-const Setting = sequelize.define('Setting', {
+settingModel.init({
     key: {
         type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false
     },
     value: {
-        type: DataTypes.STRING, // Or TEXT if you expect large JSON
+        type: DataTypes.STRING,
         allowNull: false
     }
 }, {
+    sequelize: sequelizeTZ,
+    modelName: 'Setting',
     tableName: 'Settings',
     timestamps: true
 });
 
-export default Setting;
+export default settingModel;

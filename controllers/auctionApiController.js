@@ -8,14 +8,20 @@ const auctionApiController = {};
 // Helper to get session state
 const getSessionState = async () => {
     try {
+        if (!Setting) {
+            console.error('CRITICAL: Setting model is undefined! Falling back to memory.');
+            return global.auctionActive === true;
+        }
         let setting = await Setting.findByPk('auction_session_active');
         if (!setting) {
-            setting = await Setting.create({ key: 'auction_session_active', value: 'false' });
+            // Default to false if not found
+            return false;
         }
         return setting.value === 'true';
     } catch (error) {
         console.error('Error fetching session state:', error);
-        return false;
+        // Fallback to memory if DB fails
+        return global.auctionActive === true;
     }
 };
 
@@ -82,7 +88,17 @@ auctionApiController.getState = async (req, res) => {
  */
 auctionApiController.startSession = async (req, res) => {
     try {
-        await Setting.upsert({ key: 'auction_session_active', value: 'true' });
+        console.log('Attempting to start session...');
+        // Updates persistent store
+        if (Setting) {
+            await Setting.upsert({ key: 'auction_session_active', value: 'true' });
+            console.log('Session start success. DB updated.');
+        } else {
+            console.warn('Setting model missing, using memory only');
+        }
+        // Always update memory backup
+        global.auctionActive = true;
+
         res.json({ success: true, message: 'Auction session started' });
     } catch (error) {
         console.error('Error starting session:', error);
@@ -96,7 +112,14 @@ auctionApiController.startSession = async (req, res) => {
  */
 auctionApiController.endSession = async (req, res) => {
     try {
-        await Setting.upsert({ key: 'auction_session_active', value: 'false' });
+        console.log('Ending session...');
+        if (Setting) {
+            await Setting.upsert({ key: 'auction_session_active', value: 'false' });
+            console.log('Session ended. DB updated.');
+        }
+
+        // Always update memory backup
+        global.auctionActive = false;
 
         // Also pause any active auction
         await Auction.update(
