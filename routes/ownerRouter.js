@@ -4,6 +4,7 @@ import { requireOwnerAuth, requireAdminAuth, requireAdminOrOwner } from "../midd
 import validator from "../middlewares/formValidator.js"
 import { updateOwnerSchema } from '../validators/authValidation.js';
 import upload from '../middlewares/uploadMiddleware.js';
+import csrfProtection from '../middlewares/csrfMiddleware.js';
 const router = Router();
 
 
@@ -20,7 +21,7 @@ router.post('/squad/vice-captain/:playerId', requireOwnerAuth, ownerController.h
 router.post('/squad/remove-role/:playerId', requireOwnerAuth, ownerController.handleRemoveRole);
 
 router.post('/profile/delete/:id', requireAdminAuth, ownerController.handleDelete);
-router.post('/profile/edit/:id', requireAdminAuth, upload.single('image'), validator(updateOwnerSchema), ownerController.handleEdit);
+router.post('/profile/edit/:id', requireAdminAuth, upload.single('image'), csrfProtection, validator(updateOwnerSchema), ownerController.handleEdit);
 
 
 

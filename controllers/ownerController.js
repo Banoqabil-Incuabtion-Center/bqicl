@@ -21,44 +21,6 @@ ownerController.renderRegister = async (req, res) => {
 
 ownerController.handleRegister = async (req, res) => {
    try {
-      const { name, email, password } = req.validatedData;
-
-      const imageURL = req.file ? req.file.path : null;
-
-      //   console.log("Data:", req.validatedData);
-      //   console.log("File:", req.file);
-      const existingOwner = await Owner.findOne({ where: { email } });
-      if (existingOwner) {
-         req.flash("error", "Email already exists!");
-         return res.status(400).render("createOwner", {
-            title: "Create New Owner",
-            error_msg: "Email already exists!",
-            oldInput: { name, email },
-            csrfToken: req.csrfToken ? req.csrfToken() : "",
-         });
-      }
-
-      const hash = await bcrypt.hash(password, 10);
-
-      await Owner.create({
-         name,
-         email,
-         password: hash,
-         image: imageURL,
-      });
-
-      req.flash("success", "Owner registered successfully!");
-      return res.redirect("/admin/dashboard");
-   } catch (error) {
-      console.error("Error creating owner:", error);
-      req.flash("error", "Registration failed. Please try again.");
-      return res.status(500).redirect("/auth/owner/register");
-   }
-};
-
-
-ownerController.handleRegister = async (req, res) => {
-   try {
 
       const { name, email, password } = req.validatedData;
 
@@ -132,9 +94,9 @@ ownerController.handleSignin = async (req, res) => {
 
 
 
-      const oldRefreshToken = RefreshToken.findOne({ where: { userId: owner.id } });
+      const oldRefreshToken = await RefreshToken.findOne({ where: { userId: owner.id, userType: 'owner' } });
       if (oldRefreshToken) {
-         await RefreshToken.destroy({ where: { userId: owner.id } });
+         await RefreshToken.destroy({ where: { userId: owner.id, userType: 'owner' } });
       }
       const refreshToken = generateRefreshToken(owner, "owner");
       const hashedToken = tokenHash(refreshToken);
@@ -151,14 +113,14 @@ ownerController.handleSignin = async (req, res) => {
       res.cookie("accessToken", accessToken, {
          httpOnly: true,
          secure: process.env.NODE_ENV === "production",
-         sameSite: "strict",
+         sameSite: "lax",
          maxAge: process.env.ACCESS_TOKEN_LIFE
       });
 
       res.cookie("refreshToken", refreshToken, {
          httpOnly: true,
          secure: process.env.NODE_ENV === "production",
-         sameSite: "strict",
+         sameSite: "lax",
          maxAge: process.env.REFRESH_TOKEN_LIFE
       });
 
@@ -410,14 +372,14 @@ ownerController.refreshToken = async (req, res, originalUrl) => {
       res.cookie("refreshToken", newRefreshToken, {
          httpOnly: true,
          secure: process.env.NODE_ENV === "production",
-         sameSite: "strict",
+         sameSite: "lax",
          maxAge: 7 * 24 * 60 * 60 * 1000
       });
 
       res.cookie("accessToken", newAccessToken, {
          httpOnly: true,
          secure: process.env.NODE_ENV === "production",
-         sameSite: "strict",
+         sameSite: "lax",
          maxAge: 15 * 60 * 1000
       });
       req.flash('success', 'User verified!');

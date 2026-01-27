@@ -89,9 +89,9 @@ authController.handleSignin = async (req, res) => {
 
       const accessToken = generateAccessToken(admin, "admin");
 
-      const oldRefreshToken = RefreshToken.findOne({ where: { userId: admin.id } });
+      const oldRefreshToken = await RefreshToken.findOne({ where: { userId: admin.id, userType: 'admin' } });
       if (oldRefreshToken) {
-         await RefreshToken.destroy({ where: { userId: admin.id } });
+         await RefreshToken.destroy({ where: { userId: admin.id, userType: 'admin' } });
       }
       const refreshToken = generateRefreshToken(admin, "admin");
       const hashedToken = tokenHash(refreshToken);

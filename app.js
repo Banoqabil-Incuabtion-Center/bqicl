@@ -8,7 +8,6 @@ import "./config/config.js";
 import session from 'express-session';
 import flash from 'connect-flash';
 import cookieParser from "cookie-parser";
-import csrf from "csurf";
 import { checkAuth } from "./middlewares/authMiddleware.js";
 import currentPath from "./middlewares/currentPath.js"
 import db from './models/index.js';
@@ -62,10 +61,17 @@ app.use((req, res, next) => {
 });
 
 // 6. Security & CSRF
-const csrfProtection = csrf({ cookie: false });
+import csrfProtection from "./middlewares/csrfMiddleware.js";
 app.use((req, res, next) => {
-  // Exempt API from CSRF if using Bearer tokens, or handle specifically
+  // 1. Exempt API
   if (req.path.startsWith('/api/')) return next();
+
+  // 2. Skip CSRF for multipart/form-data as it will be checked after multer in routes
+  const contentType = req.headers['content-type'];
+  if (contentType && contentType.includes('multipart/form-data')) {
+    return next();
+  }
+
   csrfProtection(req, res, next);
 });
 
