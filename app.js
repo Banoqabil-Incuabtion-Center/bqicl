@@ -20,6 +20,7 @@ dotenv.config();
 const app = express();
 
 // 1. Basic Parsers (Must come first)
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -42,9 +43,10 @@ app.use(
     resave: false,
     saveUninitialized: true,
     rolling: false,
+    proxy: true,
     cookie: {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 30 * 60 * 1000
     }
