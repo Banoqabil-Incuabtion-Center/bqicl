@@ -125,6 +125,7 @@ playerController.renderPlayerProfile = async (req, res) => {
       playerData.id = playerId;
       playerData.hashedId = Id;
 
+      // res.render("playerProfile", { player: playerData , user: req.session.user});
       res.render("playerProfile", { player: playerData });
    } catch (error) {
       console.error("Error fetching players:", error);
