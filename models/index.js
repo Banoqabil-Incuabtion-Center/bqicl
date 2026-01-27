@@ -8,6 +8,7 @@ import adminModel from './adminModel.js';
 import refreshTokenModel from './refreshTokenModel.js';
 import auctionModel from './auctionModel.js';
 import bidHistoryModel from './bidHistory.js';
+import settingModel from './setting.js';
 
 const db = {};
 
@@ -19,6 +20,7 @@ db.Admin = adminModel;
 db.RefreshToken = refreshTokenModel;
 db.Auction = auctionModel;
 db.BidHistory = bidHistoryModel;
+db.Setting = settingModel;
 
 // Initialize Associations
 Object.keys(db).forEach(modelName => {

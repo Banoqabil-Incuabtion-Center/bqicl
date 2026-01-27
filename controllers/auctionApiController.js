@@ -1,15 +1,23 @@
 import db from '../models/index.js';
-const { Auction, Player, Team, BidHistory } = db;
+const { Auction, Player, Team, BidHistory, Setting } = db;
 import { decodeId, encodeId } from '../utils/idHasher.js';
 import pusher from '../config/pusher.js';
 
 const auctionApiController = {};
 
-// Global state stored in memory (Vercel serverless limitation - use DB for production)
-// For Vercel, we'll rely on the database as the source of truth
-if (!global.auctionActive) {
-    global.auctionActive = false;
-}
+// Helper to get session state
+const getSessionState = async () => {
+    try {
+        let setting = await Setting.findByPk('auction_session_active');
+        if (!setting) {
+            setting = await Setting.create({ key: 'auction_session_active', value: 'false' });
+        }
+        return setting.value === 'true';
+    } catch (error) {
+        console.error('Error fetching session state:', error);
+        return false;
+    }
+};
 
 /**
  * GET /api/auction/state
@@ -17,6 +25,8 @@ if (!global.auctionActive) {
  */
 auctionApiController.getState = async (req, res) => {
     try {
+        const isSessionActive = await getSessionState();
+
         const activeAuction = await Auction.findOne({
             where: { status: 'active' },
             include: [
@@ -38,7 +48,7 @@ auctionApiController.getState = async (req, res) => {
 
         res.json({
             success: true,
-            isSessionActive: global.auctionActive,
+            isSessionActive,
             auction: activeAuction ? {
                 playerId: activeAuction.playerId,
                 player: activeAuction.currentPlayer ? {
@@ -65,6 +75,7 @@ auctionApiController.getState = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+    };
 
 /**
  * POST /api/auction/session/start
@@ -72,7 +83,7 @@ auctionApiController.getState = async (req, res) => {
  */
 auctionApiController.startSession = async (req, res) => {
     try {
-        global.auctionActive = true;
+        await Setting.upsert({ key: 'auction_session_active', value: 'true' });
         res.json({ success: true, message: 'Auction session started' });
     } catch (error) {
         console.error('Error starting session:', error);
@@ -86,7 +97,7 @@ auctionApiController.startSession = async (req, res) => {
  */
 auctionApiController.endSession = async (req, res) => {
     try {
-        global.auctionActive = false;
+        await Setting.upsert({ key: 'auction_session_active', value: 'false' });
 
         // Also pause any active auction
         await Auction.update(
@@ -109,7 +120,8 @@ auctionApiController.callPlayer = async (req, res) => {
     try {
         const { playerId } = req.body;
 
-        if (!global.auctionActive) {
+        const isSessionActive = await getSessionState();
+        if (!isSessionActive) {
             return res.status(400).json({ success: false, message: 'Auction session not active' });
         }
 
@@ -170,7 +182,8 @@ auctionApiController.placeBid = async (req, res) => {
         const { bidAmount } = req.body;
         const ownerId = req.user.id; // From requireOwnerAuth middleware
 
-        if (!global.auctionActive) {
+        const isSessionActive = await getSessionState();
+        if (!isSessionActive) {
             return res.status(400).json({ success: false, message: 'Auction session not active' });
         }
 
