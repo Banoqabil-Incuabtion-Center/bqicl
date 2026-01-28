@@ -6,11 +6,13 @@ import teamRouter from './teamRouter.js';
 import adminRouter from './adminRouter.js';
 
 import landingController from '../controllers/landingController.js';
+import auctionApiController from '../controllers/auctionApiController.js';
 
 const router = Router();
 
 
 router.get('/', landingController.renderLanding);
+router.get('/auction', auctionApiController.renderAuctionPage);
 
 
 router.use('/auth', authRouter);

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -107,4 +107,178 @@
     </script>
 </body>
 
+</html> -->
+
+<!-- Suraish added by GEMINI -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIVE AUCTION | RESPONSIVE ELITE VIEW</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;700;900&display=swap');
+
+        :root {
+            --accent: #3b82f6;
+            --glow-color: rgba(74, 222, 128, 0.8);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+            min-height: 100vh;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .font-heading { font-family: 'Orbitron', sans-serif; }
+
+        .player-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* RESPONSIVE TEXT SCALING */
+        .responsive-bid {
+            font-size: clamp(4rem, 15vw, 12rem);
+            line-height: 1;
+            text-shadow: 0 0 40px var(--glow-color);
+        }
+
+        .responsive-name {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            line-height: 1.1;
+        }
+
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .float-anim { animation: float 5s ease-in-out infinite; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div id="waiting-ui" class="text-center px-4">
+        <h1 class="text-6xl md:text-9xl font-heading font-black tracking-tighter animate-pulse mb-4 text-gray-800">AUCTIONPRO</h1>
+        <p class="text-lg md:text-2xl text-blue-500 font-mono tracking-[0.2em] md:tracking-[0.5em] uppercase">Searching for Next Player...</p>
+    </div>
+
+    <div id="active-ui" class="hidden w-full max-w-6xl flex flex-col items-center gap-6 md:gap-10">
+        
+        <div class="player-card float-anim w-full rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 relative overflow-hidden">
+            
+            <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+                <div class="relative w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 flex-shrink-0">
+                    <div class="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
+                    <img id="proj-img" src="" 
+                         class="relative w-full h-full object-cover rounded-2xl md:rounded-3xl border-2 border-white/10 shadow-2xl transition-opacity duration-500">
+                </div>
+
+                <div class="flex-grow w-full text-center lg:text-left space-y-6 md:space-y-8">
+                    <div>
+                        <h2 id="proj-name" class="responsive-name font-heading font-black uppercase tracking-tighter mb-2">---</h2>
+                        <div class="h-1.5 w-24 md:w-32 bg-blue-500 rounded-full mx-auto lg:mx-0"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 md:gap-8 text-left">
+                        <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
+                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Category</p>
+                            <p id="proj-cat" class="text-sm md:text-xl font-heading font-bold text-blue-400 truncate">---</p>
+                        </div>
+                        <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
+                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Campus</p>
+                            <p id="proj-campus" class="text-sm md:text-xl font-heading font-bold text-white truncate">---</p>
+                        </div>
+                        <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
+                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Base Price</p>
+                            <p id="proj-base" class="text-sm md:text-xl font-heading font-bold text-yellow-500">$0</p>
+                        </div>
+                        <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
+                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Current Leader</p>
+                            <p id="proj-bidder" class="text-sm md:text-xl font-heading font-bold text-blue-200 truncate italic">---</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full text-center px-4">
+            <p class="text-blue-400/60 text-sm md:text-xl font-bold uppercase tracking-[0.3em] md:tracking-[0.5em] mb-2">Current Bid Price</p>
+            <div id="proj-bid" class="responsive-bid font-heading font-black text-green-400 flex justify-center items-center">
+                $0
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const waitingUI = document.getElementById('waiting-ui');
+        const activeUI = document.getElementById('active-ui');
+        const projImg = document.getElementById('proj-img');
+        const projName = document.getElementById('proj-name');
+        const projCat = document.getElementById('proj-cat');
+        const projCampus = document.getElementById('proj-campus');
+        const projBase = document.getElementById('proj-base');
+        const projBid = document.getElementById('proj-bid');
+        const projBidder = document.getElementById('proj-bidder');
+
+        function updateUI(data) {
+            if (!data.isSessionActive || !data.auction || !data.auction.player) {
+                waitingUI.classList.remove('hidden');
+                activeUI.classList.add('hidden');
+                return;
+            }
+
+            waitingUI.classList.add('hidden');
+            activeUI.classList.remove('hidden');
+
+            const player = data.auction.player;
+            const currentBid = data.auction.currentBid;
+            
+            projName.textContent = player.name;
+            projCat.textContent = player.category || 'PLAYER';
+            projCampus.textContent = player.campus || 'N/A';
+            projBase.textContent = '$' + (player.basePrice || 0).toLocaleString();
+            
+            if (projImg.src !== player.playerImage) {
+                projImg.style.opacity = '0';
+                setTimeout(() => {
+                    projImg.src = player.playerImage || '/images/default-player.png';
+                    projImg.style.opacity = '1';
+                }, 300);
+            }
+
+            projBid.textContent = '$' + currentBid.toLocaleString();
+
+            if (data.auction.highestBidder) {
+                projBidder.textContent = data.auction.highestBidder.name;
+                projBidder.classList.remove('opacity-30');
+            } else {
+                projBidder.textContent = 'NO BIDS';
+                projBidder.classList.add('opacity-30');
+            }
+        }
+
+        async function pollState() {
+            try {
+                const res = await fetch('/api/auction/state');
+                const data = await res.json();
+                updateUI(data);
+            } catch (err) {
+                console.error('Polling error:', err);
+            }
+        }
+
+        pollState();
+        setInterval(pollState, 1000);
+    </script>
+</body>
 </html>
+
