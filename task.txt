@@ -50,3 +50,9 @@ Team Model: Manages financial limits with totalBudget and remainingBudget (Data 
 Auction Model: Stores the "Active State" of the current bid. Includes playerId, currentBid, and lastBidTeamId.
 
 BidHistory Model: An immutable log of every bid placed for audit trails and UI logs.
+
+//------ suraish tasks
+
+1 - Owner dashboard playerlist ka option dna ha.
+2 - Owner sa player porfile mai jata ha to navbar change ho jata ha usmai fix krn ha.
+3 - Owner sa profile player mai added or delete ka button hatana ha

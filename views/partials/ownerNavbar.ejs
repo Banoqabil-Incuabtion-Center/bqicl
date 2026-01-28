@@ -28,6 +28,13 @@
             <span class="font-medium">My Profile</span>
         </a>
 
+        <a href="/player/playerslist"
+            class="flex items-center px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors shadow-sm
+                       <%= currentPath.includes('/player/playerslist') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' %>">
+            <i class="fas fa-user w-6"></i>
+            <span class="font-medium">Players</span>
+        </a>
+
         <a href="/owner/squad"
             class="flex items-center px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors shadow-sm
                        <%= currentPath === '/owner/squad' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' %>">
