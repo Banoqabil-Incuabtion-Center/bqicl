@@ -38,37 +38,20 @@
 
 <body class="bg-gray-900 text-gray-100 font-sans antialiased">
     <div class="flex h-screen overflow-hidden">
-<<<<<<< HEAD
-          <% if (user && user.role === 'admin') { %>
-         <%- include('partials/ownerNavbar') %>
-        <% } else if (user && user.role === 'owner') { %>
-        <%- include('partials/ownerNavbar') %>
-      <% } else { %>
-    <%- include('partials/navbar') %>
-      <% } %>
 
-
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-white">Player Profile</h1>
-            <% if (user && user.role === 'admin') { %>
-                <div class="flex gap-3">
-                    <a href="/player/profile/edit/<%= player.hashedId %>" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <button onclick="document.getElementById('deleteModal-<%= player.hashedId %>').showModal()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                </div>
-            <% } %>
-        </div>
-=======
-        <%- include("partials/navbar") %>
+         
+             
+            <% if (locals.userType  ==='admin' ) { %>
+                 <%- include('partials/adminNavbar') %>
+              
+            <% } else if (locals.userType  ==='owner' ) { %>
+                <%- include('partials/ownerNavbar') %>
+            <% }  %>
+<div class="container mx-auto px_4 py_8">
+    <div class="max-w-4xl mx-auto">   
             <div class="container mx-auto px-4 py-8 overflow-y-auto">
                 <div class="max-w-4xl mx-auto">
-                    <div class="flex justify-between items-center mb-6">
+                    <!-- <div class="flex justify-between items-center mb-6">
                         <h1 class="text-3xl font-bold text-white">Player Profile</h1>
                         <div class="flex gap-3">
                             <a href="/player/profile/edit/<%= player.hashedId %>"
@@ -80,7 +63,21 @@
                                 <i class="fas fa-trash"></i> Delete
                             </button>
                         </div>
-                    </div>
+                    </div> -->
+
+                    <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-white">Player Profile</h1>
+            <% if (locals.userType === 'admin') { %>
+                <div class="flex gap-3">
+                    <a href="/player/profile/edit/<%= player.hashedId %>" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <button onclick="document.getElementById('deleteModal-<%= player.hashedId %>').showModal()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            <% } %>
+        </div>
 
                     <%- include("partials/deleteModal", { itemName: player.name, deleteUrl: "/player/profile/delete/" +
                         player.hashedId, modalId: "deleteModal-" + player.hashedId }) %>
@@ -102,7 +99,6 @@
                             tierClass="bg-yellow-500 text-black border-yellow-400 font-bold shadow-yellow-500/50" ; else
                             if (player.auctionCategory==="Silver" )
                             tierClass="bg-gray-200 text-gray-800 border-gray-400 font-bold shadow-gray-500/50" ; %>
->>>>>>> 78bb3ac712764cca49d6a8363a54315b98da4c48
 
                             <div class="<%= bannerColor %> border-2 rounded-t-xl p-4 flex items-center justify-between">
                                 <span class="<%= tierClass %> px-4 py-1 rounded-full text-sm border-2 shadow-lg">
