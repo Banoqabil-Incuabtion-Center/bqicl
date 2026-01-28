@@ -8,6 +8,7 @@ import validator from '../middlewares/formValidator.js';
 import { requireAdminAuth, requireOwnerAuth } from "../middlewares/authMiddleware.js";
 import blockInProduction from '../middlewares/productionBlock.js';
 import upload from '../middlewares/uploadMiddleware.js';
+import csrfProtection from '../middlewares/csrfMiddleware.js';
 
 const router = Router();
 
@@ -27,7 +28,7 @@ router.post('/admin/signout', requireAdminAuth, authController.handleSignout);
 
 // 1. OWNER REGISTER
 router.get('/owner/register', requireAdminAuth, ownerController.renderRegister);
-router.post('/owner/register', requireAdminAuth, upload.single('image'), validator(registerSchema), ownerController.handleRegister);
+router.post('/owner/register', requireAdminAuth, upload.single('image'), csrfProtection, validator(registerSchema), ownerController.handleRegister);
 
 // 2. OWNER SIGN IN
 router.get('/owner/signin', ownerController.renderSignin);
@@ -49,12 +50,12 @@ router.post('/owner/signout', requireOwnerAuth, authController.handleSignout);
 
 // 1. PLAYER REGISTER
 router.get('/player/register', requireAdminAuth, playerController.renderRegister);
-router.post('/player/register', requireAdminAuth, upload.single('playerImage'), validator(playerRegisterSchema), playerController.handleRegister);
+router.post('/player/register', requireAdminAuth, upload.single('playerImage'), csrfProtection, validator(playerRegisterSchema), playerController.handleRegister);
 
 
 
 //1. TEAM REGISTER
 router.get('/team/register', requireAdminAuth, teamController.renderRegister);
-router.post('/team/register', requireAdminAuth, upload.single('teamLogo'), validator(teamRegisterSchema), teamController.handleRegister);
+router.post('/team/register', requireAdminAuth, upload.single('teamLogo'), csrfProtection, validator(teamRegisterSchema), teamController.handleRegister);
 
 export default router;

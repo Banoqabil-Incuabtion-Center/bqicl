@@ -95,20 +95,32 @@ teamController.renderTeamProfile = async (req, res) => {
           model: Owner,
           as: "owner",
         },
+        {
+          model: db.Player,
+          as: "players"
+        }
       ],
     });
     if (!team) {
       return res.status(404).json({ message: "team not found" });
     }
 
-    const ownerId = encodeId(team.owner.id);
-
     const teamData = team.get({ plain: true });
     teamData.id = teamId;
     teamData.hashedId = Id;
-    teamData.ownerId = ownerId;
 
-    // console.log(teamData)
+    // Ensure compatibility with template casing
+    teamData.Name = teamData.name;
+    teamData.Players = (teamData.players || []).map(player => ({
+      ...player,
+      hashedId: encodeId(player.id)
+    }));
+
+    if (team.owner) {
+      teamData.ownerId = encodeId(team.owner.id);
+    } else {
+      teamData.ownerId = null;
+    }
 
     res.render("teamProfile", { team: teamData });
   } catch (error) {

@@ -8,7 +8,6 @@ import "./config/config.js";
 import session from 'express-session';
 import flash from 'connect-flash';
 import cookieParser from "cookie-parser";
-import csrf from "csurf";
 import { checkAuth } from "./middlewares/authMiddleware.js";
 import currentPath from "./middlewares/currentPath.js"
 import db from './models/index.js';
@@ -20,6 +19,7 @@ dotenv.config();
 const app = express();
 
 // 1. Basic Parsers (Must come first)
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -42,9 +42,10 @@ app.use(
     resave: false,
     saveUninitialized: true,
     rolling: false,
+    proxy: true,
     cookie: {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 30 * 60 * 1000
     }
@@ -60,10 +61,17 @@ app.use((req, res, next) => {
 });
 
 // 6. Security & CSRF
-const csrfProtection = csrf({ cookie: false });
+import csrfProtection from "./middlewares/csrfMiddleware.js";
 app.use((req, res, next) => {
-  // Exempt API from CSRF if using Bearer tokens, or handle specifically
+  // 1. Exempt API
   if (req.path.startsWith('/api/')) return next();
+
+  // 2. Skip CSRF for multipart/form-data as it will be checked after multer in routes
+  const contentType = req.headers['content-type'];
+  if (contentType && contentType.includes('multipart/form-data')) {
+    return next();
+  }
+
   csrfProtection(req, res, next);
 });
 
