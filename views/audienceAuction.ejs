@@ -177,15 +177,17 @@
             
             <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
                 <div class="relative w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 flex-shrink-0">
-                    <div class="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
+                    <div class="absolute bg-blue-500/20  rounded-full"></div>
                     <img id="proj-img" src="" 
-                         class="relative w-full h-full object-cover rounded-2xl md:rounded-3xl border-2 border-white/10 shadow-2xl transition-opacity duration-500">
+                         class="relative w-full h-full rounded-2xl md:rounded-3xl border-2 border-white/10 shadow-2xl">
                 </div>
 
                 <div class="flex-grow w-full text-center lg:text-left space-y-6 md:space-y-8">
                     <div>
                         <h2 id="proj-name" class="responsive-name font-heading font-black uppercase tracking-tighter mb-2">---</h2>
-                        <div class="h-1.5 w-24 md:w-32 bg-blue-500 rounded-full mx-auto lg:mx-0"></div>
+                        <div id="proj-auction-category" class="h-1.5 w-24 md:w-32 bg-red-500 rounded-full mx-auto lg:mx-0">
+
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 md:gap-8 text-left">
@@ -193,6 +195,10 @@
                             <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Category</p>
                             <p id="proj-cat" class="text-sm md:text-xl font-heading font-bold text-blue-400 truncate">---</p>
                         </div>
+                        <!-- <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
+                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Campus</p>
+                            <p id="proj-campus" class="text-sm md:text-xl font-heading font-bold text-white truncate">---</p>
+                        </div> -->
                         <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
                             <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Campus</p>
                             <p id="proj-campus" class="text-sm md:text-xl font-heading font-bold text-white truncate">---</p>
@@ -228,7 +234,10 @@
         const projBase = document.getElementById('proj-base');
         const projBid = document.getElementById('proj-bid');
         const projBidder = document.getElementById('proj-bidder');
+        const projAuctionCategory = document.getElementById('proj-auction-category');
 
+        
+        
         function updateUI(data) {
             if (!data.isSessionActive || !data.auction || !data.auction.player) {
                 waitingUI.classList.remove('hidden');
@@ -242,17 +251,16 @@
             const player = data.auction.player;
             const currentBid = data.auction.currentBid;
             
+            
+
             projName.textContent = player.name;
             projCat.textContent = player.category || 'PLAYER';
             projCampus.textContent = player.campus || 'N/A';
+            projAuctionCategory.textContent = player.auctionCategory || 'N/A';
             projBase.textContent = '$' + (player.basePrice || 0).toLocaleString();
             
             if (projImg.src !== player.playerImage) {
-                projImg.style.opacity = '0';
-                setTimeout(() => {
                     projImg.src = player.playerImage || '/images/default-player.png';
-                    projImg.style.opacity = '1';
-                }, 300);
             }
 
             projBid.textContent = '$' + currentBid.toLocaleString();
