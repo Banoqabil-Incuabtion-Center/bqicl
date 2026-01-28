@@ -318,6 +318,7 @@ auctionApiController.markSold = async (req, res) => {
         pusher.trigger('auction-channel', 'player-sold', {
             playerId: player.id,
             name: player.name,
+            playerImage: player.playerImage,
             teamName: team.name,
             amount: auction.currentBid
         });
