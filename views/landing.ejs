@@ -69,264 +69,274 @@
 
 <body class="text-gray-100 min-h-screen flex flex-col selection:bg-lime-500/30 selection:text-lime-400 sport-grid">
 
-    <!-- Navbar -->
-    <nav class="fixed w-full z-50 glass border-b border-white/5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 md:h-24 flex items-center justify-between">
-            <div class="flex items-center gap-4">
+    <%- include('partials/publicNavbar') %>
+
+        <!-- Main Content -->
+        <main class="flex-grow relative pt-24 overflow-hidden">
+
+            <!-- Ambient Lighting Effects -->
+            <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-lime-500/5 rounded-full blur-[150px] -z-10"></div>
+            <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-600/5 rounded-full blur-[120px] -z-10">
+            </div>
+
+            <section id="home"
+                class="max-w-7xl mx-auto px-6 py-16 md:py-24 text-center relative z-10 flex flex-col items-center">
+
+                <!-- Live Status Badge -->
                 <div
-                    class="h-12 w-12 sm:h-16 sm:w-16 bg-white rounded-xl overflow-hidden shadow-lg shadow-lime-900/20 p-1">
-                    <img src="/logo.png" alt="ICL Logo" class="h-full w-full object-contain">
+                    class="inline-flex items-center gap-3 px-5 py-2 rounded-full glass mb-10 border border-lime-500/20 group hover:border-lime-500/50 transition-colors">
+                    <% if (isAuctionLive) { %>
+                        <span class="relative flex h-3 w-3">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                        </span>
+                        <span class="text-[10px] font-black tracking-[0.25em] uppercase text-red-400">Live Auction
+                            Battlefield</span>
+                        <% } else { %>
+                            <div class="flex gap-1">
+                                <span class="h-1.5 w-1.5 rounded-full bg-gray-600"></span>
+                                <span class="h-1.5 w-1.5 rounded-full bg-gray-600"></span>
+                                <span class="h-1.5 w-1.5 rounded-full bg-gray-600"></span>
+                            </div>
+                            <span class="text-[10px] font-black tracking-[0.25em] uppercase text-gray-500">League Season
+                                2026 </span>
+                            <% } %>
                 </div>
-                <div>
-                    <span class="text-xl sm:text-2xl font-black tracking-tighter text-white uppercase italic">
-                        ICL
-                    </span>
-                    <div class="text-[10px] text-lime-500 font-bold tracking-[0.2em] uppercase -mt-1">Incubation Cricket
-                        League</div>
-                </div>
-            </div>
 
-            <div class="flex items-center gap-4 sm:gap-6">
-                <% if (typeof user !=='undefined' && user) { %>
-                    <a href="/<%= user.role === 'admin' ? 'admin' : 'owner' %>/dashboard"
-                        class="px-6 py-2.5 text-sm font-bold icl-bg-gradient text-white rounded-lg transition-all shadow-lg shadow-lime-900/40 hover:scale-105 active:scale-95 uppercase italic">
-                        Dashboard <i class="fas fa-bolt ml-2 text-xs"></i>
-                    </a>
-                    <% } else { %>
-                        <div class="hidden sm:flex gap-6 items-center">
-                            <a href="/auth/owner/signin"
-                                class="text-xs font-bold text-gray-400 hover:text-white transition-colors uppercase tracking-widest">Owner
-                                Portal</a>
-                            <a href="/auth/admin/signin"
-                                class="px-5 py-2 text-xs font-bold border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded-lg transition-all uppercase tracking-widest italic">Admin
-                                Access</a>
+                <!-- Hero Headline -->
+                <h1
+                    class="text-6xl md:text-9xl font-black text-white tracking-tighter mb-8 leading-[0.9] italic uppercase">
+                    Dominate the <br>
+                    <span class="icl-gradient-text">Pitch.</span>
+                </h1>
+
+                <p class="text-lg md:text-2xl text-gray-400 max-w-3xl mb-14 font-medium leading-relaxed tracking-tight">
+                    Welcome to the digital auction arena of the <span class="text-white">Incubation Cricket
+                        League</span>.
+                    Strategize your bids, build your dream squad, and lead your franchise to victory.
+                </p>
+
+                <!-- Major Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 mb-20">
+                    <!-- <a href="/auth/owner/signin"
+                        class="px-10 py-4 bg-white text-black font-black rounded-xl hover:bg-lime-500 transition-all hover:scale-105 uppercase italic flex items-center gap-3 shadow-2xl shadow-white/5">
+                        <i class="fas fa-trophy"></i>
+                        Start Bidding
+                    </a> -->
+                    <div class="w-full sm:w-px h-px sm:h-14 bg-white/10 mx-2"></div>
+                    <div class="flex items-center gap-6 px-4">
+                        <div class="text-left">
+                            <div class="text-2xl font-black text-white">
+                                <%= stats.totalTeams %>
+                            </div>
+                            <div class="text-[10px] text-gray-500 uppercase font-black tracking-widest">Franchises</div>
                         </div>
-                        <div class="sm:hidden">
-                            <a href="/auth/admin/signin" class="text-lime-500"><i
-                                    class="fas fa-user-shield text-xl"></i></a>
+                        <div class="text-left">
+                            <div class="text-2xl font-black text-white">
+                                <%= stats.totalPlayers %>
+                            </div>
+                            <div class="text-[10px] text-gray-500 uppercase font-black tracking-widest">Elite Talent
+                            </div>
                         </div>
-                        <% } %>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="flex-grow relative pt-24 overflow-hidden">
-
-        <!-- Ambient Lighting Effects -->
-        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-lime-500/5 rounded-full blur-[150px] -z-10"></div>
-        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-600/5 rounded-full blur-[120px] -z-10">
-        </div>
-
-        <section class="max-w-7xl mx-auto px-6 py-16 md:py-24 text-center relative z-10 flex flex-col items-center">
-
-            <!-- Live Status Badge -->
-            <div
-                class="inline-flex items-center gap-3 px-5 py-2 rounded-full glass mb-10 border border-lime-500/20 group hover:border-lime-500/50 transition-colors">
-                <% if (isAuctionLive) { %>
-                    <span class="relative flex h-3 w-3">
-                        <span
-                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                    </span>
-                    <span class="text-[10px] font-black tracking-[0.25em] uppercase text-red-400">Live Auction
-                        Battlefield</span>
-                    <% } else { %>
-                        <div class="flex gap-1">
-                            <span class="h-1.5 w-1.5 rounded-full bg-gray-600"></span>
-                            <span class="h-1.5 w-1.5 rounded-full bg-gray-600"></span>
-                            <span class="h-1.5 w-1.5 rounded-full bg-gray-600"></span>
-                        </div>
-                        <span class="text-[10px] font-black tracking-[0.25em] uppercase text-gray-500">League Season
-                            2026 </span>
-                        <% } %>
-            </div>
-
-            <!-- Hero Headline -->
-            <h1 class="text-6xl md:text-9xl font-black text-white tracking-tighter mb-8 leading-[0.9] italic uppercase">
-                Dominate the <br>
-                <span class="icl-gradient-text">Pitch.</span>
-            </h1>
-
-            <p class="text-lg md:text-2xl text-gray-400 max-w-3xl mb-14 font-medium leading-relaxed tracking-tight">
-                Welcome to the digital auction arena of the <span class="text-white">Incubation Cricket League</span>.
-                Strategize your bids, build your dream squad, and lead your franchise to victory.
-            </p>
-
-            <!-- Major Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 mb-20">
-                <a href="/auth/owner/signin"
-                    class="px-10 py-4 bg-white text-black font-black rounded-xl hover:bg-lime-500 transition-all hover:scale-105 uppercase italic flex items-center gap-3 shadow-2xl shadow-white/5">
-                    <i class="fas fa-trophy"></i>
-                    Start Bidding
-                </a>
-                <div class="w-full sm:w-px h-px sm:h-14 bg-white/10 mx-2"></div>
-                <div class="flex items-center gap-6 px-4">
-                    <div class="text-left">
-                        <div class="text-2xl font-black text-white">
-                            <%= stats.totalTeams %>
-                        </div>
-                        <div class="text-[10px] text-gray-500 uppercase font-black tracking-widest">Franchises</div>
-                    </div>
-                    <div class="text-left">
-                        <div class="text-2xl font-black text-white">
-                            <%= stats.totalPlayers %>
-                        </div>
-                        <div class="text-[10px] text-gray-500 uppercase font-black tracking-widest">Elite Talent</div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Team Logos Section -->
-            <div class="w-full max-w-6xl mb-24">
-                <div class="flex items-center justify-between mb-8 px-4">
-                    <h2 class="text-xl font-black uppercase italic tracking-widest">Participating <span
-                            class="text-lime-500">Teams</span></h2>
-                    <div class="h-px flex-grow bg-white/5 mx-6"></div>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <% const teams=[ { name: 'Clifton 11' , logo: '/clifton-11.jpeg' }, { name: 'Noor-ul-Huq Royals' ,
-                        logo: '/idara-noor-ul-huq-royals.jpeg' }, { name: 'Bahadurabad United' ,
-                        logo: '/bahadurabad-united.jpeg' }, { name: 'Bahadurabad Eagles' ,
-                        logo: '/bahadurabad-eagles.jpeg' } ]; teams.forEach(team=> { %>
-                        <div
-                            class="team-card glass p-6 rounded-2xl group cursor-pointer hover:bg-lime-500/5 transition-all">
+                <!-- Team Logos Section -->
+                <div class="w-full max-w-6xl mb-24">
+                    <div class="flex items-center justify-between mb-8 px-4">
+                        <h2 class="text-xl font-black uppercase italic tracking-widest">Participating <span
+                                class="text-lime-500">Teams</span></h2>
+                        <div class="h-px flex-grow bg-white/5 mx-6"></div>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <% const teams=[ { name: 'Clifton 11' , logo: '/clifton-11.jpeg' }, {
+                            name: 'Idarah Noor-e-Haq Royals' , logo: '/idara-noor-ul-huq-royals.jpeg' }, {
+                            name: 'Bahadurabad United' , logo: '/bahadurabad-united.jpeg' }, {
+                            name: 'Bahadurabad Eagles' , logo: '/bahadurabad-eagles.jpeg' } ]; teams.forEach(team=> { %>
                             <div
-                                class="team-logo w-full aspect-square bg-white rounded-xl mb-4 flex items-center justify-center transition-transform duration-500 overflow-hidden relative p-2 shadow-inner">
-                                <img src="<%= team.logo %>" alt="<%= team.name %>"
-                                    class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500">
+                                class="team-card glass p-6 rounded-2xl group cursor-pointer hover:bg-lime-500/5 transition-all">
                                 <div
-                                    class="absolute inset-0 bg-lime-500/5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    class="team-logo w-full aspect-square bg-white rounded-xl mb-4 flex items-center justify-center transition-transform duration-500 overflow-hidden relative p-2 shadow-inner">
+                                    <img src="<%= team.logo %>" alt="<%= team.name %>"
+                                        class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500">
+                                    <div
+                                        class="absolute inset-0 bg-lime-500/5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    </div>
+                                </div>
+                                <div
+                                    class="text-[11px] font-black uppercase tracking-widest text-lime-400/70 group-hover:text-lime-400 transition-colors text-center line-clamp-1">
+                                    <%= team.name %>
                                 </div>
                             </div>
+                            <% }) %>
+                    </div>
+                </div>
+
+                <!-- Sponsor Marquee -->
+                <div class="w-full relative overflow-hidden py-10 border-y border-white/5 mb-24">
+                    <div class="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-gray-950 to-transparent z-10">
+                    </div>
+                    <div class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-gray-950 to-transparent z-10">
+                    </div>
+
+                    <div class="animate-marquee gap-20 items-center">
+                        <span
+                            class="text-4xl font-black text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
                             <div
-                                class="text-[11px] font-black uppercase tracking-widest text-lime-400/70 group-hover:text-lime-400 transition-colors text-center line-clamp-1">
-                                <%= team.name %>
+                                class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
+                                <img src="/alkhidmat.png" alt="Alkhidmat"
+                                    class="h-full w-full object-contain mix-blend-multiply">
+                            </div>
+                            ALKHIDMAT KARACHI
+                        </span>
+                        <span
+                            class="text-4xl font-black text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
+                            <div
+                                class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
+                                <img src="/banoqabil.png" alt="Banoqabil"
+                                    class="h-full w-full object-contain mix-blend-multiply">
+                            </div>
+                            Banoqabil Pakistan
+                        </span>
+
+                        <!-- Duplicate for infinite effect -->
+                        <span
+                            class="text-4xl font-black text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
+                            <div
+                                class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
+                                <img src="/alkhidmat.png" alt="Alkhidmat"
+                                    class="h-full w-full object-contain mix-blend-multiply">
+                            </div>
+                            ALKHIDMAT KARACHI
+                        </span>
+                        <span
+                            class="text-4xl font-black text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
+                            <div
+                                class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
+                                <img src="/banoqabil.png" alt="Banoqabil"
+                                    class="h-full w-full object-contain mix-blend-multiply">
+                            </div>
+                            Banoqabil Pakistan
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Features / Roles -->
+                <div class="grid md:grid-cols-2 gap-8 max-w-5xl w-full">
+                    <a href="/auth/owner/signin" class="group relative overflow-hidden rounded-3xl">
+                        <div
+                            class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=1000')] bg-cover bg-center brightness-50 group-hover:scale-110 transition-transform duration-700">
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/60 to-transparent">
+                        </div>
+                        <div class="relative p-10 text-left h-full flex flex-col justify-end">
+                            <div
+                                class="h-14 w-14 icl-bg-gradient rounded-xl mb-4 flex items-center justify-center text-white text-2xl">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <h3 class="text-3xl font-black text-white mb-3 italic uppercase">Franchise Owner</h3>
+                            <p class="text-gray-300 font-medium mb-6">Access your command center, track budgets in
+                                real-time, and outbid rivals to secure the ultimate match-winners.</p>
+                            <span
+                                class="inline-flex items-center gap-2 text-lime-400 font-bold uppercase tracking-widest text-xs group-hover:gap-4 transition-all">
+                                Enter Command Center <i class="fas fa-chevron-right text-[10px]"></i>
+                            </span>
+                        </div>
+                    </a>
+
+                    <a href="/auth/admin/signin" class="group relative overflow-hidden rounded-3xl">
+                        <div
+                            class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=1000')] bg-cover bg-center brightness-50 group-hover:scale-110 transition-transform duration-700">
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/60 to-transparent">
+                        </div>
+                        <div class="relative p-10 text-left h-full flex flex-col justify-end">
+                            <div
+                                class="h-14 w-14 bg-white/10 backdrop-blur-md rounded-xl mb-4 flex items-center justify-center text-white text-2xl border border-white/10">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="text-3xl font-black text-white mb-3 italic uppercase">Administrator</h3>
+                            <p class="text-gray-300 font-medium mb-6">Full authority over the auction process. Manage
+                                roster
+                                registration, bid verification, and league settings.</p>
+                            <span
+                                class="inline-flex items-center gap-2 border-b-2 border-white/20 pb-1 text-white font-bold uppercase tracking-widest text-xs hover:border-lime-500 transition-colors">
+                                Secure Login <i class="fas fa-lock text-[10px]"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="max-w-7xl mx-auto px-6 py-24 border-t border-white/5 relative">
+                <div
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-lime-500/5 blur-[120px] rounded-full -z-10">
+                </div>
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div class="space-y-8">
+                        <h2 class="text-4xl md:text-6xl font-black italic uppercase italic tracking-tighter">
+                            About the <br>
+                            <span class="icl-gradient-text">Incubation Cricket League</span>
+                        </h2>
+                        <p class="text-gray-400 text-lg leading-relaxed font-medium">
+                            The ICL is more than just a tournament; it's a high-stakes arena where strategy meets
+                            passion.
+                            Born from the vision of Alkhidmat Karachi and Bano Qabil, this league brings together the
+                            brightest
+                            minds from our incubation centers to compete on the cricket pitch.
+                        </p>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="glass p-6 rounded-2xl">
+                                <i class="fas fa-bullseye text-lime-500 text-2xl mb-4"></i>
+                                <h4 class="font-bold uppercase tracking-widest text-xs mb-2">Our Mission</h4>
+                                <p class="text-gray-500 text-xs leading-relaxed">Fostering sportsmanship and healthy
+                                    competition among young entrepreneurs.</p>
+                            </div>
+                            <div class="glass p-6 rounded-2xl">
+                                <i class="fas fa-star text-lime-500 text-2xl mb-4"></i>
+                                <h4 class="font-bold uppercase tracking-widest text-xs mb-2">The Vision</h4>
+                                <p class="text-gray-500 text-xs leading-relaxed">Creating a platform where talent is
+                                    recognized and celebrated through a fair auction.</p>
                             </div>
                         </div>
-                        <% }) %>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-lime-500/20 blur-2xl rounded-[3rem]"></div>
+                        <img src="https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=1000"
+                            alt="About ICL"
+                            class="relative rounded-[2.5rem] w-full aspect-video object-cover border border-white/10 shadow-2xl">
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Professional Footer -->
+        <footer class="py-16 mt-20 border-t border-white/5 bg-black/40 backdrop-blur-xl">
+            <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12 items-center">
+                <div class="text-left">
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="/logo.png" alt="ICL" class="h-8 w-8 object-contain">
+                        <span class="text-lg font-black italic uppercase">ICL</span>
+                    </div>
+                    <p class="text-sm text-gray-500 max-w-xs">The premier platform for professional cricket auctions.
+                        Excellence in every bid.</p>
+                </div>
+                <div class="flex justify-center gap-8">
+                    <a href="#" class="text-gray-500 hover:text-white transition-colors"><i
+                            class="fab fa-twitter text-xl"></i></a>
+                    <a href="#" class="text-gray-500 hover:text-white transition-colors"><i
+                            class="fab fa-facebook text-xl"></i></a>
+                    <a href="#" class="text-gray-500 hover:text-white transition-colors"><i
+                            class="fab fa-instagram text-xl"></i></a>
+                </div>
+                <div class="text-right text-xs text-gray-600 font-bold uppercase tracking-[0.2em]">
+                    &copy; <%= new Date().getFullYear() %> BICC INCUBATION CENTER <br>
+                        POWERED BY THE TEAM AT BANO QABIL
                 </div>
             </div>
-
-            <!-- Sponsor Marquee -->
-            <div class="w-full relative overflow-hidden py-10 border-y border-white/5 mb-24">
-                <div class="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-gray-950 to-transparent z-10"></div>
-                <div class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-gray-950 to-transparent z-10">
-                </div>
-
-                <div class="animate-marquee gap-20 items-center">
-                    <span
-                        class="text-4xl font-black text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
-                        <div
-                            class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
-                            <img src="/alkhidmat.png" alt="Alkhidmat"
-                                class="h-full w-full object-contain mix-blend-multiply">
-                        </div>
-                        ALKHIDMAT KARACHI
-                    </span>
-                    <span
-                        class="text-4xl font-black text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
-                        <div
-                            class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
-                            <img src="/banoqabil.png" alt="Banoqabil"
-                                class="h-full w-full object-contain mix-blend-multiply">
-                        </div>
-                        Banoqabil Pakistan
-                    </span>
-
-                    <!-- Duplicate for infinite effect -->
-                    <span
-                        class="text-4xl font-black text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
-                        <div
-                            class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
-                            <img src="/alkhidmat.png" alt="Alkhidmat"
-                                class="h-full w-full object-contain mix-blend-multiply">
-                        </div>
-                        ALKHIDMAT KARACHI
-                    </span>
-                    <span
-                        class="text-4xl font-black text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
-                        <div
-                            class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
-                            <img src="/banoqabil.png" alt="Banoqabil"
-                                class="h-full w-full object-contain mix-blend-multiply">
-                        </div>
-                        Banoqabil Pakistan
-                    </span>
-                </div>
-            </div>
-
-            <!-- Features / Roles -->
-            <div class="grid md:grid-cols-2 gap-8 max-w-5xl w-full">
-                <a href="/auth/owner/signin" class="group relative overflow-hidden rounded-3xl">
-                    <div
-                        class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=1000')] bg-cover bg-center brightness-50 group-hover:scale-110 transition-transform duration-700">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/60 to-transparent"></div>
-                    <div class="relative p-10 text-left h-full flex flex-col justify-end">
-                        <div
-                            class="h-14 w-14 icl-bg-gradient rounded-xl mb-4 flex items-center justify-center text-white text-2xl">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <h3 class="text-3xl font-black text-white mb-3 italic uppercase">Franchise Owner</h3>
-                        <p class="text-gray-300 font-medium mb-6">Access your command center, track budgets in
-                            real-time, and outbid rivals to secure the ultimate match-winners.</p>
-                        <span
-                            class="inline-flex items-center gap-2 text-lime-400 font-bold uppercase tracking-widest text-xs group-hover:gap-4 transition-all">
-                            Enter Command Center <i class="fas fa-chevron-right text-[10px]"></i>
-                        </span>
-                    </div>
-                </a>
-
-                <a href="/auth/admin/signin" class="group relative overflow-hidden rounded-3xl">
-                    <div
-                        class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=1000')] bg-cover bg-center brightness-50 group-hover:scale-110 transition-transform duration-700">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/60 to-transparent"></div>
-                    <div class="relative p-10 text-left h-full flex flex-col justify-end">
-                        <div
-                            class="h-14 w-14 bg-white/10 backdrop-blur-md rounded-xl mb-4 flex items-center justify-center text-white text-2xl border border-white/10">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h3 class="text-3xl font-black text-white mb-3 italic uppercase">Administrator</h3>
-                        <p class="text-gray-300 font-medium mb-6">Full authority over the auction process. Manage roster
-                            registration, bid verification, and league settings.</p>
-                        <span
-                            class="inline-flex items-center gap-2 border-b-2 border-white/20 pb-1 text-white font-bold uppercase tracking-widest text-xs hover:border-lime-500 transition-colors">
-                            Secure Login <i class="fas fa-lock text-[10px]"></i>
-                        </span>
-                    </div>
-                </a>
-            </div>
-
-        </section>
-    </main>
-
-    <!-- Professional Footer -->
-    <footer class="py-16 mt-20 border-t border-white/5 bg-black/40 backdrop-blur-xl">
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12 items-center">
-            <div class="text-left">
-                <div class="flex items-center gap-3 mb-4">
-                    <img src="/logo.jpg" alt="ICL" class="h-8 w-8 object-contain">
-                    <span class="text-lg font-black italic uppercase">ICL</span>
-                </div>
-                <p class="text-sm text-gray-500 max-w-xs">The premier platform for professional cricket auctions.
-                    Excellence in every bid.</p>
-            </div>
-            <div class="flex justify-center gap-8">
-                <a href="#" class="text-gray-500 hover:text-white transition-colors"><i
-                        class="fab fa-twitter text-xl"></i></a>
-                <a href="#" class="text-gray-500 hover:text-white transition-colors"><i
-                        class="fab fa-facebook text-xl"></i></a>
-                <a href="#" class="text-gray-500 hover:text-white transition-colors"><i
-                        class="fab fa-instagram text-xl"></i></a>
-            </div>
-            <div class="text-right text-xs text-gray-600 font-bold uppercase tracking-[0.2em]">
-                &copy; <%= new Date().getFullYear() %> BICC INCUBATION CENTER <br>
-                    POWERED BY THE TEAM AT BANO QABIL
-            </div>
-        </div>
-    </footer>
+        </footer>
 
 </body>
 
