@@ -18,7 +18,8 @@
 <body class="text-slate-200 antialiased">
     <div class="flex flex-col md:flex-row min-h-screen">
         
-        <div class="shrink-0 bg-slate-900 border-b md:border-r border-slate-800">
+        <div class="shrink-0 flex">
+        <!-- <div class="flex h-screen overflow-hidden md:inline-block max-sm:hidden sm:hidden"> -->
             <% if (locals.userType === 'admin') { %>
                 <%- include('partials/adminNavbar') %>
             <% } else if (locals.userType === 'owner') { %>
@@ -26,7 +27,8 @@
             <% } %>
         </div>
 
-        <main class="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto">
+        <!-- <main class="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto"> -->
+        <main class="flex-1 h-screen overflow-y-auto p-4 md:p-8 lg:p-12">
 
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
     <h1 class="text-3xl font-black text-white tracking-tight">Player Profile</h1>
