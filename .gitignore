@@ -1,3 +1,4 @@
 .env
 node_modules
 public/css/output.css
+public/css/styles.css
