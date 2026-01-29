@@ -48,7 +48,12 @@
 
         <div class="flex h-screen overflow-hidden">
 
-            <%- include('partials/navbar') %>
+              <% if (locals.userType  ==='admin' ) { %>
+                 <%- include('partials/adminNavbar') %>
+              
+            <% } else if (locals.userType  ==='owner' ) { %>
+                <%- include('partials/ownerNavbar') %>
+            <% }  %>
 
                 <div class="flex-1 flex flex-col overflow-hidden relative w-screen">
 

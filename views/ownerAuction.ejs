@@ -53,14 +53,17 @@
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <span id="display-cat"
-                                        class="inline-block bg-blue-600/20 text-blue-400 px-4 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4">---</span>
+                                        class="inline-block bg-blue-600/20 text-blue-400 px-4 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4"></span>
                                     <h1 id="display-name"
                                         class="text-4xl md:text-5xl lg:text-6xl font-black mb-3 tracking-tight truncate">
                                         ---</h1>
                                     <div
                                         class="flex flex-wrap justify-center md:justify-start gap-4 text-gray-400 text-xs md:text-sm font-medium">
-                                        <span id="display-campus" class="truncate"><i
-                                                class="fas fa-university mr-2"></i>---</span>
+                                        <span  class="truncate">
+                                            <i
+                                                class="fas fa-university mr-2"></i>
+                                                <span id="display-campus"></span>
+                                            </span>
                                         <span id="display-base" class="truncate"><i class="fas fa-tag mr-2"></i>Base:
                                             $0</span>
                                     </div>
@@ -99,6 +102,9 @@
                             </button>
                         </div>
                     </div>
+
+
+                    
 
                     <!-- Market Info / Activity -->
                     <div class="space-y-6 flex flex-col">
@@ -202,6 +208,7 @@
             if (!data.isSessionActive || !data.auction) {
                 displayName.textContent = !data.isSessionActive ? 'System Offline' : 'Waiting...';
                 displayCat.textContent = '---';
+                displayCampus.textContent = '---'
                 displayImg.classList.add('hidden');
                 placeholderIcon.classList.remove('hidden');
                 bidBtn.disabled = true;
@@ -211,15 +218,16 @@
             }
 
             const player = data.auction.player;
+            
             if (player) {
                 displayName.textContent = player.name;
                 displayCat.textContent = player.category || 'PLAYER';
+                displayCampus.textContent = player.campus || "N/A"
                 displayBase.innerHTML = `<i class="fas fa-tag mr-2"></i>Base: $${player.basePrice.toLocaleString()}`;
-                if (player.playerImage) {
-                    displayImg.src = player.playerImage;
+                    displayImg.src = player.playerImage || '/images/default-player.png';
                     displayImg.classList.remove('hidden');
                     placeholderIcon.classList.add('hidden');
-                }
+                
             }
 
             currentBidAmount = data.auction.currentBid;
