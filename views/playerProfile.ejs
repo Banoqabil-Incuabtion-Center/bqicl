@@ -1,16 +1,17 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= player.name %> | Profile</title>
+    <title><%= player.name %> | Pro Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
-        body { font-family: 'Outfit', sans-serif; background-color: #020617; }
-        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        body { font-family: 'Outfit', sans-serif; background-color: #0f172a; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        /* .banner-gradient { background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); } */
     </style>
 </head>
 
@@ -25,145 +26,165 @@
             <% } %>
         </div>
 
-        <main class="flex-1 p-4 md:p-8 overflow-y-auto">
-            
-            <div class="flex justify-between items-center mb-8">
-                <button onclick="history.back()" class="text-slate-400 hover:text-white flex items-center gap-2 group">
-                    <i class="fas fa-chevron-left group-hover:-translate-x-1 transition-transform"></i> Back
-                </button>
-                <% if (locals.userType === 'admin') { %>
-                    <a href="/player/profile/edit/<%= player.hashedId %>" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm transition-all shadow-lg shadow-blue-900/20">
-                        Edit Player
-                    </a>
-                <% } %>
-            </div>
+        <main class="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto">
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <h1 class="text-3xl font-black text-white tracking-tight">Player Profile</h1>
+    
+    <% if (locals.userType === 'admin') { %>
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+            <a href="/player/profile/edit/<%= player.hashedId %>" 
+               class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-blue-600/10 text-blue-500 font-bold text-sm border border-blue-600/20 hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+
+           
+
+            <button onclick="document.getElementById('deleteModal-<%= player.hashedId %>').showModal()" 
+                    class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-red-600/10 text-red-500 font-bold text-sm border border-red-600/20 hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2">
+                <i class="fas fa-trash"></i> Delete
+            </button>
+        </div>
+
+        <%- include("partials/deleteModal", { 
+            itemName: player.name, 
+            deleteUrl: "/player/profile/delete/" + player.hashedId, 
+            modalId: "deleteModal-" + player.hashedId 
+        }) %>
+    <% } %>
+</div>
+
+ <% let bannerColor="bg-gray-800 border-gray-700" ; if (player.auctionCategory==="Platinum" )
+                            bannerColor="bg-gradient-to-r from-blue-950 to-blue-900 border-slate-300" ; else if
+                            (player.auctionCategory==="Diamond" )
+                            bannerColor="bg-gradient-to-r from-purple-950 to-purple-900 border-purple-500" ; else if
+                            (player.auctionCategory==="Gold" )
+                            bannerColor="bg-gradient-to-r from-yellow-950 to-yellow-900 border-yellow-500" ; else if
+                            (player.auctionCategory==="Silver" )
+                            bannerColor="bg-gradient-to-r from-slate-800 to-gray-800 border-gray-500" ; let
+                            tierClass="bg-gray-700 text-gray-300 border-gray-600" ; if
+                            (player.auctionCategory==="Platinum" )
+                            tierClass="bg-slate-200 text-slate-900 border-slate-300 font-bold shadow-blue-500/50" ; else
+                            if (player.auctionCategory==="Diamond" )
+                            tierClass="bg-purple-500 text-white border-purple-400 font-bold shadow-purple-500/50" ; else
+                            if (player.auctionCategory==="Gold" )
+                            tierClass="bg-yellow-500 text-black border-yellow-400 font-bold shadow-yellow-500/50" ; else
+                            if (player.auctionCategory==="Silver" )
+                            tierClass="bg-gray-200 text-gray-800 border-gray-400 font-bold shadow-gray-500/50" ; %>
+
+            <div class="player-banner <%= bannerColor %> rounded-[2.5rem] p-6 md:p-10 border border-slate-800 relative overflow-hidden mb-10 shadow-2xl">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[100px] rounded-full"></div>
                 
-                <div class="md:col-span-5 lg:col-span-4 space-y-6">
-                    <div class="glass-panel rounded-3xl p-6 text-center md:text-left overflow-hidden relative">
-                        <% 
-                            let accentColor = "blue";
-                            if(player.auctionCategory === "Platinum") accentColor = "blue";
-                            else if(player.auctionCategory === "Diamond") accentColor = "purple";
-                            else if(player.auctionCategory === "Gold") accentColor = "yellow";
-                        %>
-                        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-<%= accentColor %>-500/10 blur-3xl rounded-full"></div>
+                
 
-                        <div class="relative">
-                            <div class="w-32 h-32 md:w-full aspect-square mx-auto md:mx-0 rounded-2xl overflow-hidden border-2 border-slate-700 mb-6 shadow-2xl">
-                                <% if (player.playerImage) { %>
-                                    <img src="<%= player.playerImage %>" class="w-full h-full object-cover">
-                                <% } else { %>
-                                    <div class="w-full h-full bg-slate-800 flex items-center justify-center text-5xl font-bold"><%= player.name.charAt(0) %></div>
-                                <% } %>
-                            </div>
+                <div class="relative flex flex-col lg:flex-row items-center gap-8">
+                    
+                    
 
-                            <span class="inline-block px-3 py-1 bg-<%= accentColor %>-500/20 text-<%= accentColor %>-400 text-[10px] font-black tracking-widest rounded-full border border-<%= accentColor %>-500/30 mb-2 uppercase">
-                                <%= player.auctionCategory %> Tier
-                            </span>
-                            <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2 leading-tight"><%= player.name %></h1>
-                            <p class="text-slate-400 font-medium mb-6"><%= player.category %></p>
-                            
-                            <% if (player.isSold) { %>
-                                <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 text-emerald-400">
-                                    <p class="text-[10px] font-bold uppercase mb-1 opacity-60">Auction Status</p>
-                                    <p class="font-bold flex items-center gap-2">
-                                        <i class="fas fa-check-circle"></i> SOLD TO <%= player.teamId %>
-                                    </p>
-                                </div>
+                    <div class="shrink-0">
+                        <div class="w-40 h-40 md:w-56 md:h-56 rounded-[2rem] overflow-hidden border-4 border-slate-800 shadow-2xl ring-1 ring-white/10">
+                            <% if (player.playerImage) { %>
+                                <img src="<%= player.playerImage %>" class="w-full h-full object-cover">
+                            <% } else { %>
+                                <!-- <div class="w-full h-full bg-slate-800 flex items-center justify-center text-6xl font-bold"><%= player.name.charAt(0) %></div> -->
+                                 <img src="/images/default-player.png" class="w-full h-full object-cover">
                             <% } %>
                         </div>
                     </div>
-                </div>
 
-                <div class="md:col-span-7 lg:col-span-8 space-y-6">
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="glass-panel rounded-2xl p-5 flex items-center gap-4">
-                            <div class="w-12 h-12 bg-yellow-500/10 rounded-xl flex items-center justify-center text-yellow-500 shrink-0">
-                                <i class="fas fa-tag text-lg"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Base Price</p>
-                                <p class="text-xl font-bold text-white truncate">$<%= player.basePrice ? player.basePrice.toLocaleString() : '0' %></p>
-                            </div>
-                        </div>
-                        <div class="glass-panel rounded-2xl p-5 flex items-center gap-4">
-                            <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500 shrink-0">
-                                <i class="fas fa-university text-lg"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Campus</p>
-                                <p class="text-xl font-bold text-white truncate"><%= player.campus || 'Not Set' %></p>
-                            </div>
-                        </div>
+                    <div class="flex-1 text-center lg:text-left">
+                        <span class="inline-block px-4 py-1.5  text-xs font-black tracking-widest rounded-full <%= tierClass %> mb-4 uppercase">
+                            <%= player.auctionCategory %> 
+                        </span>
+                        <h1 class="text-4xl md:text-6xl font-black text-white mb-2 tracking-tight">
+                            <%= player.name %>
+                        </h1>
+                        <p class="text-slate-400 text-lg font-medium flex items-center justify-center lg:justify-start gap-3">
+                            <%= player.category %> <span class="text-slate-700">|</span> <span><%= player.campus || 'Not Set' %></span>
+                        </p>
                     </div>
 
-                    <div class="glass-panel rounded-3xl p-6">
-                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-6">Playing Statistics</h3>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800">
-                                <div class="flex items-center gap-2 text-yellow-500 mb-4 font-bold text-xs uppercase">
-                                    <i class="fas fa-bat"></i> Batting
-                                </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <p class="text-[9px] text-slate-500 uppercase font-bold">Style</p>
-                                        <p class="text-sm font-semibold"><%= player.playingStyle %></p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-[9px] text-slate-500 uppercase font-bold">Order</p>
-                                        <p class="text-sm font-semibold"><%= player.battingOrder || 'Open' %></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800">
-                                <div class="flex items-center gap-2 text-red-500 mb-4 font-bold text-xs uppercase">
-                                    <i class="fas fa-bowling-ball"></i> Bowling
-                                </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <p class="text-[9px] text-slate-500 uppercase font-bold">Type</p>
-                                        <p class="text-sm font-semibold truncate"><%= player.bowlingType || 'N/A' %></p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-[9px] text-slate-500 uppercase font-bold">Specialty</p>
-                                        <p class="text-sm font-semibold"><%= player.bowlingType && player.bowlingType.includes("Spin") ? "Spinner" : "Pacer" %></p>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="flex flex-col gap-4 w-full lg:w-auto">
+                        <div class="glass-panel rounded-3xl p-6 text-center lg:text-right min-w-[200px]">
+                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Base Price</p>
+                            <p class="text-3xl font-black text-white">$<%= player.basePrice ? player.basePrice.toLocaleString() : '0' %></p>
                         </div>
-                    </div>
-
-                    <div class="glass-panel rounded-3xl p-6">
-                        <div class="flex flex-col sm:flex-row gap-8">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 shrink-0">
-                                    <i class="fas fa-envelope"></i>
-                                </div>
-                                <div class="min-w-0">
-                                    <p class="text-[10px] text-slate-500 uppercase font-bold">Email</p>
-                                    <p class="text-sm font-medium truncate text-slate-300"><%= player.email %></p>
-                                </div>
+                        
+                        <% if (player.isSold) { %>
+                            <div class="bg-cyan-500/20 border border-cyan-500/30 rounded-2xl p-4 text-center">
+                                <p class="text-[10px] font-black text-cyan-400 uppercase">Status</p>
+                                <p class="text-white font-bold tracking-tight">SOLD TO <%= player.teamId %></p>
                             </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 shrink-0">
-                                    <i class="fas fa-phone"></i>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] text-slate-500 uppercase font-bold">Phone</p>
-                                    <p class="text-sm font-medium text-slate-300"><%= player.phoneNumber || 'N/A' %></p>
-                                </div>
-                            </div>
-                        </div>
+                        <% } %>
                     </div>
-
                 </div>
             </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <div class="lg:col-span-4 space-y-4">
+                    <h3 class="text-slate-500 text-sm font-bold uppercase tracking-widest ml-2">Connect</h3>
+                    
+                    <div class="glass-panel  rounded-2xl p-4 flex items-center gap-4 hover:bg-slate-800/50 transition-colors">
+                        <div class="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 shrink-0">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-[10px] text-slate-500 font-bold uppercase">Email Address</p>
+                            <p class="text-sm font-semibold truncate"><%= player.email %></p>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-2xl p-4 flex items-center gap-4 hover:bg-slate-800/50 transition-colors">
+                        <div class="w-12 h-12 bg-emerald-600/20 rounded-xl flex items-center justify-center text-emerald-400 shrink-0">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-slate-500 font-bold uppercase">Phone Number</p>
+                            <p class="text-sm font-semibold"><%= player.phoneNumber || 'N/A' %></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8">
+                    <h3 class="text-slate-500 text-sm font-bold uppercase tracking-widest mb-4 ml-2">Playing Statistics</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="glass-panel rounded-[2rem] p-8 border-l-4 ">
+                            <p class="text-yellow-500 text-xs font-black uppercase mb-4 tracking-widest">Batting</p>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Style</p>
+                                    <p class="text-xl font-bold"><%= player.playingStyle %></p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Order</p>
+                                    <p class="text-xl font-bold"><%= player.battingOrder || 'Open' %></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel rounded-[2rem] p-8 border-l-4">
+                            <p class="text-red-500 text-xs font-black uppercase mb-4 tracking-widest">Bowling</p>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Type</p>
+                                    <p class="text-xl font-bold truncate"><%= player.bowlingType || 'N/A' %></p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Specialty</p>
+                                    <p class="text-xl font-bold"><%= player.bowlingType && player.bowlingType.includes("Spin") ? "Spinner" : "Pacer" %></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+           
+
         </main>
     </div>
 </body>
 
-</html> -->
-
+</html>
