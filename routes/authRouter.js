@@ -18,11 +18,6 @@ router.post('/admin/signin', validator(loginSchema, 'adminSignin'), authControll
 // 3. ADMIN SIGN OUT 
 router.post('/admin/signout', requireAdminAuth, authController.handleSignout);
 
-// 4. ADMIN PASSWORD RESET - DISABLED
-// router.get('/admin/forget-password', authController.renderForgetPassword);
-// router.post('/admin/forget-password', authController.handleForgetPassword);
-// router.get('/admin/reset-password', authController.renderResetPassword);
-// router.post('/admin/reset-password', authController.handleResetPassword);
 
 
 

@@ -1,113 +1,108 @@
-<%- include('themeHeader') %>
-    <!-- Mobile Menu Overlay -->
-    <div id="mobile-sidebar-overlay"
-        class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm z-40 hidden md:hidden transition-opacity duration-300 opacity-0">
+<!-- Mobile Menu Overlay -->
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm z-40 hidden md:hidden transition-opacity duration-300 opacity-0"></div>
+
+<!-- Sidebar -->
+<aside id="owner-sidebar"
+    class="fixed md:static inset-y-0 left-0 w-64 bg-slate-900 border-r border-emerald-900/50 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col">
+
+    <div class="h-16 flex items-center justify-center border-b border-emerald-900/50 bg-emerald-950/20">
+        <h1 class="text-2xl font-bold text-emerald-500 tracking-wider">OWNER <span class="text-white">PANEL</span></h1>
     </div>
 
-    <!-- Sidebar -->
-    <aside id="owner-sidebar"
-        class="fixed md:static inset-y-0 left-0 w-64 bg-slate-900 border-r border-emerald-900/50 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col">
+    <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        <p class="px-4 text-xs font-semibold text-emerald-500/50 uppercase tracking-wider mb-2">My Franchise</p>
 
-        <div class="h-16 flex items-center justify-center border-b border-emerald-900/50 bg-emerald-950/20">
-            <h1 class="text-2xl font-bold text-emerald-500 tracking-wider">OWNER <span class="text-white">PANEL</span>
-            </h1>
-        </div>
+        <a href="/owner/dashboard"
+            class="flex items-center px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors shadow-sm
+                   <%= currentPath === '/owner/dashboard' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' %>">
+            <i class="fas fa-th-large w-6"></i>
+            <span class="font-medium">Dashboard</span>
+        </a>
 
-        <nav class="flex-1 px-4 py-6 space-y-2">
-            <p class="px-4 text-xs font-semibold text-emerald-500/50 uppercase tracking-wider mb-2">My Franchise</p>
+        <a href="/owner/profile/<%= typeof encodeId !== 'undefined' ? encodeId(user.id) : user.id %>"
+            class="flex items-center px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors shadow-sm
+                   <%= currentPath.includes('/owner/profile') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' %>">
+            <i class="fas fa-user w-6"></i>
+            <span class="font-medium">My Profile</span>
+        </a>
 
-            <a href="/owner/dashboard"
-                class="flex items-center px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors shadow-sm
-                       <%= currentPath === '/owner/dashboard' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' %>">
-                <i class="fas fa-th-large w-6"></i>
-                <span class="font-medium">Dashboard</span>
-            </a>
+        <a href="/player/playerslist"
+            class="flex items-center px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors shadow-sm
+                   <%= currentPath.includes('/player/playerslist') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' %>">
+            <i class="fas fa-user w-6"></i>
+            <span class="font-medium">Players</span>
+        </a>
 
-            <a href="/owner/profile/<%= typeof encodeId !== 'undefined' ? encodeId(user.id) : user.id %>"
-                class="flex items-center px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors shadow-sm
-                       <%= currentPath.includes('/owner/profile') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' %>">
-                <i class="fas fa-user w-6"></i>
-                <span class="font-medium">My Profile</span>
-            </a>
+        <a href="/owner/squad"
+            class="flex items-center px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors shadow-sm
+                   <%= currentPath === '/owner/squad' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' %>">
+            <i class="fas fa-users w-6"></i>
+            <span class="font-medium">My Squad</span>
+        </a>
 
-            <a href="/player/playerslist"
-                class="flex items-center px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors shadow-sm
-                       <%= currentPath.includes('/player/playerslist') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' %>">
-                <i class="fas fa-user w-6"></i>
-                <span class="font-medium">Players</span>
-            </a>
+        <p class="px-4 text-xs font-semibold text-emerald-500/50 uppercase tracking-wider mt-8 mb-2">System</p>
 
-            <a href="/owner/squad"
-                class="flex items-center px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors shadow-sm
-                       <%= currentPath === '/owner/squad' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' %>">
-                <i class="fas fa-users w-6"></i>
-                <span class="font-medium">My Squad</span>
-            </a>
+        <a href="/owner/auction"
+            class="flex items-center px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors
+            <%= currentPath.includes('/auction') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' %>">
+            <i class="fas fa-gavel w-6"></i>
+            <span class="font-medium">Live Auction</span>
+        </a>
+    </nav>
 
-            <p class="px-4 text-xs font-semibold text-emerald-500/50 uppercase tracking-wider mt-8 mb-2">System</p>
-
-            <a href="/owner/auction"
-                class="flex items-center px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors
-                <%= currentPath.includes('/auction') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' %>">
-                <i class="fas fa-gavel w-6"></i>
-                <span class="font-medium">Live Auction</span>
-            </a>
-
-            <button id="theme-toggle"
-                class="flex items-center w-full px-4 py-3 text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-lg transition-colors">
-                <i class="fas fa-moon w-6 dark:hidden"></i>
-                <i class="fas fa-sun w-6 hidden dark:block"></i>
-                <span class="font-medium">Theme Mode</span>
+    <div class="p-4 border-t border-emerald-900/50">
+        <form action="/auth/owner/signout" method="POST">
+            <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+            <button type="submit"
+                class="flex items-center w-full px-4 py-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
+                <i class="fas fa-sign-out-alt w-6"></i>
+                <span class="font-medium">Sign Out</span>
             </button>
-        </nav>
+        </form>
+    </div>
+</aside>
 
-        <div class="p-4 border-t border-emerald-900/50">
-            <form action="/auth/owner/signout" method="POST">
-                <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
-                <button type="submit"
-                    class="flex items-center w-full px-4 py-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
-                    <i class="fas fa-sign-out-alt w-6"></i>
-                    <span class="font-medium">Sign Out</span>
-                </button>
-            </form>
-        </div>
-    </aside>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.getElementById('owner-sidebar');
+        const overlay = document.getElementById('mobile-sidebar-overlay');
+        const toggleBtns = document.querySelectorAll('.mobile-toggle');
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const sidebar = document.getElementById('owner-sidebar');
-            const overlay = document.getElementById('mobile-sidebar-overlay');
-            const toggleBtns = document.querySelectorAll('.mobile-toggle');
-
-            function toggleSidebar() {
-                const isHidden = sidebar.classList.contains('-translate-x-full');
-                if (isHidden) {
-                    sidebar.classList.remove('-translate-x-full');
+        function toggleSidebar() {
+            const isHidden = sidebar.classList.contains('-translate-x-full');
+            if (isHidden) {
+                sidebar.classList.remove('-translate-x-full');
+                if (overlay) {
                     overlay.classList.remove('hidden');
                     setTimeout(() => overlay.classList.add('opacity-100'), 10);
-                    document.body.classList.add('overflow-hidden');
-                } else {
-                    sidebar.classList.add('-translate-x-full');
+                }
+                document.body.classList.add('overflow-hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                if (overlay) {
                     overlay.classList.remove('opacity-100');
                     setTimeout(() => overlay.classList.add('hidden'), 300);
-                    document.body.classList.remove('overflow-hidden');
                 }
+                document.body.classList.remove('overflow-hidden');
             }
+        }
 
-            toggleBtns.forEach(btn => btn.addEventListener('click', toggleSidebar));
+        toggleBtns.forEach(btn => btn.addEventListener('click', toggleSidebar));
+        if (overlay) {
             overlay.addEventListener('click', toggleSidebar);
+        }
 
-            const themeToggle = document.getElementById('theme-toggle');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', () => {
-                    if (document.documentElement.classList.contains('dark')) {
-                        document.documentElement.classList.remove('dark');
-                        localStorage.setItem('theme', 'light');
-                    } else {
-                        document.documentElement.classList.add('dark');
-                        localStorage.setItem('theme', 'dark');
-                    }
-                });
-            }
-        });
-    </script>
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        }
+    });
+</script>

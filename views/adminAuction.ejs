@@ -164,37 +164,35 @@
             pollState();
         });
 
-        channel.bind('new-player', (data) => {
-            location.reload();
-        });
-
+        channel.bind('new-player', () => location.reload());
         channel.bind('player-sold', (data) => {
             location.reload();
         });
-
-        channel.bind('player-unsold', (data) => {
-            location.reload();
-        });
+        channel.bind('player-unsold', () => location.reload());
 
         async function initSession() {
             try {
-                const res = await fetch('/api/auction/session/start', { method: 'POST' });
-                const data = await res.json();
-                if (data.success) location.reload();
-            } catch (err) { console.error(err); }
+                await fetch('/api/auction/session/start', { method: 'POST' });
+                location.reload();
+            } catch (e) {
+                console.error("Session start failed", e);
+            }
         }
 
         async function endSession() {
-            try {
-                const res = await fetch('/api/auction/session/end', { method: 'POST' });
-                const data = await res.json();
-                if (data.success) location.reload();
-            } catch (err) { console.error(err); }
+            if (confirm('End Session?')) {
+                try {
+                    await fetch('/api/auction/session/end', { method: 'POST' });
+                    location.reload();
+                } catch (e) {
+                    console.error("Session end failed", e);
+                }
+            }
         }
 
         async function pushToAuction(playerId) {
             try {
-                const res = await fetch('/api/auction/player/call', {
+                await fetch('/api/auction/player/call', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ playerId })
@@ -205,11 +203,13 @@
         }
 
         async function markSold() {
-            try {
-                const res = await fetch('/api/auction/sold', { method: 'POST' });
-                const data = await res.json();
-                if (!data.success) alert(data.message);
-            } catch (err) { console.error(err); }
+            if (confirm('Confirm Sale?')) {
+                try {
+                    await fetch('/api/auction/sold', { method: 'POST' });
+                } catch (e) {
+                    console.error("Mark sold failed", e);
+                }
+            }
         }
 
         async function markUnsold() {
