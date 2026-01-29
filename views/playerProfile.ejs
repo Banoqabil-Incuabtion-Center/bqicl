@@ -17,178 +17,262 @@
     </style>
 </head>
 
-<body class="text-slate-200 antialiased">
-    <div class="flex flex-col md:flex-row min-h-screen">
-        
-        <div class="shrink-0 flex">
-        <!-- <div class="flex h-screen overflow-hidden md:inline-block max-sm:hidden sm:hidden"> -->
-            <% if (locals.userType === 'admin') { %>
-                <%- include('partials/adminNavbar') %>
-            <% } else if (locals.userType === 'owner') { %>
-                <%- include('partials/ownerNavbar') %>
-            <% } %>
-        </div>
+<body class="bg-gray-900 text-gray-100 font-sans antialiased">
+    <% if (locals.userType==='admin' ) { %>
+        <%- include('layouts/admin_layout_header', { title: 'Player Dossier' }) %>
+            <% } else { %>
+                <%- include('layouts/owner_layout_header', { title: 'Contract Details' }) %>
+                    <% } %>
 
-        <!-- <main class="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto"> -->
-        <main class="flex-1 h-screen overflow-y-auto p-4 md:p-8 lg:p-12">
-
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-    <h1 class="text-3xl font-black text-white tracking-tight">Player Profile</h1>
-    
-    <% if (locals.userType === 'admin') { %>
-        <div class="flex items-center gap-3 w-full sm:w-auto">
-            <a href="/player/profile/edit/<%= player.hashedId %>" 
-               class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-blue-600/10 text-blue-500 font-bold text-sm border border-blue-600/20 hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2">
-                <i class="fas fa-edit"></i> Edit
-            </a>
-
-           
-
-            <button onclick="document.getElementById('deleteModal-<%= player.hashedId %>').showModal()" 
-                    class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-red-600/10 text-red-500 font-bold text-sm border border-red-600/20 hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2">
-                <i class="fas fa-trash"></i> Delete
-            </button>
-        </div>
-
-        <%- include("partials/deleteModal", { 
-            itemName: player.name, 
-            deleteUrl: "/player/profile/delete/" + player.hashedId, 
-            modalId: "deleteModal-" + player.hashedId 
-        }) %>
-    <% } %>
-</div>
-
- <% let bannerColor="bg-gray-800 border-gray-700" ; if (player.auctionCategory==="Platinum" )
-                            bannerColor="bg-gradient-to-r from-blue-950 to-blue-900 border-slate-300" ; else if
-                            (player.auctionCategory==="Diamond" )
-                            bannerColor="bg-gradient-to-r from-purple-950 to-purple-900 border-purple-500" ; else if
-                            (player.auctionCategory==="Gold" )
-                            bannerColor="bg-gradient-to-r from-yellow-950 to-yellow-900 border-yellow-500" ; else if
-                            (player.auctionCategory==="Silver" )
-                            bannerColor="bg-gradient-to-r from-slate-800 to-gray-800 border-gray-500" ; let
-                            tierClass="bg-gray-700 text-gray-300 border-gray-600" ; if
-                            (player.auctionCategory==="Platinum" )
-                            tierClass="bg-slate-200 text-slate-900 border-slate-300 font-bold shadow-blue-500/50" ; else
-                            if (player.auctionCategory==="Diamond" )
-                            tierClass="bg-purple-500 text-white border-purple-400 font-bold shadow-purple-500/50" ; else
-                            if (player.auctionCategory==="Gold" )
-                            tierClass="bg-yellow-500 text-black border-yellow-400 font-bold shadow-yellow-500/50" ; else
-                            if (player.auctionCategory==="Silver" )
-                            tierClass="bg-gray-200 text-gray-800 border-gray-400 font-bold shadow-gray-500/50" ; %>
-
-            <div class="player-banner <%= bannerColor %> rounded-[2.5rem] p-6 md:p-10 border border-slate-800 relative overflow-hidden mb-10 shadow-2xl">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[100px] rounded-full"></div>
-                
-                
-
-                <div class="relative flex flex-col lg:flex-row items-center gap-8">
-                    
-                    
-
-                    <div class="shrink-0">
-                        <div class="w-40 h-40 md:w-56 md:h-56 rounded-[2rem] overflow-hidden border-4 border-slate-800 shadow-2xl ring-1 ring-white/10">
-                            <% if (player.playerImage) { %>
-                                <img src="<%= player.playerImage %>" class="w-full h-full object-cover">
-                            <% } else { %>
-                                <!-- <div class="w-full h-full bg-slate-800 flex items-center justify-center text-6xl font-bold"><%= player.name.charAt(0) %></div> -->
-                                 <img src="/images/default-player.png" class="w-full h-full object-cover">
-                            <% } %>
-                        </div>
-                    </div>
-
-                    <div class="flex-1 text-center lg:text-left">
-                        <span class="inline-block px-4 py-1.5  text-xs font-black tracking-widest rounded-full <%= tierClass %> mb-4 uppercase">
-                            <%= player.auctionCategory %> 
-                        </span>
-                        <h1 class="text-4xl md:text-6xl font-black text-white mb-2 tracking-tight">
-                            <%= player.name %>
-                        </h1>
-                        <p class="text-slate-400 text-lg font-medium flex items-center justify-center lg:justify-start gap-3">
-                            <%= player.category %> <span class="text-slate-700">|</span> <span><%= player.campus || 'Not Set' %></span>
-                        </p>
-                    </div>
-
-                    <div class="flex flex-col gap-4 w-full lg:w-auto">
-                        <div class="glass-panel rounded-3xl p-6 text-center lg:text-right min-w-[200px]">
-                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Base Price</p>
-                            <p class="text-3xl font-black text-white">$<%= player.basePrice ? player.basePrice.toLocaleString() : '0' %></p>
-                        </div>
-                        
-                        <% if (player.isSold) { %>
-                            <div class="bg-cyan-500/20 border border-cyan-500/30 rounded-2xl p-4 text-center">
-                                <p class="text-[10px] font-black text-cyan-400 uppercase">Status</p>
-                                <p class="text-white font-bold tracking-tight">SOLD TO <%= player.teamId %></p>
+                        <div class="max-w-4xl mx-auto space-y-10">
+                            <div
+                                class="flex justify-between items-center bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-xl">
+                                <div>
+                                    <h1
+                                        class="text-3xl font-black text-gray-900 dark:text-white tracking-tighter uppercase">
+                                        Player Profile</h1>
+                                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+                                        Personnel Information System</p>
+                                </div>
+                                <% if (locals.userType==='admin' ) { %>
+                                    <div class="flex gap-4">
+                                        <a href="/player/profile/edit/<%= player.hashedId %>"
+                                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/30 flex items-center gap-2">
+                                            <i class="fas fa-edit"></i> Modify Record
+                                        </a>
+                                        <button
+                                            onclick="document.getElementById('deleteModal-<%= player.hashedId %>').showModal()"
+                                            class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2">
+                                            <i class="fas fa-trash"></i> Purge Data
+                                        </button>
+                                    </div>
+                                    <% } %>
                             </div>
-                        <% } %>
-                    </div>
-                </div>
-            </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                
-                <div class="lg:col-span-4 space-y-4">
-                    <h3 class="text-slate-500 text-sm font-bold uppercase tracking-widest ml-2">Connect</h3>
-                    
-                    <div class="glass-panel  rounded-2xl p-4 flex items-center gap-4 hover:bg-slate-800/50 transition-colors">
-                        <div class="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 shrink-0">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-[10px] text-slate-500 font-bold uppercase">Email Address</p>
-                            <p class="text-sm font-semibold truncate"><%= player.email %></p>
-                        </div>
-                    </div>
+                            <%- include("partials/deleteModal", { itemName: player.name,
+                                deleteUrl: "/player/profile/delete/" + player.hashedId, modalId: "deleteModal-" +
+                                player.hashedId }) %>
 
-                    <div class="glass-panel rounded-2xl p-4 flex items-center gap-4 hover:bg-slate-800/50 transition-colors">
-                        <div class="w-12 h-12 bg-emerald-600/20 rounded-xl flex items-center justify-center text-emerald-400 shrink-0">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] text-slate-500 font-bold uppercase">Phone Number</p>
-                            <p class="text-sm font-semibold"><%= player.phoneNumber || 'N/A' %></p>
-                        </div>
-                    </div>
-                </div>
+                                <div
+                                    class="bg-white dark:bg-gray-800 rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700">
+                                    <div
+                                        class="relative h-40 bg-gradient-to-r from-blue-600 to-indigo-700 overflow-hidden">
+                                        <div
+                                            class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20">
+                                        </div>
+                                        <div class="absolute inset-0 bg-black/10"></div>
 
-                <div class="lg:col-span-8">
-                    <h3 class="text-slate-500 text-sm font-bold uppercase tracking-widest mb-4 ml-2">Playing Statistics</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="glass-panel rounded-[2rem] p-8 border-l-4 ">
-                            <p class="text-yellow-500 text-xs font-black uppercase mb-4 tracking-widest">Batting</p>
-                            <div class="space-y-4">
-                                <div>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Style</p>
-                                    <p class="text-xl font-bold"><%= player.playingStyle %></p>
+                                        <div class="absolute top-8 right-8">
+                                            <% let tierClass="bg-white/20 text-white border-white/30" ; if
+                                                (player.auctionCategory==="Platinum" )
+                                                tierClass="bg-white text-blue-900 border-white font-black" ; else if
+                                                (player.auctionCategory==="Diamond" )
+                                                tierClass="bg-purple-500 text-white border-purple-400 font-black" ; else
+                                                if (player.auctionCategory==="Gold" )
+                                                tierClass="bg-yellow-500 text-black border-yellow-400 font-black" ; else
+                                                if (player.auctionCategory==="Silver" )
+                                                tierClass="bg-gray-200 text-gray-800 border-gray-400 font-black" ; %>
+                                                <span
+                                                    class="<%= tierClass %> px-6 py-2 rounded-2xl text-[10px] uppercase tracking-[0.2em] border backdrop-blur-md shadow-2xl">
+                                                    <%= player.auctionCategory %> TIER
+                                                </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="px-10 pb-12">
+                                        <div class="flex flex-col md:flex-row gap-10 items-start -mt-20 relative z-10">
+                                            <div class="relative group">
+                                                <div
+                                                    class="h-44 w-44 rounded-[3rem] border-8 border-white dark:border-gray-800 shadow-2xl overflow-hidden bg-gray-50 dark:bg-gray-700 flex items-center justify-center ring-4 ring-gray-100 dark:ring-gray-800/50 transition-transform group-hover:scale-105">
+                                                    <% if (player.playerImage) { %>
+                                                        <img src="<%= player.playerImage %>" alt="<%= player.name %>"
+                                                            class="h-full w-full object-cover">
+                                                        <% } else { %>
+                                                            <div
+                                                                class="h-full w-full flex items-center justify-center text-4xl font-black text-gray-200 dark:text-gray-600">
+                                                                <%= player.name.charAt(0).toUpperCase() %>
+                                                            </div>
+                                                            <% } %>
+                                                </div>
+                                            </div>
+
+                                            <div class="flex-1 pt-6 md:pt-24">
+                                                <h2
+                                                    class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white tracking-tighter uppercase mb-4">
+                                                    <%= player.name %>
+                                                </h2>
+                                                <div class="flex flex-wrap gap-3">
+                                                    <span
+                                                        class="bg-blue-600 text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/30">
+                                                        <%= player.category %>
+                                                    </span>
+                                                    <% if (player.isSold && player.teamId) { %>
+                                                        <span
+                                                            class="bg-emerald-500 text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/30">
+                                                            CONTRACTED: Team <%= player.teamId %>
+                                                        </span>
+                                                        <% } else { %>
+                                                            <span
+                                                                class="bg-amber-500 text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/30">
+                                                                FREE AGENT
+                                                            </span>
+                                                            <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+                                            <div
+                                                class="bg-gray-50 dark:bg-gray-900/50 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 relative overflow-hidden group">
+                                                <div
+                                                    class="absolute -right-4 -bottom-4 opacity-5 group-hover:scale-110 transition-transform">
+                                                    <i class="fas fa-money-bill-wave text-6xl text-blue-500"></i>
+                                                </div>
+                                                <p
+                                                    class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">
+                                                    Base Valuation</p>
+                                                <p class="text-3xl font-black text-blue-600 tracking-tighter">$<%=
+                                                        (player.basePrice) ? player.basePrice.toLocaleString() : "0" %>
+                                                </p>
+                                            </div>
+                                            <% if (player.isSold) { %>
+                                                <div
+                                                    class="bg-emerald-50 text-emerald-900 dark:bg-emerald-500/5 dark:text-emerald-400 p-6 rounded-3xl border border-emerald-100 dark:border-emerald-500/20 relative overflow-hidden group">
+                                                    <div
+                                                        class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform">
+                                                        <i class="fas fa-gavel text-6xl"></i>
+                                                    </div>
+                                                    <p
+                                                        class="text-emerald-600 dark:text-emerald-500 text-[10px] font-black uppercase tracking-widest mb-1">
+                                                        Acquisition Price</p>
+                                                    <p class="text-3xl font-black tracking-tighter">$<%=
+                                                            (player.soldPrice) ? player.soldPrice.toLocaleString() : "0"
+                                                            %>
+                                                    </p>
+                                                </div>
+                                                <% } %>
+                                        </div>
+
+                                        <div class="mt-12 space-y-12">
+                                            <div class="relative">
+                                                <h3
+                                                    class="text-gray-900 dark:text-white text-[10px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                                                    <i class="fas fa-id-badge text-blue-500"></i> Assignment & Location
+                                                </h3>
+                                                <div
+                                                    class="bg-gray-50 dark:bg-gray-900/50 p-8 rounded-3xl border border-gray-100 dark:border-gray-700">
+                                                    <p class="text-lg font-black text-gray-700 dark:text-gray-300">
+                                                        <%= player.campus || "UNASSIGNED BASE CAMPUS" %>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="relative">
+                                                <h3
+                                                    class="text-gray-900 dark:text-white text-[10px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                                                    <i class="fas fa-envelope-open-text text-blue-500"></i> Secure
+                                                    Communications
+                                                </h3>
+                                                <div
+                                                    class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50 dark:bg-gray-900/50 p-8 rounded-3xl border border-gray-100 dark:border-gray-700">
+                                                    <div>
+                                                        <p
+                                                            class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">
+                                                            Digital Address</p>
+                                                        <p class="text-gray-900 dark:text-white font-black">
+                                                            <%= player.email %>
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <p
+                                                            class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">
+                                                            Mobile Frequency</p>
+                                                        <p class="text-gray-900 dark:text-white font-black">
+                                                            <%= player.phoneNumber || "UNSPECIFIED" %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                                <div class="space-y-6">
+                                                    <h3
+                                                        class="text-gray-900 dark:text-white text-[10px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                                                        <i class="fas fa-baseball-bat-ball text-yellow-500"></i>
+                                                        Offensive Metrics
+                                                    </h3>
+                                                    <div
+                                                        class="bg-gray-50 dark:bg-gray-900/50 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 space-y-6">
+                                                        <div>
+                                                            <p
+                                                                class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">
+                                                                Batting Style</p>
+                                                            <p class="text-gray-900 dark:text-white font-black">
+                                                                <%= player.playingStyle %>
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <p
+                                                                class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">
+                                                                Tactical Position</p>
+                                                            <p class="text-gray-900 dark:text-white font-black">
+                                                                <%= player.battingOrder || "Flexible Order" %>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="space-y-6">
+                                                    <h3
+                                                        class="text-gray-900 dark:text-white text-[10px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                                                        <i class="fas fa-bowling-ball text-red-500"></i> Defensive
+                                                        Metrics
+                                                    </h3>
+                                                    <div
+                                                        class="bg-gray-50 dark:bg-gray-900/50 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 min-h-[160px] flex flex-col justify-center">
+                                                        <% if (player.bowlingType) { %>
+                                                            <div class="space-y-6">
+                                                                <div>
+                                                                    <p
+                                                                        class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">
+                                                                        Bowling Style</p>
+                                                                    <p class="text-gray-900 dark:text-white font-black">
+                                                                        <%= player.bowlingType %>
+                                                                    </p>
+                                                                </div>
+                                                                <div>
+                                                                    <p
+                                                                        class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">
+                                                                        Specialization</p>
+                                                                    <p class="text-900 dark:text-white font-black">
+                                                                        <%= (player.bowlingType &&
+                                                                            player.bowlingType.includes("Spin"))
+                                                                            ? "Precision Spinner" : "Force Pacer" %>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <% } else { %>
+                                                                <div class="text-center">
+                                                                    <i
+                                                                        class="fas fa-ban text-2xl text-gray-200 dark:text-gray-700 mb-2"></i>
+                                                                    <p
+                                                                        class="text-gray-400 text-[10px] font-black uppercase tracking-widest italic">
+                                                                        Non-Bowling Personnel</p>
+                                                                </div>
+                                                                <% } %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Order</p>
-                                    <p class="text-xl font-bold"><%= player.battingOrder || 'Open' %></p>
-                                </div>
-                            </div>
                         </div>
 
-                        <div class="glass-panel rounded-[2rem] p-8 border-l-4">
-                            <p class="text-red-500 text-xs font-black uppercase mb-4 tracking-widest">Bowling</p>
-                            <div class="space-y-4">
-                                <div>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Type</p>
-                                    <p class="text-xl font-bold truncate"><%= player.bowlingType || 'N/A' %></p>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Specialty</p>
-                                    <p class="text-xl font-bold"><%= player.bowlingType && player.bowlingType.includes("Spin") ? "Spinner" : "Pacer" %></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-           
-
-        </main>
-    </div>
+                        <% if (locals.userType==='admin' ) { %>
+                            <%- include('layouts/admin_layout_footer') %>
+                                <% } else { %>
+                                    <%- include('layouts/owner_layout_footer') %>
+                                        <% } %>
 </body>
 
 </html>

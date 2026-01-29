@@ -1,198 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('layouts/admin_layout_header', { title: 'Dashboard Overview' }) %>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Auction System</title>
-   <link href="/css/output.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Custom Scrollbar for Dark Theme */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
+    <div class="mb-8">
+        <h3 class="text-3xl font-bold text-gray-900 dark:text-white">Welcome back, <%= locals.admin ?
+                admin.name.split(' ')[0] : ' Admin' %>! 👋</h3>
+        <p class="text-gray-400 mt-2">Here is what is happening with your auction system today.</p>
+    </div>
 
-        ::-webkit-scrollbar-track {
-            background: #1f2937;
-        }
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
 
-        ::-webkit-scrollbar-thumb {
-            background: #4b5563;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6b7280;
-        }
-    </style>
-</head>
-
-<body
-    class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased transition-colors duration-300">
-
-    <!-- <div class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4 space-y-4">
-        <% if (locals.success_msg && locals.success_msg.length > 0) { %>
-            <div class="bg-green-500/10 border-l-4 border-green-500 text-green-400 p-4 rounded shadow-2xl backdrop-blur-sm flex items-center justify-between animate-bounce" role="alert">
-                <div><span class="font-bold">Success:</span> <%= success_msg %></div>
+        <a href="/auth/owner/register"
+            class="group relative bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 transition-all duration-300 hover:shadow-blue-500/20 hover:-translate-y-1">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <i class="fas fa-user-tie text-6xl text-blue-500"></i>
             </div>
-        <% } %>
-        <% if (locals.error_msg && locals.error_msg.length > 0) { %>
-            <div class="bg-red-500/10 border-l-4 border-red-500 text-red-400 p-4 rounded shadow-2xl backdrop-blur-sm flex items-center justify-between" role="alert">
-                <div><span class="font-bold">Error:</span> <%= error_msg %></div>
+            <div
+                class="h-12 w-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                <i class="fas fa-plus text-xl"></i>
             </div>
-        <% } %>
-    </div> -->
+            <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Add Owner</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Register a new team owner and assign
+                them a budget.</p>
+        </a>
 
-    <%- include('partials/alert') %>
+        <a href="/auth/player/register"
+            class="group relative bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20 hover:-translate-y-1">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <i class="fas fa-team text-6xl text-purple-500"></i>
+            </div>
+            <div
+                class="h-12 w-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4 text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                <i class="fas fa-user-plus text-xl"></i>
+            </div>
+            <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Add Player</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Create a player profile with stats
+                and base price.</p>
+        </a>
 
-        <div class="flex h-screen overflow-hidden">
+        <a href="/auth/team/register"
+            class="group relative bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20 hover:-translate-y-1">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <i class="fas fa-running text-6xl text-purple-500"></i>
+            </div>
+            <div
+                class="h-12 w-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4 text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                <i class="fa-solid fa-people-group text-xl"></i>
+            </div>
+            <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Add Team</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Create a team and appoint players.
+            </p>
+        </a>
 
-            <%- include('partials/adminNavbar') %>
+        <a href="/admin/auction"
+            class="group relative bg-gradient-to-br from-green-500/10 to-transparent dark:from-green-900 dark:to-gray-800 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-green-500/20 dark:border-green-700/50 hover:border-green-500 transition-all duration-300 hover:shadow-green-500/20 hover:-translate-y-1">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <i class="fas fa-gavel text-6xl text-green-500"></i>
+            </div>
+            <div
+                class="h-12 w-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4 text-green-400 group-hover:bg-green-500 group-hover:text-white transition-colors">
+                <i class="fas fa-play text-xl"></i>
+            </div>
+            <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Start Auction</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Initialize the auction console and
+                begin bidding.</p>
+        </a>
 
+    </div>
 
-                <div class="flex-1 flex flex-col overflow-hidden relative w-screen">
-
-                    <header
-                        class="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 md:px-8">
-                        <div class="flex items-center gap-4">
-                            <!-- Mobile Toggle -->
-                            <button class="mobile-toggle p-2 text-gray-400 hover:text-white md:hidden">
-                                <i class="fas fa-bars text-xl"></i>
-                            </button>
-                            <h2 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-200">Dashboard
-                                Overview</h2>
-                        </div>
-
-                        <div class="flex items-center space-x-4">
-                            <div class="text-right hidden sm:block">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">
-                                    <%= locals.admin ? admin.name : 'Admin' %>
-                                </p>
-                                <p class="text-xs text-gray-400">Super Administrator</p>
-                            </div>
-                            <div
-                                class="h-8 w-8 md:h-10 md:w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold border-2 border-gray-600">
-                                <%= locals.admin ? admin.name.charAt(0).toUpperCase() : 'A' %>
-                            </div>
-                        </div>
-                    </header>
-
-                    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900 p-8">
-
-                        <div class="mb-8">
-                            <h3 class="text-3xl font-bold text-gray-900 dark:text-white">Welcome back, <%= locals.admin
-                                    ? admin.name.split(' ')[0] : ' Admin' %>! 👋</h3>
-                            <p class="text-gray-400 mt-2">Here is what is happening with your auction system today.</p>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-
-                            <a href="/auth/owner/register"
-                                class="group relative bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 transition-all duration-300 hover:shadow-blue-500/20 hover:-translate-y-1">
-                                <div
-                                    class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <i class="fas fa-user-tie text-6xl text-blue-500"></i>
-                                </div>
-                                <div
-                                    class="h-12 w-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                                    <i class="fas fa-plus text-xl"></i>
-                                </div>
-                                <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Add Owner</h4>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Register a new team owner and assign
-                                    them a budget.</p>
-                            </a>
-
-                            <a href="/auth/player/register"
-                                class="group relative bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20 hover:-translate-y-1">
-                                <div
-                                    class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <i class="fas fa-team text-6xl text-purple-500"></i>
-                                </div>
-                                <div
-                                    class="h-12 w-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4 text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                                    <i class="fas fa-user-plus text-xl"></i>
-                                </div>
-                                <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Add Player</h4>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Create a player profile with stats
-                                    and base price.</p>
-                            </a>
-
-                            <a href="/auth/team/register"
-                                class="group relative bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20 hover:-translate-y-1">
-                                <div
-                                    class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <i class="fas fa-running text-6xl text-purple-500"></i>
-                                </div>
-                                <div
-                                    class="h-12 w-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4 text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                                    <i class="fa-solid fa-people-group text-xl"></i>
-                                </div>
-                                <h4 class="text-xl font-bold text-white mb-2">Add Team</h4>
-                                <p class="text-sm text-gray-400">Create a team and appoint players.</p>
-                            </a>
-
-                            <a href="/admin/auction"
-                                class="group relative bg-gradient-to-br from-green-500/10 to-transparent dark:from-green-900 dark:to-gray-800 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-green-500/20 dark:border-green-700/50 hover:border-green-500 transition-all duration-300 hover:shadow-green-500/20 hover:-translate-y-1">
-                                <div
-                                    class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <i class="fas fa-gavel text-6xl text-green-500"></i>
-                                </div>
-                                <div
-                                    class="h-12 w-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4 text-green-400 group-hover:bg-green-500 group-hover:text-white transition-colors">
-                                    <i class="fas fa-play text-xl"></i>
-                                </div>
-                                <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Start Auction</h4>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Initialize the auction console and
-                                    begin bidding.</p>
-                            </a>
-
-                        </div>
-
-                        <div
-                            class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg overflow-hidden">
-                            <div
-                                class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                                <h3 class="font-bold text-gray-800 dark:text-gray-200">Recent System Logs</h3>
-                                <button class="text-sm text-blue-500 hover:text-blue-400">View All</button>
-                            </div>
-                            <table class="w-full text-left text-gray-400">
-                                <thead
-                                    class="bg-gray-50 dark:bg-gray-700/50 text-xs uppercase text-gray-500 dark:text-gray-300">
-                                    <tr>
-                                        <th class="px-6 py-3">Action</th>
-                                        <th class="px-6 py-3">User</th>
-                                        <th class="px-6 py-3">Time</th>
-                                        <th class="px-6 py-3">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-                                    <tr class="hover:bg-gray-700/50 transition-colors">
-                                        <td class="px-6 py-4">System Login</td>
-                                        <td class="px-6 py-4">
-                                            <%= locals.admin ? admin.email : 'admin@system.com' %>
-                                        </td>
-                                        <td class="px-6 py-4">Just Now</td>
-                                        <td class="px-6 py-4"><span
-                                                class="px-2 py-1 text-xs font-semibold text-green-400 bg-green-900/30 rounded-full">Success</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:bg-gray-700/50 transition-colors">
-                                        <td class="px-6 py-4">Database Backup</td>
-                                        <td class="px-6 py-4">System</td>
-                                        <td class="px-6 py-4">2 hours ago</td>
-                                        <td class="px-6 py-4"><span
-                                                class="px-2 py-1 text-xs font-semibold text-blue-400 bg-blue-900/30 rounded-full">Completed</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </main>
-                </div>
+    <div
+        class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h3 class="font-bold text-gray-800 dark:text-gray-200">Recent System Logs</h3>
+            <button class="text-sm text-blue-500 hover:text-blue-400">View All</button>
         </div>
+        <table class="w-full text-left text-gray-400">
+            <thead class="bg-gray-50 dark:bg-gray-700/50 text-xs uppercase text-gray-500 dark:text-gray-300">
+                <tr>
+                    <th class="px-6 py-3">Action</th>
+                    <th class="px-6 py-3">User</th>
+                    <th class="px-6 py-3">Time</th>
+                    <th class="px-6 py-3">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                <tr class="hover:bg-gray-700/50 transition-colors">
+                    <td class="px-6 py-4">System Login</td>
+                    <td class="px-6 py-4">
+                        <%= locals.admin ? admin.email : 'admin@system.com' %>
+                    </td>
+                    <td class="px-6 py-4">Just Now</td>
+                    <td class="px-6 py-4"><span
+                            class="px-2 py-1 text-xs font-semibold text-green-400 bg-green-900/30 rounded-full">Success</span>
+                    </td>
+                </tr>
+                <tr class="hover:bg-gray-700/50 transition-colors">
+                    <td class="px-6 py-4">Database Backup</td>
+                    <td class="px-6 py-4">System</td>
+                    <td class="px-6 py-4">2 hours ago</td>
+                    <td class="px-6 py-4"><span
+                            class="px-2 py-1 text-xs font-semibold text-blue-400 bg-blue-900/30 rounded-full">Completed</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-</body>
-
-</html>
+    <%- include('layouts/admin_layout_footer') %>
