@@ -7,7 +7,7 @@
     <title>
         <%= title %> | Auction System
     </title>
-    <script src="https://cdn.tailwindcss.com"></script>
+   <link href="/css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         ::-webkit-scrollbar {
@@ -29,7 +29,8 @@
     </style>
 </head>
 
-<body class="bg-gray-900 text-gray-100 font-sans antialiased">
+<body
+    class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased transition-colors duration-300">
 
     <!-- <div class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4 space-y-4">
         <% if (locals.success_msg && locals.success_msg.length > 0) { %>
@@ -57,12 +58,14 @@
                 <div class="flex-1 flex flex-col overflow-hidden relative w-screen">
 
                     <header
-                        class="h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4 md:px-8 shrink-0">
-                        <div class="flex items-center gap-4 text-white">
-                            <button class="mobile-toggle p-2 text-gray-400 hover:text-white md:hidden">
+                        class="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 md:px-8 shrink-0">
+                        <div class="flex items-center gap-4 text-gray-900 dark:text-white">
+                            <button
+                                class="mobile-toggle p-2 text-gray-400 hover:text-gray-600 dark:hover:text-white md:hidden">
                                 <i class="fas fa-bars text-xl"></i>
                             </button>
-                            <h2 class="text-lg md:text-xl font-semibold text-gray-200">Manage Teams</h2>
+                            <h2 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-200">Manage Teams
+                            </h2>
                         </div>
                         <a href="/auth/team/register"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all shadow-md shrink-0">
@@ -71,35 +74,37 @@
                         </a>
                     </header>
 
-                    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900 p-8">
+                    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900 p-8">
 
-                        <div class="bg-gray-800 rounded-xl border border-gray-700 shadow-xl overflow-hidden">
+                        <div
+                            class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden">
 
                             <% if (teams.length===0) { %>
                                 <div class="p-12 text-center text-gray-500">
                                     <div
-                                        class="mb-4 bg-gray-700/50 h-20 w-20 rounded-full flex items-center justify-center mx-auto">
+                                        class="mb-4 bg-gray-100 dark:bg-gray-700/50 h-20 w-20 rounded-full flex items-center justify-center mx-auto">
                                         <i class="fas fa-shield-alt text-3xl"></i>
                                     </div>
-                                    <h4 class="text-xl font-medium text-white">No Teams Found</h4>
+                                    <h4 class="text-xl font-medium text-gray-900 dark:text-white">No Teams Found</h4>
                                     <p class="mt-2 text-sm">Get started by creating a new team franchise.</p>
                                 </div>
                                 <% } else { %>
                                     <div class="overflow-x-auto">
                                         <table class="w-full text-left border-collapse">
                                             <thead
-                                                class="bg-gray-700/50 text-xs uppercase text-gray-400 font-semibold tracking-wider">
+                                                class="bg-gray-50 dark:bg-gray-700/50 text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider">
                                                 <tr>
                                                     <th class="px-6 py-4">Team Name</th>
                                                     <th class="px-6 py-4">Assigned Owner</th>
                                                     <th class="px-6 py-4 text-right">Actions</th>
                                                 </tr>
                                             </thead>
-                                            <tbody class="divide-y divide-gray-700">
+                                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                                                 <% teams.forEach(team=> { %>
                                                     <% const teamOwner=team.Owner || team.owner; %>
 
-                                                        <tr class="hover:bg-gray-700/30 transition-colors">
+                                                        <tr
+                                                            class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
 
                                                             <td class="px-6 py-4 whitespace-nowrap">
                                                                 <div class="flex items-center">
@@ -114,7 +119,8 @@
                                                                                     <% } %>
                                                                     </div>
                                                                     <div class="ml-4">
-                                                                        <div class="text-sm font-medium text-white">
+                                                                        <div
+                                                                            class="text-sm font-medium text-gray-900 dark:text-white">
                                                                             <%= team.name %>
                                                                         </div>
 
@@ -138,7 +144,7 @@
                                                                         </div>
                                                                         <div>
                                                                             <div
-                                                                                class="text-sm text-gray-300 font-medium">
+                                                                                class="text-sm text-gray-600 dark:text-gray-300 font-medium">
                                                                                 <%= teamOwner.name %>
                                                                             </div>
                                                                         </div>
@@ -154,7 +160,7 @@
                                                             <td
                                                                 class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                                 <a href="/team/profile/<%= team.hashedId %>"
-                                                                    class="text-white bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded-lg text-xs transition-colors border border-gray-600 inline-block">
+                                                                    class="text-gray-600 dark:text-white bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 px-3 py-1.5 rounded-lg text-xs transition-colors border border-gray-200 dark:border-gray-600 inline-block">
                                                                     View Profile
                                                                 </a>
                                                             </td>

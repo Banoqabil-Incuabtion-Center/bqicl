@@ -94,8 +94,8 @@ playerController.renderAllPlayers = async (req, res) => {
          return p;
       });
 
-      res.render("players", { 
-         title: "All Players", 
+      res.render("players", {
+         title: "All Players",
          players: securePlayers,
          currentPage: page,
          totalPages: totalPages,
@@ -238,6 +238,64 @@ playerController.handleDelete = async (req, res) => {
       console.error("Error deleting player:", error);
       req.flash("error", "Failed to delete player");
       return res.redirect(`/player/playerslist/${req.params.id}`);
+   }
+};
+
+playerController.renderPublicPlayers = async (req, res) => {
+   try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = 12;
+      const offset = (page - 1) * limit;
+
+      const { count, rows: players } = await Player.findAndCountAll({
+         limit: limit,
+         offset: offset,
+         order: [['createdAt', 'DESC']]
+      });
+
+      const totalPages = Math.ceil(count / limit);
+      const securePlayers = players.map(p => {
+         const plain = p.get({ plain: true });
+         plain.hashedId = encodeId(plain.id);
+         return plain;
+      });
+
+      res.render("publicPlayers", {
+         title: "ICL Season 2026 - Players",
+         players: securePlayers,
+         currentPage: page,
+         totalPages: totalPages
+      });
+   } catch (error) {
+      console.error("Public players error:", error);
+      res.status(500).render("error", { title: "Error", message: "Error loading players" });
+   }
+};
+
+playerController.renderPublicPlayerProfile = async (req, res) => {
+   try {
+      const Id = req.params.id;
+      const playerId = decodeId(Id);
+
+      if (!playerId) {
+         return res.status(400).render("error", { title: "Error", message: "Invalid Player ID" });
+      }
+
+      const player = await Player.findByPk(playerId);
+      if (!player) {
+         return res.status(404).render("error", { title: "Error", message: "Player not found" });
+      }
+
+      const playerData = player.get({ plain: true });
+      playerData.hashedId = Id;
+
+      res.render("publicPlayerProfile", {
+         title: `${playerData.name} - Player Profile`,
+         player: playerData
+      });
+   } catch (error) {
+      console.error("Public player profile error:", error);
+      res.status(500).render("error", { title: "Error", message: "Error loading player profile" });
    }
 };
 
