@@ -1,0 +1,26 @@
+<header
+    class="h-16 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-emerald-900/50 flex items-center justify-between px-4 md:px-8">
+    <div class="flex items-center gap-4">
+        <!-- Mobile Toggle -->
+        <button class="mobile-toggle p-2 text-gray-400 hover:text-emerald-400 md:hidden">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+        <h2 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-emerald-400">
+            <%= typeof title !=='undefined' ? title : 'Owner Dashboard' %>
+        </h2>
+    </div>
+
+    <div class="flex items-center space-x-4">
+        <div class="text-right hidden sm:block">
+            <p class="text-sm font-medium text-gray-900 dark:text-emerald-400">
+                <%= typeof owner !=='undefined' ? owner.name : (locals.user ? user.name : 'Owner' ) %>
+            </p>
+            <p class="text-xs text-gray-500 uppercase tracking-wider">Team Franchise Owner</p>
+        </div>
+        <div
+            class="h-8 w-8 md:h-10 md:w-10 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold border-2 border-emerald-400/30">
+            <%= typeof owner !=='undefined' ? owner.name.charAt(0).toUpperCase() : (locals.user ?
+                user.name.charAt(0).toUpperCase() : 'O' ) %>
+        </div>
+    </div>
+</header>
