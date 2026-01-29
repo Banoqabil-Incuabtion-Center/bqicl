@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+   <link href="/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --icl-green: #38b000;
+            --icl-green-dark: #008000;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .dark .glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        html:not(.dark) .glass {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .icl-gradient-text {
+            background: linear-gradient(135deg, #70e000, #38b000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sport-grid {
+            background-image: radial-gradient(rgba(56, 176, 0, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        html:not(.dark) .sport-grid {
+            background-image: radial-gradient(rgba(0, 128, 0, 0.1) 1px, transparent 1px);
+        }
+
+        .team-card:hover .team-logo {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body
+    class="text-gray-900 dark:text-gray-100 bg-white dark:bg-[#050a05] sport-grid min-h-screen flex flex-col pt-24 transition-colors duration-300">
+    <%- include('partials/publicNavbar') %>
+
+        <main class="max-w-7xl mx-auto px-4 py-12 flex-grow w-full">
+            <header class="text-center mb-16">
+                <h1 class="text-5xl md:text-7xl font-black italic uppercase icl-gradient-text mb-4">The Franchises</h1>
+                <p class="text-gray-600 dark:text-gray-400 font-medium">Behold the legendary teams battling for the
+                    championship.</p>
+            </header>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <% teams.forEach(team=> { %>
+                    <div
+                        class="team-card glass rounded-[2.5rem] p-8 flex flex-col items-center text-center group hover:bg-lime-500/5 transition-all border border-black/5 dark:border-white/5 hover:border-lime-500/20">
+                        <div
+                            class="team-logo w-40 h-40 bg-white rounded-3xl mb-8 flex items-center justify-center p-4 shadow-2xl transition-transform duration-500 overflow-hidden relative">
+                            <img src="<%= team.teamLogo || '/images/default-team.png' %>" alt="<%= team.name %>"
+                                class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500">
+                        </div>
+                        <h3
+                            class="text-2xl font-black italic uppercase mb-2 tracking-tight text-gray-900 dark:text-white">
+                            <%= team.name %>
+                        </h3>
+                        <div class="h-1 w-12 bg-lime-500 rounded-full mb-6"></div>
+
+                        <div
+                            class="w-full bg-black/5 dark:bg-white/5 rounded-2xl p-4 border border-black/5 dark:border-white/5">
+                            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-1">Franchise
+                                Owner
+                            </p>
+                            <p class="text-sm font-bold text-gray-700 dark:text-gray-200">
+                                <%= team.owner ? team.owner.name : 'Unassigned' %>
+                            </p>
+                        </div>
+
+                        <a href="/teams/<%= team.hashedId %>"
+                            class="mt-8 text-[10px] font-black uppercase tracking-widest text-lime-400 hover:text-lime-300 transition-colors flex items-center gap-2">
+                            View Squad <i class="fas fa-arrow-right text-[8px]"></i>
+                        </a>
+                    </div>
+                    <% }) %>
+            </div>
+        </main>
+
+        <footer
+            class="py-12 border-t border-black/5 dark:border-white/5 mt-20 opacity-50 text-center text-xs font-bold tracking-[0.2em] uppercase text-gray-400">
+            &copy; <%= new Date().getFullYear() %> BICC INCUBATION CENTER
+        </footer>
+</body>
+
+</html>

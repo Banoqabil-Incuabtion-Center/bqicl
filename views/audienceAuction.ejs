@@ -1,284 +1,218 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <title>LIVE AUCTION | PROJECTOR VIEW</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .glow {
-            text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
-        }
-
-        .bg-animate {
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
-        }
-    </style>
-</head>
-
-<body class="bg-animate h-screen w-screen flex flex-col items-center justify-center text-white overflow-hidden">
-
-    <div id="waiting-ui" class="text-center px-6">
-        <h1 class="text-6xl md:text-8xl font-black tracking-tighter animate-pulse mb-4 text-gray-700">AUCTIONPRO</h1>
-        <p class="text-lg md:text-2xl text-blue-500 font-mono tracking-widest uppercase">Waiting for Session to Begin
-        </p>
-    </div>
-
-    <div id="active-ui"
-        class="hidden w-full max-w-7xl px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center py-10 md:py-0">
-        <div class="relative w-full aspect-square md:aspect-auto">
-            <div class="absolute -inset-4 bg-blue-500/20 blur-3xl rounded-full"></div>
-            <img id="proj-img" src=""
-                class="relative h-full md:h-[500px] lg:h-[600px] w-full object-cover rounded-3xl border-4 md:border-8 border-white/10 shadow-2xl">
-        </div>
-        <div class="space-y-6 md:space-y-8 text-center lg:text-left">
-            <div>
-                <h2 id="proj-name"
-                    class="text-5xl md:text-7xl lg:text-8xl font-black leading-none mb-4 uppercase break-words">---</h2>
-                <p id="proj-cat"
-                    class="text-xl md:text-2xl lg:text-3xl text-blue-400 font-bold uppercase tracking-widest">---</p>
-            </div>
-            <div class="bg-black/40 backdrop-blur-md p-6 md:p-10 rounded-3xl border border-white/10 shadow-2xl">
-                <p class="text-gray-400 text-lg md:text-xl font-bold uppercase mb-2">Current Bid</p>
-                <p id="proj-bid" class="text-7xl md:text-8xl lg:text-9xl font-black text-green-400 glow leading-none">$0
-                </p>
-                <div id="proj-bidder"
-                    class="mt-4 md:mt-6 text-2xl md:text-3xl font-bold text-white uppercase italic truncate">---</div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // DOM elements
-        const waitingUI = document.getElementById('waiting-ui');
-        const activeUI = document.getElementById('active-ui');
-        const projImg = document.getElementById('proj-img');
-        const projName = document.getElementById('proj-name');
-        const projCat = document.getElementById('proj-cat');
-        const projBid = document.getElementById('proj-bid');
-        const projBidder = document.getElementById('proj-bidder');
-
-        // Update UI from state
-        function updateUI(data) {
-            if (!data.isSessionActive || !data.auction) {
-                // Show waiting state
-                waitingUI.classList.remove('hidden');
-                activeUI.classList.add('hidden');
-                return;
-            }
-
-            // Show active state
-            waitingUI.classList.add('hidden');
-            activeUI.classList.remove('hidden');
-
-            // Update player info
-            const player = data.auction.player;
-            if (player) {
-                projName.textContent = player.name;
-                projCat.textContent = player.category || '---';
-                projImg.src = player.playerImage || '';
-            }
-
-            // Update bid info
-            projBid.textContent = '$' + data.auction.currentBid.toLocaleString();
-
-            // Update highest bidder
-            if (data.auction.highestBidder) {
-                projBidder.textContent = data.auction.highestBidder.name;
-            } else {
-                projBidder.textContent = 'No bids yet';
-            }
-        }
-
-        // Poll for state updates
-        async function pollState() {
-            try {
-                const res = await fetch('/api/auction/state');
-                const data = await res.json();
-                updateUI(data);
-            } catch (err) {
-                console.error('Polling error:', err);
-            }
-        }
-
-        // Start polling
-        pollState(); // Initial fetch
-        setInterval(pollState, 1000);
-    </script>
-</body>
-
-</html> -->
-
-<!-- Suraish added by GEMINI -->
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIVE AUCTION | RESPONSIVE ELITE VIEW</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>LIVE AUCTION | ICL Season 2026</title>
+   <link href="/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;700;900&display=swap');
-
         :root {
-            --accent: #3b82f6;
-            --glow-color: rgba(74, 222, 128, 0.8);
+            --icl-green: #38b000;
+            --glow-color: rgba(56, 176, 0, 0.6);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
-            min-height: 100vh;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            transition: background 0.3s ease;
         }
 
-        .font-heading { font-family: 'Orbitron', sans-serif; }
+        .dark body {
+            background: radial-gradient(circle at center, #050a05 0%, #000000 100%);
+        }
 
-        .player-card {
+        html:not(.dark) body {
+            background: radial-gradient(circle at center, #f0fff0 0%, #ffffff 100%);
+        }
+
+        .font-heading {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .glass {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* RESPONSIVE TEXT SCALING */
+        .dark .glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        html:not(.dark) .glass {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
         .responsive-bid {
-            font-size: clamp(4rem, 15vw, 12rem);
+            font-size: clamp(3rem, 12vw, 8rem);
             line-height: 1;
             text-shadow: 0 0 40px var(--glow-color);
         }
 
         .responsive-name {
-            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-size: clamp(2rem, 7vw, 4rem);
             line-height: 1.1;
         }
 
-        /* Floating animation */
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
-        .float-anim { animation: float 5s ease-in-out infinite; }
+
+        .float-anim {
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .sport-grid {
+            background-image: radial-gradient(rgba(56, 176, 0, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        html:not(.dark) .sport-grid {
+            background-image: radial-gradient(rgba(0, 128, 0, 0.1) 1px, transparent 1px);
+        }
     </style>
 </head>
-<body class="p-4 md:p-8">
 
-    <div id="waiting-ui" class="text-center px-4">
-        <h1 class="text-6xl md:text-9xl font-heading font-black tracking-tighter animate-pulse mb-4 text-gray-800">AUCTIONPRO</h1>
-        <p class="text-lg md:text-2xl text-blue-500 font-mono tracking-[0.2em] md:tracking-[0.5em] uppercase">Searching for Next Player...</p>
-    </div>
+<body
+    class="text-gray-900 dark:text-white sport-grid min-h-screen flex flex-col pt-24 overflow-x-hidden transition-colors duration-300">
+    <%- include('partials/publicNavbar') %>
 
-    <div id="active-ui" class="hidden w-full max-w-6xl flex flex-col items-center gap-6 md:gap-10">
-        
-        <div class="player-card float-anim w-full rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 relative overflow-hidden">
-            
-            <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-                <div class="relative w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 flex-shrink-0">
-                    <div class="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
-                    <img id="proj-img" src="" 
-                         class="relative w-full h-full object-cover rounded-2xl md:rounded-3xl border-2 border-white/10 shadow-2xl transition-opacity duration-500">
+        <main class="flex-grow flex items-center justify-center p-4 md:p-8">
+            <div id="waiting-ui" class="text-center px-4">
+                <h1
+                    class="text-6xl md:text-9xl font-heading font-black tracking-tighter animate-pulse mb-4 text-gray-300 dark:text-gray-800 uppercase italic">
+                    ICL AUCTION</h1>
+                <p
+                    class="text-lg md:text-2xl text-lime-500 font-mono tracking-[0.2em] md:tracking-[0.5em] uppercase italic">
+                    Waiting for Next Player...</p>
+            </div>
+
+            <div id="active-ui" class="hidden w-full max-w-6xl flex flex-col items-center gap-8 py-6">
+                <div
+                    class="glass float-anim w-full rounded-[3rem] lg:rounded-[4rem] p-8 md:p-12 relative overflow-hidden border border-black/5 dark:border-white/10 shadow-emerald-500/5 shadow-2xl">
+                    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                        <div class="relative w-56 h-56 md:w-80 md:h-80 flex-shrink-0">
+                            <div class="absolute inset-0 bg-lime-500/20 blur-3xl rounded-full"></div>
+                            <img id="proj-img" src=""
+                                class="relative w-full h-full object-cover rounded-[2rem] md:rounded-[3rem] border-2 border-white/10 shadow-2xl transition-opacity duration-300">
+                        </div>
+
+                        <div class="flex-grow w-full text-center lg:text-left space-y-8">
+                            <div>
+                                <h2 id="proj-name"
+                                    class="responsive-name font-heading font-black uppercase tracking-tighter mb-4 italic">
+                                    ---</h2>
+                                <div class="h-1.5 w-32 bg-lime-500 rounded-full mx-auto lg:mx-0"></div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 md:gap-8">
+                                <div class="glass p-4 rounded-2xl border border-white/5 bg-white/2">
+                                    <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1">
+                                        Category</p>
+                                    <p id="proj-cat"
+                                        class="text-sm md:text-xl font-heading font-bold text-lime-400 truncate uppercase">
+                                        ---</p>
+                                </div>
+                                <div class="glass p-4 rounded-2xl border border-white/5 bg-white/2">
+                                    <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1">
+                                        Current Leader</p>
+                                    <p id="proj-bidder"
+                                        class="text-sm md:text-xl font-heading font-bold text-gray-900 dark:text-white truncate italic uppercase">
+                                        ---</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="flex-grow w-full text-center lg:text-left space-y-6 md:space-y-8">
-                    <div>
-                        <h2 id="proj-name" class="responsive-name font-heading font-black uppercase tracking-tighter mb-2">---</h2>
-                        <div class="h-1.5 w-24 md:w-32 bg-blue-500 rounded-full mx-auto lg:mx-0"></div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4 md:gap-8 text-left">
-                        <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
-                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Category</p>
-                            <p id="proj-cat" class="text-sm md:text-xl font-heading font-bold text-blue-400 truncate">---</p>
-                        </div>
-                        <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
-                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Campus</p>
-                            <p id="proj-campus" class="text-sm md:text-xl font-heading font-bold text-white truncate">---</p>
-                        </div>
-                        <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
-                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Base Price</p>
-                            <p id="proj-base" class="text-sm md:text-xl font-heading font-bold text-yellow-500">$0</p>
-                        </div>
-                        <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
-                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Current Leader</p>
-                            <p id="proj-bidder" class="text-sm md:text-xl font-heading font-bold text-blue-200 truncate italic">---</p>
-                        </div>
+                <div class="w-full text-center">
+                    <p
+                        class="text-lime-400/60 text-sm md:text-xl font-black uppercase tracking-[0.3em] md:tracking-[0.5em] mb-4">
+                        Current Bid</p>
+                    <div id="proj-bid"
+                        class="responsive-bid font-heading font-black text-lime-500 flex justify-center items-center italic">
+                        $0
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
 
-        <div class="w-full text-center px-4">
-            <p class="text-blue-400/60 text-sm md:text-xl font-bold uppercase tracking-[0.3em] md:tracking-[0.5em] mb-2">Current Bid Price</p>
-            <div id="proj-bid" class="responsive-bid font-heading font-black text-green-400 flex justify-center items-center">
-                $0
-            </div>
-        </div>
-    </div>
+        <footer
+            class="py-12 border-t border-black/5 dark:border-white/5 mt-auto opacity-50 text-center text-xs font-bold tracking-[0.2em] uppercase text-gray-400">
+            &copy; <%= new Date().getFullYear() %> BICC INCUBATION CENTER
+        </footer>
 
-    <script>
-        const waitingUI = document.getElementById('waiting-ui');
-        const activeUI = document.getElementById('active-ui');
-        const projImg = document.getElementById('proj-img');
-        const projName = document.getElementById('proj-name');
-        const projCat = document.getElementById('proj-cat');
-        const projCampus = document.getElementById('proj-campus');
-        const projBase = document.getElementById('proj-base');
-        const projBid = document.getElementById('proj-bid');
-        const projBidder = document.getElementById('proj-bidder');
+        <script>
+            const waitingUI = document.getElementById('waiting-ui');
+            const activeUI = document.getElementById('active-ui');
+            const projImg = document.getElementById('proj-img');
+            const projName = document.getElementById('proj-name');
+            const projCat = document.getElementById('proj-cat');
+            const projBid = document.getElementById('proj-bid');
+            const projBidder = document.getElementById('proj-bidder');
 
-        function updateUI(data) {
-            if (!data.isSessionActive || !data.auction || !data.auction.player) {
-                waitingUI.classList.remove('hidden');
-                activeUI.classList.add('hidden');
-                return;
+            function updateUI(data) {
+                if (!data.isSessionActive || !data.auction || !data.auction.player) {
+                    waitingUI.classList.remove('hidden');
+                    activeUI.classList.add('hidden');
+                    return;
+                }
+
+                waitingUI.classList.add('hidden');
+                activeUI.classList.remove('hidden');
+
+                const player = data.auction.player;
+                const currentBid = data.auction.currentBid;
+
+                projName.textContent = player.name;
+                projCat.textContent = player.category || 'PLAYER';
+
+                if (projImg.src !== player.playerImage) {
+                    projImg.style.opacity = '0';
+                    setTimeout(() => {
+                        projImg.src = player.playerImage || '/images/default-player.png';
+                        projImg.style.opacity = '1';
+                    }, 300);
+                }
+
+                projBid.textContent = '$' + currentBid.toLocaleString();
+
+                if (data.auction.highestBidder) {
+                    projBidder.textContent = data.auction.highestBidder.name;
+                    projBidder.classList.remove('opacity-30');
+                } else {
+                    projBidder.textContent = 'NO BIDS';
+                    projBidder.classList.add('opacity-30');
+                }
             }
 
-            waitingUI.classList.add('hidden');
-            activeUI.classList.remove('hidden');
-
-            const player = data.auction.player;
-            const currentBid = data.auction.currentBid;
-            
-            projName.textContent = player.name;
-            projCat.textContent = player.category || 'PLAYER';
-            projCampus.textContent = player.campus || 'N/A';
-            projBase.textContent = '$' + (player.basePrice || 0).toLocaleString();
-            
-            if (projImg.src !== player.playerImage) {
-                projImg.style.opacity = '0';
-                setTimeout(() => {
-                    projImg.src = player.playerImage || '/images/default-player.png';
-                    projImg.style.opacity = '1';
-                }, 300);
+            async function pollState() {
+                try {
+                    const res = await fetch('/api/auction/state');
+                    const data = await res.json();
+                    updateUI(data);
+                } catch (err) {
+                    console.error('Polling error:', err);
+                }
             }
 
-            projBid.textContent = '$' + currentBid.toLocaleString();
-
-            if (data.auction.highestBidder) {
-                projBidder.textContent = data.auction.highestBidder.name;
-                projBidder.classList.remove('opacity-30');
-            } else {
-                projBidder.textContent = 'NO BIDS';
-                projBidder.classList.add('opacity-30');
-            }
-        }
-
-        async function pollState() {
-            try {
-                const res = await fetch('/api/auction/state');
-                const data = await res.json();
-                updateUI(data);
-            } catch (err) {
-                console.error('Polling error:', err);
-            }
-        }
-
-        pollState();
-        setInterval(pollState, 1000);
-    </script>
+            pollState();
+            setInterval(pollState, 1000);
+        </script>
 </body>
-</html>
 
+</html>

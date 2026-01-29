@@ -242,4 +242,64 @@ teamController.handleDelete = async (req, res) => {
     return res.redirect(`/team/teamslist/${req.params.id}`);
   }
 };
+teamController.renderPublicTeams = async (req, res) => {
+  try {
+    const teams = await Team.findAll({
+      include: [{ model: Owner, as: "owner" }],
+      order: [['name', 'ASC']]
+    });
+
+    const secureTeams = teams.map(t => {
+      const plain = t.get({ plain: true });
+      plain.hashedId = encodeId(plain.id);
+      return plain;
+    });
+
+    res.render("publicTeams", {
+      title: "ICL Season 2026 - Teams",
+      teams: secureTeams
+    });
+  } catch (error) {
+    console.error("Public teams error:", error);
+    res.status(500).render("error", { title: "Error", message: "Error loading teams" });
+  }
+};
+
+teamController.renderPublicTeamProfile = async (req, res) => {
+  try {
+    const Id = req.params.id;
+    const teamId = decodeId(Id);
+
+    if (!teamId) {
+      return res.status(400).render("error", { title: "Error", message: "Invalid Team ID" });
+    }
+
+    const team = await Team.findByPk(teamId, {
+      include: [
+        { model: Owner, as: "owner" },
+        { model: db.Player, as: "players" }
+      ],
+    });
+
+    if (!team) {
+      return res.status(404).render("error", { title: "Error", message: "Team not found" });
+    }
+
+    const teamData = team.get({ plain: true });
+    teamData.hashedId = Id;
+    teamData.Players = (teamData.players || []).map(p => ({
+      ...p,
+      hashedId: encodeId(p.id)
+    }));
+
+    res.render("publicTeamProfile", {
+      title: `${teamData.name} - Team Profile`,
+      team: teamData
+    });
+  } catch (error) {
+    console.error("Public team profile error:", error);
+    res.status(500).render("error", { title: "Error", message: "Error loading team profile" });
+  }
+};
+
 export default teamController;
