@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | Auction System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-900 min-h-screen flex items-center justify-center relative font-sans antialiased">
+
+  <div class="absolute top-8 right-8">
+    <a href="/auth/owner/signin" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group">
+      <span class="font-medium">Owner Sign In</span>
+      <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+    </a>
+  </div>
+
+  <%- include('partials/alert') %>
+
+    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-700 w-full max-w-sm">
+
+      <div class="text-center mb-6">
+        <h1 class="text-3xl font-bold text-white">Admin Sign In</h1>
+        <p class="text-gray-400 mt-2">Please sign in to your dashboard</p>
+      </div>
+
+      <form action="/auth/admin/signin" method="POST" class="space-y-5">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-300">Email Address</label>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <input type="email" name="email" id="email" required value="<%= locals.oldInput ? oldInput.email : '' %>"
+              class="block w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-md focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 sm:text-sm transition duration-200"
+              placeholder="admin@example.com">
+          </div>
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <input type="password" name="password" id="password" required
+              class="block w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-md focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 sm:text-sm transition duration-200"
+              placeholder="••••••••">
+          </div>
+        </div>
+
+        <button type="submit"
+          class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-lg hover:shadow-blue-500/30 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors transform hover:scale-[1.02]">
+          Sign In
+        </button>
+      </form>
+
+      <div class="mt-8 pt-6 border-t border-gray-700">
+
+        <div class="flex flex-col pl-4">
+          <span class="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Franchise Owner</span>
+          <a href="/auth/owner/signin"
+            class="text-sm text-blue-500 hover:text-blue-400 font-semibold transition-colors">
+            Owner Sign Up
+          </a>
+        </div>
+      </div>
+    </div>
+
+</body>
+
+</html>
+

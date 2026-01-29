@@ -62,7 +62,9 @@ auctionApiController.getState = async (req, res) => {
                     name: activeAuction.currentPlayer.name,
                     category: activeAuction.currentPlayer.category,
                     basePrice: activeAuction.currentPlayer.basePrice,
-                    playerImage: activeAuction.currentPlayer.playerImage
+                    playerImage: activeAuction.currentPlayer.playerImage,
+                    campus: activeAuction.currentPlayer.campus,
+                    auctionCategory: activeAuction.currentPlayer.auctionCategory,
                 } : null,
                 currentBid: activeAuction.currentBid,
                 highestBidder: activeAuction.currentHighestBidder ? {
@@ -176,8 +178,10 @@ auctionApiController.callPlayer = async (req, res) => {
             name: player.name,
             image: player.playerImage,
             basePrice: player.basePrice,
-            category: player.category
+            category: player.category,
+          
         });
+        console.log("controllers",player.campus)
 
         res.json({
             success: true,
@@ -186,7 +190,8 @@ auctionApiController.callPlayer = async (req, res) => {
                 playerId: player.id,
                 playerName: player.name,
                 basePrice: player.basePrice,
-                currentBid: player.basePrice
+                currentBid: player.basePrice,
+                
             }
         });
     } catch (error) {
