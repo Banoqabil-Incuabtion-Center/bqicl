@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owner Login | Auction System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-900 min-h-screen flex items-center justify-center relative font-sans antialiased">
+
+  <div class="absolute top-8 left-8">
+    <a href="/auth/admin/signin" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group">
+      <i class="fas fa-arrow-left transform group-hover:-translate-x-1 transition-transform"></i>
+      <span class="font-medium">Admin Sign In</span>
+    </a>
+  </div>
+
+  <!-- <div class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4 space-y-4">
+    
+    <% if (locals.success_msg && locals.success_msg.length > 0) { %>
+      <div class="bg-green-500/10 border-l-4 border-green-500 text-green-400 p-4 rounded shadow-2xl backdrop-blur-sm flex items-center justify-between animate-bounce" role="alert">
+        <div>
+          <p class="font-bold">Success</p>
+          <p><%= success_msg %></p>
+        </div>
+      </div>
+    <% } %>
+
+    <% if ((locals.error_msg && locals.error_msg.length > 0) || (locals.error && locals.error.length > 0)) { %>
+      <div class="bg-red-500/10 border-l-4 border-red-500 text-red-400 p-4 rounded shadow-2xl backdrop-blur-sm flex items-center justify-between" role="alert">
+        <div>
+          <p class="font-bold">Error</p>
+          <p><%= locals.error_msg || locals.error %></p>
+        </div>
+      </div>
+    <% } %>
+
+  </div> -->
+   <%- include('partials/alert') %>
+
+  <div class="bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-700 w-full max-w-sm">
+
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-white">Owner Sign In</h1>
+      <p class="text-gray-400 mt-2">Please sign in to your dashboard</p>
+    </div>
+
+    <form action="/auth/owner/signin" method="POST" class="space-y-5">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-300">Email Address</label>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <input type="email" name="email" id="email" required 
+            value="<%= locals.oldInput ? oldInput.email : '' %>"
+            class="block w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-md focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 sm:text-sm transition duration-200"
+            placeholder="you@example.com">
+        </div>
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <input type="password" name="password" id="password" required 
+            class="block w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-md focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 sm:text-sm transition duration-200"
+            placeholder="••••••••">
+        </div>
+        <div class="flex justify-end mt-2">
+          <a href="/owner/forget-password" class="text-sm text-blue-400 hover:text-blue-300 font-medium hover:underline">Forgot password?</a>
+        </div>
+      </div>
+
+      <button type="submit" 
+        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-lg hover:shadow-blue-500/30 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors transform hover:scale-[1.02]">
+        Sign In
+      </button>
+    </form>
+
+  </div>
+
+</body>
+</html>
