@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
+<body
+    class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
     <div class="max-w-2xl w-full text-center space-y-6">
         <div
             class="inline-flex items-center justify-center h-24 w-24 rounded-full bg-red-500/10 border-2 border-red-500/20 mb-4">
@@ -20,22 +21,23 @@
 
         <div class="space-y-2">
             <h1 class="text-3xl font-bold">Something Went Wrong</h1>
-            <p class="text-gray-400 text-lg">
+            <p class="text-gray-600 dark:text-gray-400 text-lg">
                 <%= message %>
             </p>
         </div>
 
         <% if (locals.error && error.stack) { %>
-            <div class="mt-8 text-left bg-gray-800 p-6 rounded-2xl border border-gray-700 overflow-auto max-h-64">
+            <div
+                class="mt-8 text-left bg-black/5 dark:bg-gray-800 p-6 rounded-2xl border border-black/5 dark:border-gray-700 overflow-auto max-h-64">
                 <p class="text-xs font-mono text-red-400 mb-2 font-bold uppercase tracking-wider">Debug Stack Trace (Dev
                     Only)</p>
-                <pre class="text-xs font-mono text-gray-500 leading-relaxed"><%= error.stack %></pre>
+                <pre class="text-xs font-mono text-gray-400 dark:text-gray-500 leading-relaxed"><%= error.stack %></pre>
             </div>
             <% } %>
 
                 <div class="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <a href="/"
-                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-semibold transition-all border border-gray-700">
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-black/5 dark:bg-gray-800 hover:bg-black/10 dark:hover:bg-gray-700 text-gray-900 dark:text-white px-6 py-3 rounded-xl font-semibold transition-all border border-black/5 dark:border-gray-700">
                         <i class="fas fa-arrow-left"></i> Home
                     </a>
                     <button onclick="window.location.reload()"

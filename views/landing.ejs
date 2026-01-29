@@ -20,13 +20,22 @@
 
         body {
             font-family: 'Outfit', sans-serif;
-            background-color: #050a05;
         }
 
         .glass {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .dark .glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        html:not(.dark) .glass {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .icl-gradient-text {
@@ -43,6 +52,10 @@
         .sport-grid {
             background-image: radial-gradient(rgba(56, 176, 0, 0.1) 1px, transparent 1px);
             background-size: 30px 30px;
+        }
+
+        html:not(.dark) .sport-grid {
+            background-image: radial-gradient(rgba(0, 128, 0, 0.1) 1px, transparent 1px);
         }
 
         .team-card:hover .team-logo {
@@ -67,7 +80,8 @@
     </style>
 </head>
 
-<body class="text-gray-100 min-h-screen flex flex-col selection:bg-lime-500/30 selection:text-lime-400 sport-grid">
+<body
+    class="text-gray-900 dark:text-gray-100 bg-white dark:bg-[#050a05] min-h-screen flex flex-col selection:bg-lime-500/30 selection:text-lime-400 sport-grid transition-colors duration-300">
 
     <%- include('partials/publicNavbar') %>
 
@@ -106,13 +120,15 @@
 
                 <!-- Hero Headline -->
                 <h1
-                    class="text-6xl md:text-9xl font-black text-white tracking-tighter mb-8 leading-[0.9] italic uppercase">
+                    class="text-6xl md:text-9xl font-black text-gray-900 dark:text-white tracking-tighter mb-8 leading-[0.9] italic uppercase">
                     Dominate the <br>
                     <span class="icl-gradient-text">Pitch.</span>
                 </h1>
 
-                <p class="text-lg md:text-2xl text-gray-400 max-w-3xl mb-14 font-medium leading-relaxed tracking-tight">
-                    Welcome to the digital auction arena of the <span class="text-white">Incubation Cricket
+                <p
+                    class="text-lg md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mb-14 font-medium leading-relaxed tracking-tight">
+                    Welcome to the digital auction arena of the <span class="text-gray-900 dark:text-white">Incubation
+                        Cricket
                         League</span>.
                     Strategize your bids, build your dream squad, and lead your franchise to victory.
                 </p>
@@ -124,16 +140,16 @@
                         <i class="fas fa-trophy"></i>
                         Start Bidding
                     </a> -->
-                    <div class="w-full sm:w-px h-px sm:h-14 bg-white/10 mx-2"></div>
+                    <div class="w-full sm:w-px h-px sm:h-14 bg-black/10 dark:bg-white/10 mx-2"></div>
                     <div class="flex items-center gap-6 px-4">
                         <div class="text-left">
-                            <div class="text-2xl font-black text-white">
+                            <div class="text-2xl font-black text-gray-900 dark:text-white">
                                 <%= stats.totalTeams %>
                             </div>
                             <div class="text-[10px] text-gray-500 uppercase font-black tracking-widest">Franchises</div>
                         </div>
                         <div class="text-left">
-                            <div class="text-2xl font-black text-white">
+                            <div class="text-2xl font-black text-gray-900 dark:text-white">
                                 <%= stats.totalPlayers %>
                             </div>
                             <div class="text-[10px] text-gray-500 uppercase font-black tracking-widest">Elite Talent
@@ -145,9 +161,9 @@
                 <!-- Team Logos Section -->
                 <div class="w-full max-w-6xl mb-24">
                     <div class="flex items-center justify-between mb-8 px-4">
-                        <h2 class="text-xl font-black uppercase italic tracking-widest">Participating <span
-                                class="text-lime-500">Teams</span></h2>
-                        <div class="h-px flex-grow bg-white/5 mx-6"></div>
+                        <h2 class="text-xl font-black uppercase italic tracking-widest text-gray-900 dark:text-white">
+                            Participating <span class="text-lime-500">Teams</span></h2>
+                        <div class="h-px flex-grow bg-black/5 dark:bg-white/5 mx-6"></div>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <% const teams=[ { name: 'Clifton 11' , logo: '/clifton-11.jpeg' }, {
@@ -174,15 +190,17 @@
                 </div>
 
                 <!-- Sponsor Marquee -->
-                <div class="w-full relative overflow-hidden py-10 border-y border-white/5 mb-24">
-                    <div class="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-gray-950 to-transparent z-10">
+                <div class="w-full relative overflow-hidden py-10 border-y border-black/5 dark:border-white/5 mb-24">
+                    <div
+                        class="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-white dark:from-[#050a05] to-transparent z-10">
                     </div>
-                    <div class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-gray-950 to-transparent z-10">
+                    <div
+                        class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-white dark:from-[#050a05] to-transparent z-10">
                     </div>
 
                     <div class="animate-marquee gap-20 items-center">
                         <span
-                            class="text-4xl font-black text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
+                            class="text-4xl font-black text-gray-900/10 dark:text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
                             <div
                                 class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
                                 <img src="/alkhidmat.png" alt="Alkhidmat"
@@ -191,7 +209,7 @@
                             ALKHIDMAT KARACHI
                         </span>
                         <span
-                            class="text-4xl font-black text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
+                            class="text-4xl font-black text-gray-900/10 dark:text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
                             <div
                                 class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
                                 <img src="/banoqabil.png" alt="Banoqabil"
@@ -202,7 +220,7 @@
 
                         <!-- Duplicate for infinite effect -->
                         <span
-                            class="text-4xl font-black text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
+                            class="text-4xl font-black text-gray-900/10 dark:text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
                             <div
                                 class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
                                 <img src="/alkhidmat.png" alt="Alkhidmat"
@@ -211,7 +229,7 @@
                             ALKHIDMAT KARACHI
                         </span>
                         <span
-                            class="text-4xl font-black text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
+                            class="text-4xl font-black text-gray-900/10 dark:text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
                             <div
                                 class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
                                 <img src="/banoqabil.png" alt="Banoqabil"
@@ -270,17 +288,19 @@
             </section>
 
             <!-- About Section -->
-            <section id="about" class="max-w-7xl mx-auto px-6 py-24 border-t border-white/5 relative">
+            <section id="about"
+                class="max-w-7xl mx-auto px-6 py-24 border-t border-black/5 dark:border-white/5 relative">
                 <div
                     class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-lime-500/5 blur-[120px] rounded-full -z-10">
                 </div>
                 <div class="grid lg:grid-cols-2 gap-16 items-center">
                     <div class="space-y-8">
-                        <h2 class="text-4xl md:text-6xl font-black italic uppercase italic tracking-tighter">
+                        <h2
+                            class="text-4xl md:text-6xl font-black italic uppercase italic tracking-tighter text-gray-900 dark:text-white">
                             About the <br>
                             <span class="icl-gradient-text">Incubation Cricket League</span>
                         </h2>
-                        <p class="text-gray-400 text-lg leading-relaxed font-medium">
+                        <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-medium">
                             The ICL is more than just a tournament; it's a high-stakes arena where strategy meets
                             passion.
                             Born from the vision of Alkhidmat Karachi and Bano Qabil, this league brings together the
@@ -290,13 +310,17 @@
                         <div class="grid grid-cols-2 gap-6">
                             <div class="glass p-6 rounded-2xl">
                                 <i class="fas fa-bullseye text-lime-500 text-2xl mb-4"></i>
-                                <h4 class="font-bold uppercase tracking-widest text-xs mb-2">Our Mission</h4>
+                                <h4
+                                    class="font-bold uppercase tracking-widest text-xs mb-2 text-gray-900 dark:text-white">
+                                    Our Mission</h4>
                                 <p class="text-gray-500 text-xs leading-relaxed">Fostering sportsmanship and healthy
                                     competition among young entrepreneurs.</p>
                             </div>
                             <div class="glass p-6 rounded-2xl">
                                 <i class="fas fa-star text-lime-500 text-2xl mb-4"></i>
-                                <h4 class="font-bold uppercase tracking-widest text-xs mb-2">The Vision</h4>
+                                <h4
+                                    class="font-bold uppercase tracking-widest text-xs mb-2 text-gray-900 dark:text-white">
+                                    The Vision</h4>
                                 <p class="text-gray-500 text-xs leading-relaxed">Creating a platform where talent is
                                     recognized and celebrated through a fair auction.</p>
                             </div>
@@ -306,29 +330,30 @@
                         <div class="absolute -inset-4 bg-lime-500/20 blur-2xl rounded-[3rem]"></div>
                         <img src="https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=1000"
                             alt="About ICL"
-                            class="relative rounded-[2.5rem] w-full aspect-video object-cover border border-white/10 shadow-2xl">
+                            class="relative rounded-[2.5rem] w-full aspect-video object-cover border border-black/5 dark:border-white/10 shadow-2xl">
                     </div>
                 </div>
             </section>
         </main>
 
         <!-- Professional Footer -->
-        <footer class="py-16 mt-20 border-t border-white/5 bg-black/40 backdrop-blur-xl">
+        <footer
+            class="py-16 mt-20 border-t border-black/5 dark:border-white/5 bg-gray-50/40 dark:bg-black/40 backdrop-blur-xl">
             <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12 items-center">
                 <div class="text-left">
                     <div class="flex items-center gap-3 mb-4">
                         <img src="/logo.png" alt="ICL" class="h-8 w-8 object-contain">
-                        <span class="text-lg font-black italic uppercase">ICL</span>
+                        <span class="text-lg font-black italic uppercase text-gray-900 dark:text-white">ICL</span>
                     </div>
                     <p class="text-sm text-gray-500 max-w-xs">The premier platform for professional cricket auctions.
                         Excellence in every bid.</p>
                 </div>
                 <div class="flex justify-center gap-8">
-                    <a href="#" class="text-gray-500 hover:text-white transition-colors"><i
+                    <a href="#" class="text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"><i
                             class="fab fa-twitter text-xl"></i></a>
-                    <a href="#" class="text-gray-500 hover:text-white transition-colors"><i
+                    <a href="#" class="text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"><i
                             class="fab fa-facebook text-xl"></i></a>
-                    <a href="#" class="text-gray-500 hover:text-white transition-colors"><i
+                    <a href="#" class="text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"><i
                             class="fab fa-instagram text-xl"></i></a>
                 </div>
                 <div class="text-right text-xs text-gray-600 font-bold uppercase tracking-[0.2em]">
