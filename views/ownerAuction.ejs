@@ -224,7 +224,7 @@
 
             currentBidAmount = data.auction.currentBid;
             currentBidDisplay.textContent = '$' + currentBidAmount.toLocaleString();
-            highestBidderDisplay.textContent = data.auction.highestBidder ? data.auction.highestBidder.name : "Starting Bid";
+            highestBidderDisplay.textContent = data.auction.highestBidder ? data.auction.highestBidder.name :'';
 
             const nextBid = currentBidAmount + bidIncrement;
             nextBidVal.textContent = '$' + nextBid.toLocaleString();
