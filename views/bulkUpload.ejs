@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Import | Auction System</title>
+    <link href="/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <%- include('partials/alert') %>
+    <div class="flex h-screen overflow-hidden">
+        <%- include('partials/adminNavbar') %>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="h-16 bg-gray-800 border-b border-gray-700 flex items-center px-8">
+                <h2 class="text-xl font-semibold">Bulk Player Import</h2>
+            </header>
+
+            <main class="p-8 flex justify-center items-center">
+                <div class="max-w-xl w-full bg-gray-800 rounded-xl border border-gray-700 shadow-xl p-8">
+                    <div class="mb-6 text-center">
+                        <i class="fas fa-file-csv text-5xl text-blue-500 mb-4"></i>
+                        <h3 class="text-2xl font-bold">Upload CSV File</h3>
+                        <p class="text-gray-400 text-sm">Import multiple players at once via CSV.</p>
+                    </div>
+
+                    <form action="/player/bulk-upload" method="POST" enctype="multipart/form-data" class="space-y-4">
+                        <% if (locals.csrfToken) { %>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <% } %>
+
+                        <div class="bg-gray-700/30 border-2 border-dashed border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors group relative">
+                            <input type="file" name="csvFile" accept=".csv" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" id="csvInput">
+                            <div id="uploadContent">
+                                <span class="text-gray-300 font-medium">Click or Drag CSV File here</span>
+                                <p id="fileNameDisplay" class="text-blue-400 mt-2 font-mono text-sm"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-3">
+                            <a href="/player/playerslist" class="flex-1 text-center bg-gray-700 hover:bg-gray-600 py-3 rounded-lg font-bold">Cancel</a>
+                            <button type="submit" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-bold">
+                                <i class="fas fa-file-import mr-2"></i> Start Import
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('csvInput').onchange = function() {
+            if (this.files[0]) {
+                document.getElementById('fileNameDisplay').innerText = "Selected: " + this.files[0].name;
+            }
+        };
+    </script>
+</body>
+</html>

@@ -29,6 +29,7 @@
     "cookie-parser": "^1.4.7",
     "crypt": "^0.0.2",
     "csurf": "^1.11.0",
+    "csv-parser": "^3.2.0",
     "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
     "express": "^5.2.1",
