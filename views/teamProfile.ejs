@@ -1,82 +1,102 @@
 <%- include('layouts/admin_layout_header', { title: 'Team Profile' }) %>
 
-    <div class="max-w-6xl mx-auto space-y-10">
-        <div
-            class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-2xl overflow-hidden relative">
-            <div class="h-48 bg-gradient-to-r from-blue-600 to-indigo-700 relative overflow-hidden">
-                <div
-                    class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20">
-                </div>
-                <div class="absolute inset-0 bg-black/10"></div>
+<div class="max-w-6xl mx-auto space-y-10">
+    <div class="flex justify-between items-center bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-xl">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tighter uppercase">
+                Team Profile
+            </h1>
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+                Franchise Management System
+            </p>
+        </div>
 
-                <div class="absolute top-6 right-6 flex gap-3">
-                    <a href="/team/profile/edit/<%= team.hashedId %>"
-                        class="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all border border-white/20 flex items-center gap-2">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <form action="/team/profile/delete/<%= team.hashedId %>" method="POST">
-                        <button type="button"
-                            class="bg-red-500/20 hover:bg-red-500/40 backdrop-blur-md text-white border border-red-500/30 px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
-                            onclick="document.getElementById('deleteModal-<%= team.hashedId %>').classList.remove('hidden')">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                        <%- include('partials/deleteModal', { itemName: team.name, deleteUrl: '/team/profile/delete/' +
-                            team.hashedId, modalId: 'deleteModal-' + team.hashedId }) %>
-                    </form>
-                </div>
+        <% if (locals.userType === 'admin') { %>
+            <div class="flex gap-4">
+                <a href="/team/profile/edit/<%= team.hashedId %>"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/30 flex items-center gap-2">
+                    <i class="fas fa-edit"></i> Modify Franchise
+                </a>
+
+                <button onclick="document.getElementById('deleteModal-<%= team.hashedId %>').showModal()"
+                    class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2">
+                    <i class="fas fa-trash"></i> Dissolve Team
+                </button>
             </div>
+        <% } %>
+    </div>
 
-            <div class="px-10 pb-12">
-                <div class="flex flex-col md:flex-row gap-8 items-start -mt-20 relative z-10">
-                    <div class="relative">
-                        <div
-                            class="h-44 w-44 md:h-52 md:w-52 rounded-[3rem] border-8 border-white dark:border-gray-800 shadow-2xl overflow-hidden bg-gray-50 dark:bg-gray-700 flex items-center justify-center ring-4 ring-gray-100 dark:ring-gray-800/50">
-                            <% if (team.teamLogo) { %>
-                                <img src="<%= team.teamLogo %>" alt="<%= team.name %>"
-                                    class="h-full w-full object-cover">
-                                <% } else { %>
-                                    <i class="fas fa-shield-alt text-7xl text-gray-200 dark:text-gray-600"></i>
-                                    <% } %>
-                        </div>
-                    </div>
+    <%- include("partials/deleteModal", { 
+        itemName: team.name, 
+        deleteUrl: "/team/profile/delete/" + team.hashedId, 
+        modalId: "deleteModal-" + team.hashedId 
+    }) %>
 
-                    <div class="flex-1 pt-6 md:pt-24">
-                        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                            <div>
-                                <h1
-                                    class="text-5xl md:text-7xl font-black text-gray-900 dark:text-white tracking-tighter uppercase leading-tight">
-                                    <%= team.name %>
-                                </h1>
-                                <p class="text-sm text-gray-400 font-bold uppercase tracking-[0.3em] mt-3">Professional
-                                    Franchise</p>
+    <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700 relative">
+        <div class="h-48 bg-gradient-to-r from-blue-600 to-indigo-700 relative overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+            <div class="absolute inset-0 bg-black/10"></div>
+            </div> 
+
+        <div class="px-10 pb-12">
+            <div class="flex flex-col md:flex-row gap-8 items-start -mt-20 relative z-10">
+
+                <div class="px-10 pb-12">
+                    <div class="flex flex-col md:flex-row gap-8 items-start -mt-20 relative z-10">
+                        <div class="relative">
+                            <div
+                                class="h-44 w-44 md:h-52 md:w-52 rounded-[3rem] border-8 border-white dark:border-gray-800 shadow-2xl overflow-hidden bg-gray-50 dark:bg-gray-700 flex items-center justify-center ring-4 ring-gray-100 dark:ring-gray-800/50">
+                                <% if (team.teamLogo) { %>
+                                    <img src="<%= team.teamLogo %>" alt="<%= team.name %>"
+                                        class="h-full w-full object-cover">
+                                    <% } else { %>
+                                        <i class="fas fa-shield-alt text-7xl text-gray-200 dark:text-gray-600"></i>
+                                        <% } %>
                             </div>
+                        </div>
 
-                            <div class="flex gap-6">
-                                <div
-                                    class="bg-gray-50 dark:bg-gray-900/50 px-8 py-5 rounded-3xl border border-gray-100 dark:border-gray-700 text-center min-w-[140px] shadow-sm">
-                                    <p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">Squad
-                                        Strength</p>
-                                    <p class="text-3xl font-black text-blue-600 dark:text-blue-400 tracking-tighter">
-                                        <%= team.Players ? team.Players.length : 0 %>
-                                    </p>
+                        <div class="flex-1 pt-6 md:pt-24">
+                            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                                <div>
+                                    <h1
+                                        class="text-5xl md:text-7xl font-black text-gray-900 dark:text-white tracking-tighter uppercase leading-tight">
+                                        <%= team.name %>
+                                    </h1>
+                                    <p class="text-sm text-gray-400 font-bold uppercase tracking-[0.3em] mt-3">
+                                        Professional
+                                        Franchise</p>
                                 </div>
 
-                                <% let totalSpend=0; if(team.Players && team.Players.length> 0) {
-                                    totalSpend = team.Players.reduce((sum, p) => sum + (p.soldPrice || 0), 0);
-                                    } %>
+                                <div class="flex gap-6">
                                     <div
-                                        class="bg-gray-50 dark:bg-gray-900/50 px-8 py-5 rounded-3xl border border-gray-100 dark:border-gray-700 text-center min-w-[160px] shadow-sm">
+                                        class="bg-gray-50 dark:bg-gray-900/50 px-8 py-5 rounded-3xl border border-gray-100 dark:border-gray-700 text-center min-w-[140px] shadow-sm">
                                         <p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">
-                                            Total Expenses</p>
-                                        <p class="text-3xl font-black text-emerald-500 tracking-tighter">$<%=
-                                                totalSpend.toLocaleString() %>
+                                            Squad
+                                            Strength</p>
+                                        <p
+                                            class="text-3xl font-black text-blue-600 dark:text-blue-400 tracking-tighter">
+                                            <%= team.Players ? team.Players.length : 0 %>
                                         </p>
                                     </div>
+
+                                    <% let totalSpend=0; if(team.Players && team.Players.length> 0) {
+                                        totalSpend = team.Players.reduce((sum, p) => sum + (p.soldPrice || 0),
+                                        0);
+                                        } %>
+                                        <div
+                                            class="bg-gray-50 dark:bg-gray-900/50 px-8 py-5 rounded-3xl border border-gray-100 dark:border-gray-700 text-center min-w-[160px] shadow-sm">
+                                            <p
+                                                class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">
+                                                Total Expenses</p>
+                                            <p class="text-3xl font-black text-emerald-500 tracking-tighter">$
+                                                <%= totalSpend.toLocaleString() %>
+                                            </p>
+                                        </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -221,7 +241,8 @@
                                 </div>
                                 <h4 class="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
                                     Empty Roster</h4>
-                                <p class="text-sm text-gray-500 mt-2">This franchise has no contracted players yet.</p>
+                                <p class="text-sm text-gray-500 mt-2">This franchise has no contracted players yet.
+                                </p>
                             </div>
                             <% } %>
                 </div>
