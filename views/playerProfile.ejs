@@ -15,6 +15,7 @@
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
         /* .banner-gradient { background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); } */
     </style>
+
 </head>
 
 <body class="text-slate-200 antialiased">
@@ -57,6 +58,8 @@
         }) %>
     <% } %>
 </div>
+
+<% console.log(player) %>
 
  <% let bannerColor="bg-gray-800 border-gray-700" ; if (player.auctionCategory==="Platinum" )
                             bannerColor="bg-gradient-to-r from-blue-950 to-blue-900 border-slate-300" ; else if
@@ -186,9 +189,160 @@
             </div>
 
            
+<!--  -->
+            <!-- <div class="mt-12">
+        <h3 class="text-slate-500 text-sm font-bold uppercase tracking-widest mb-6 ml-2">Career Journey & History</h3>
+        
+        <div class="glass-panel rounded-[2.5rem] p-6 md:p-10 relative overflow-hidden">
+            <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-emerald-500/5 blur-[80px] rounded-full"></div>
+    
+            <div class="relative space-y-8">
+                <% if (player.history && player.history.length > 0) { %>
+                    <div class="relative border-l-2 border-slate-700/50 ml-4 md:ml-6 space-y-10">
+                        <% player.history.forEach((event, index) => { %>
+                            <div class="relative pl-8 md:pl-12">
+                                <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-blue-600 border-4 border-slate-900 shadow-[0_0_10px_rgba(37,99,235,0.5)]"></div>
+                                
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <span class="text-blue-500 text-xs font-black uppercase tracking-tighter bg-blue-600/10 px-3 py-1 rounded-lg border border-blue-600/20">
+                                            <%= event.year || 'Season' %>
+                                        </span>
+                                        <h4 class="text-xl font-bold text-white mt-2"><%= event.achievement || event.teamName %></h4>
+                                        <p class="text-slate-400 text-sm mt-1 max-w-2xl leading-relaxed">
+                                            <%= event.description || 'Played as a key player contributing significantly to the team performance.' %>
+                                        </p>
+                                    </div>
+                                    
+                                    <% if (event.stats) { %>
+                                        <div class="flex gap-3">
+                                            <div class="bg-slate-800/50 px-4 py-2 rounded-xl border border-white/5">
+                                                <p class="text-[9px] text-slate-500 font-bold uppercase">Performace</p>
+                                                <p class="text-sm font-bold text-emerald-400"><%= event.stats %></p>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="flex flex-col items-center justify-center py-12 text-center">
+                        <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center text-slate-600 mb-4">
+                            <i class="fas fa-history text-2xl"></i>
+                        </div>
+                        <p class="text-slate-500 font-medium">No career history records found for this player.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div> -->
 
-        </main>
+    <!--  -->
+
+    <div class="mt-12">
+    <div class="flex items-center justify-between mb-6 ml-2">
+        <h3 class="text-slate-500 text-sm font-bold uppercase tracking-widest">Auction Bid History</h3>
+        <span id="bid-count-badge" class="hidden bg-blue-600/20 text-blue-400 text-[10px] font-black px-3 py-1 rounded-lg border border-blue-600/20">0 BIDS</span>
     </div>
+    
+    <div class="glass-panel rounded-[2.5rem] overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-white/5 bg-white/5">
+                        <th class="px-8 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Time</th>
+                        <th class="px-8 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Team</th>
+                        <th class="px-8 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">Bid Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="bid-history-table-body" class="divide-y divide-white/5">
+                    <tr>
+                        <td colspan="3" class="px-8 py-12 text-center">
+                            <div class="flex flex-col items-center gap-2 opacity-40">
+                                <i class="fas fa-circle-notch animate-spin text-xl"></i>
+                                <p class="text-xs font-medium italic">Loading history...</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</main>
+    </div>
+   <script>
+    async function loadBidHistory() {
+        const playerId = "<%= player.id %>"; // Primary key for the API call
+        const tableBody = document.getElementById('bid-history-table-body');
+        const countBadge = document.getElementById('bid-count-badge');
+
+        try {
+            const response = await fetch(`/api/auction/bid-history/${playerId}`);
+            const data = await response.json();
+
+            if (data.success && data.bids.length > 0) {
+                // Update badge
+                countBadge.textContent = `${data.bids.length} BIDS`;
+                countBadge.classList.remove('hidden');
+
+                // Generate Rows
+                tableBody.innerHTML = data.bids.map((bid, index) => {
+                    const bidTime = new Date(bid.time).toLocaleTimeString([], { 
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        second: '2-digit' 
+                    });
+
+                    return `
+                        <tr class="hover:bg-white/[0.02] transition-colors group">
+                            <td class="px-8 py-5">
+                                <p class="text-xs font-medium text-slate-400">${bidTime}</p>
+                            </td>
+                            <td class="px-8 py-5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center text-blue-400 border border-blue-600/20 text-[10px] font-black uppercase">
+                                        ${bid.teamName.charAt(0)}
+                                    </div>
+                                    <span class="text-sm font-bold text-white group-hover:text-blue-400 transition-colors uppercase truncate max-w-[150px]">
+                                        ${bid.teamName}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-8 py-5 text-right">
+                                <div class="flex flex-col items-end">
+                                    <span class="text-base font-black ${index === 0 ? 'text-emerald-400' : 'text-slate-300'}">
+                                        $${Number(bid.amount).toLocaleString()}
+                                    </span>
+                                    ${index === 0 ? '<span class="text-[8px] text-emerald-500 font-black uppercase tracking-tighter">Current High</span>' : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } else {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="px-8 py-12 text-center">
+                            <div class="flex flex-col items-center opacity-40">
+                                <i class="fas fa-gavel text-3xl mb-3"></i>
+                                <p class="text-sm font-medium italic">No auction activity recorded for this player.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        } catch (error) {
+            console.error('Error fetching bid history:', error);
+            tableBody.innerHTML = `<tr><td colspan="3" class="text-center py-8 text-red-500 text-xs">Failed to load history.</td></tr>`;
+        }
+    }
+
+    // Call on page load
+    document.addEventListener('DOMContentLoaded', loadBidHistory);
+</script>
 </body>
 
 </html>

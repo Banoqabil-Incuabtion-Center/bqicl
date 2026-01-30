@@ -73,6 +73,8 @@
                                 <form action="/auth/player/register" method="POST" enctype="multipart/form-data"
                                     class="space-y-6">
 
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-400 mb-2">Full
@@ -253,6 +255,44 @@
                                     </div>
 
                                 </form>
+
+                                <!--  -->
+                                <div class="relative my-10">
+    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-700"></div></div>
+    <div class="relative flex justify-center text-sm"><span class="px-2 bg-gray-900 text-gray-500 uppercase tracking-widest">OR</span></div>
+</div>
+
+<div class="bg-gray-800 rounded-xl border border-gray-700 shadow-xl overflow-hidden p-8">
+    <div class="mb-6">
+        <h3 class="text-2xl font-bold text-white">Bulk Import</h3>
+        <p class="text-gray-400 text-sm mt-1">Upload a CSV file to add multiple players at once.</p>
+    </div>
+
+    <form action="/player/bulk-upload" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="bg-gray-700/30 border-2 border-dashed border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors group">
+            <input type="file" name="csvFile" accept=".csv" required class="hidden" id="csvInput">
+            <label for="csvInput" class="cursor-pointer">
+                <i class="fas fa-file-csv text-4xl text-gray-500 group-hover:text-blue-400 mb-3 block"></i>
+                <span class="text-gray-300 font-medium">Click to select CSV File</span>
+                <p id="fileName" class="text-xs text-blue-400 mt-2 font-mono"></p>
+            </label>
+        </div>
+        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-bold transition-all">
+            <i class="fas fa-file-import mr-2"></i> Start Bulk Import
+        </button>
+    </form>
+</div>
+
+<!--  -->
+
+<script>
+    // Show filename when selected
+    document.getElementById('csvInput').onchange = function() {
+        document.getElementById('fileName').innerText = this.files[0].name;
+    };
+</script>
+
                             </div>
 
                         </div>
