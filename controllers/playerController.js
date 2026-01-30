@@ -11,10 +11,56 @@ import csv from "csv-parser";
 
 const playerController = {};
 
+// playerController.handleBulkUpload = async (req, res) => {
+//   if (!req.file) {
+//     req.flash("error", "Please upload a CSV file.");
+//     return res.redirect("/auth/player/register");
+//   }
+
+//   const results = [];
+//   fs.createReadStream(req.file.path)
+//     .pipe(csv())
+//     .on("data", (data) => results.push(data))
+//     .on("end", async () => {
+//       try {
+//         // CLEAN THE DATA: Convert empty strings to null
+//         const cleanedResults = results.map((player) => ({
+//           ...player,
+//           // If bowlingType is "", change it to null
+//           bowlingType: player.bowlingType === "" ? null : player.bowlingType,
+
+//           // Set default values for auction logic if not in CSV
+//           status: "available",
+//           isSold: false,
+//           soldPrice: 0,
+//         }));
+
+//         // Insert the cleaned data
+//         await Player.bulkCreate(cleanedResults);
+
+//         await Player.bulkCreate(cleanedResults, {
+//           ignoreDuplicates: true,
+//         });
+
+//         fs.unlinkSync(req.file.path);
+//         req.flash(
+//           "success",
+//           `${cleanedResults.length} players imported successfully!`,
+//         );
+//         res.redirect("/admin/dashboard");
+//       } catch (error) {
+//         console.error("Bulk Upload Error:", error);
+//         if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+//         req.flash("error", "Import failed: " + error.message);
+//         res.redirect("/player/playerslist");
+//       }
+//     });
+// };
+
 playerController.handleBulkUpload = async (req, res) => {
   if (!req.file) {
-    req.flash("error", "Please upload a CSV file.");
-    return res.redirect("/auth/player/register");
+    req.flash("error", "No file uploaded.");
+    return res.redirect("back");
   }
 
   const results = [];
@@ -23,36 +69,29 @@ playerController.handleBulkUpload = async (req, res) => {
     .on("data", (data) => results.push(data))
     .on("end", async () => {
       try {
-        // CLEAN THE DATA: Convert empty strings to null
-        const cleanedResults = results.map((player) => ({
-          ...player,
-          // If bowlingType is "", change it to null
-          bowlingType: player.bowlingType === "" ? null : player.bowlingType,
+        console.log("CSV Row Detected:", results[0]); // <--- CHECK THIS IN TERMINAL
 
-          // Set default values for auction logic if not in CSV
+        const cleanedResults = results.map((row) => ({
+          name: row.name,
+          email: row.email,
+          campus: row.campus,
+          category: row.category,
+          basePrice: parseInt(row.basePrice) || 0,
           status: "available",
-          isSold: false,
-          soldPrice: 0,
         }));
 
-        // Insert the cleaned data
-        await Player.bulkCreate(cleanedResults);
-
-        await Player.bulkCreate(cleanedResults, {
+        const data = await Player.bulkCreate(cleanedResults, {
           ignoreDuplicates: true,
         });
 
+        console.log("Rows actually saved to DB:", data.length); // <--- CHECK THIS
+
         fs.unlinkSync(req.file.path);
-        req.flash(
-          "success",
-          `${cleanedResults.length} players imported successfully!`,
-        );
+        req.flash("success", `${data.length} Players imported.`);
         res.redirect("/admin/dashboard");
       } catch (error) {
-        console.error("Bulk Upload Error:", error);
-        if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
-        req.flash("error", "Import failed: " + error.message);
-        res.redirect("/player/playerslist");
+        console.error("DB Error:", error);
+        res.redirect("back");
       }
     });
 };

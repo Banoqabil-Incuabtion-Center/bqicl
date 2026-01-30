@@ -11,6 +11,17 @@ import csv from 'csv-parser';
 import fs from 'fs';
 const uploadCsv = multer({ dest: 'uploads/' });
 
+// const uploadCsv = multer({ 
+//     dest: 'uploads/',
+//     fileFilter: (req, file, cb) => {
+//         if (file.mimetype === "text/csv" || file.originalname.endsWith(".csv")) {
+//             cb(null, true);
+//         } else {
+//             cb(new Error("Only CSV files are allowed!"), false);
+//         }
+//     }
+// });
+
 const uploadDir = './uploads';
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
