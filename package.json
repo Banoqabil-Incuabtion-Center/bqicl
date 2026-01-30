@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node -r dotenv/config app.js",
-    "dev": "nodemon -r dotenv/config app.js"
+    "dev": "nodemon -r dotenv/config app.js",
+    "build:css": "npx @tailwindcss/cli -i ./src/input.css -o ./public/css/styles.css --minify",
+    "watch:css": "npx @tailwindcss/cli -i ./src/input.css -o ./public/css/styles.css --watch"
   },
   "repository": {
     "type": "git",

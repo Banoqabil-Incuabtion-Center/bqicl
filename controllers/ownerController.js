@@ -262,7 +262,11 @@ ownerController.renderEdit = async (req, res) => {
       const ownerData = owner.get({ plain: true });
       ownerData.id = ownerId;
       ownerData.hashedId = Id;
-      res.render('editOwner', { owner: ownerData, title: 'edit  Owner' });
+      res.render('editOwner', {
+         owner: ownerData,
+         title: 'edit  Owner',
+         csrfToken: req.csrfToken ? req.csrfToken() : ''
+      });
    }
    catch (error) {
       console.error("Error in GET /edit:", error);
@@ -290,13 +294,17 @@ ownerController.handleEdit = async (req, res) => {
 
       const imageUrl = req.file ? req.file.path : owner.image;
 
-
-      await owner.update({
+      const updateData = {
          name,
          email,
-         password,
          image: imageUrl
-      });
+      };
+
+      if (password) {
+         updateData.password = await bcrypt.hash(password, 10);
+      }
+
+      await owner.update(updateData);
 
       req.flash('success', 'Owner updated successfully!');
       return res.redirect('/admin/dashboard');

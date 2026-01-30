@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LIVE AUCTION | ICL Season 2026</title>
-   <link href="/css/output.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap"
@@ -73,168 +73,183 @@
     class="text-gray-900 dark:text-white sport-grid min-h-screen flex flex-col pt-24 overflow-x-hidden transition-colors duration-300">
     <%- include('partials/publicNavbar') %>
 
-    <div id="active-ui" class="hidden w-full max-w-6xl flex flex-col items-center gap-6 md:gap-10">
-        
-        <!-- <div id="player-card-container" class="player-card float-anim w-full rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 relative overflow-hidden"> -->
-        <div id="player-card-container">
-            
-            <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-                <div class="relative w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 flex-shrink-0">
-                    <div class="absolute bg-blue-500/20  rounded-full"></div>
-                    <img id="proj-img" src="" 
-                         class="relative w-full h-full rounded-2xl md:rounded-3xl border-2 border-white/10 shadow-2xl">
-                </div>
+        <div id="active-ui" class="hidden w-full max-w-6xl flex flex-col items-center gap-6 md:gap-10">
 
-                <div class="flex-grow w-full text-center lg:text-left space-y-6 md:space-y-8">
-                    <!-- <div>
+            <!-- <div id="player-card-container" class="player-card float-anim w-full rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 relative overflow-hidden"> -->
+            <div id="player-card-container">
+
+                <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+                    <div class="relative w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 flex-shrink-0">
+                        <div class="absolute bg-blue-500/20  rounded-full"></div>
+                        <img id="proj-img" src=""
+                            class="relative w-full h-full rounded-2xl md:rounded-3xl border-2 border-white/10 shadow-2xl">
+                    </div>
+
+                    <div class="flex-grow w-full text-center lg:text-left space-y-6 md:space-y-8">
+                        <!-- <div>
                         <h2 id="proj-name" class="responsive-name font-heading font-black uppercase tracking-tighter mb-2">---</h2>
                         <div id="proj-auction-category" class="h-1.5 w-24 md:w-32 bg-red-500 rounded-full mx-auto lg:mx-0">
 
                         </div>
                     </div> -->
 
-                    <div>
-    <h2 id="proj-name" class="responsive-name font-heading font-black uppercase tracking-tighter mb-2">---</h2>
-    <div class="flex justify-center lg:justify-start">
-        <span id="proj-auction-category" class="text-xs rounded-full border transition-all duration-300">
-            ---
-        </span>
-    </div>
-</div>
-
-                    
-
-                    <div class="grid grid-cols-2 gap-4 md:gap-8 text-left">
-                        <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
-                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Category</p>
-                            <p id="proj-cat" class="text-sm md:text-xl font-heading font-bold text-blue-400 truncate">---</p>
+                        <div>
+                            <h2 id="proj-name"
+                                class="responsive-name font-heading font-black uppercase tracking-tighter mb-2">---</h2>
+                            <div class="flex justify-center lg:justify-start">
+                                <span id="proj-auction-category"
+                                    class="text-xs rounded-full border transition-all duration-300">
+                                    ---
+                                </span>
+                            </div>
                         </div>
-                        
-                        <!-- <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
+
+
+
+                        <div class="grid grid-cols-2 gap-4 md:gap-8 text-left">
+                            <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
+                                <p
+                                    class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">
+                                    Category</p>
+                                <p id="proj-cat"
+                                    class="text-sm md:text-xl font-heading font-bold text-blue-400 truncate">---</p>
+                            </div>
+
+                            <!-- <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
                             <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Campus</p>
                             <p id="proj-campus" class="text-sm md:text-xl font-heading font-bold text-white truncate">---</p>
                         </div> -->
-                        <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
-                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Campus</p>
-                            <p id="proj-campus" class="text-sm md:text-xl font-heading font-bold text-white truncate">---</p>
+                            <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
+                                <p
+                                    class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">
+                                    Campus</p>
+                                <p id="proj-campus"
+                                    class="text-sm md:text-xl font-heading font-bold text-white truncate">---</p>
+                            </div>
+                            <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
+                                <p
+                                    class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">
+                                    Base Price</p>
+                                <p id="proj-base" class="text-sm md:text-xl font-heading font-bold text-yellow-500">$0
+                                </p>
+                            </div>
+                            <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
+                                <p
+                                    class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">
+                                    Current Leader</p>
+                                <p id="proj-bidder"
+                                    class="text-sm md:text-xl font-heading font-bold text-blue-200 truncate italic">---
+                                </p>
+                            </div>
                         </div>
-                        <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
-                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Base Price</p>
-                            <p id="proj-base" class="text-sm md:text-xl font-heading font-bold text-yellow-500">$0</p>
-                        </div>
-                        <div class="bg-white/5 p-3 md:p-4 rounded-xl border border-white/5">
-                            <p class="text-[10px] md:text-xs text-gray-400 font-extrabold uppercase tracking-widest">Current Leader</p>
-                            <p id="proj-bidder" class="text-sm md:text-xl font-heading font-bold text-blue-200 truncate italic">---</p>
+                    </div>
+
+                    <div class="w-full text-center">
+                        <p
+                            class="text-lime-400/60 text-sm md:text-xl font-black uppercase tracking-[0.3em] md:tracking-[0.5em] mb-4">
+                            Current Bid</p>
+                        <div id="proj-bid"
+                            class="responsive-bid font-heading font-black text-lime-500 flex justify-center items-center italic">
+                            $0
                         </div>
                     </div>
                 </div>
+                </main>
 
-                <div class="w-full text-center">
-                    <p
-                        class="text-lime-400/60 text-sm md:text-xl font-black uppercase tracking-[0.3em] md:tracking-[0.5em] mb-4">
-                        Current Bid</p>
-                    <div id="proj-bid"
-                        class="responsive-bid font-heading font-black text-lime-500 flex justify-center items-center italic">
-                        $0
-                    </div>
-                </div>
-            </div>
-        </main>
+                <footer
+                    class="py-12 border-t border-black/5 dark:border-white/5 mt-auto opacity-50 text-center text-xs font-bold tracking-[0.2em] uppercase text-gray-400">
+                    &copy; <%= new Date().getFullYear() %> BICC INCUBATION CENTER
+                </footer>
 
-        <footer
-            class="py-12 border-t border-black/5 dark:border-white/5 mt-auto opacity-50 text-center text-xs font-bold tracking-[0.2em] uppercase text-gray-400">
-            &copy; <%= new Date().getFullYear() %> BICC INCUBATION CENTER
-        </footer>
-
-    <script>
-        const waitingUI = document.getElementById('waiting-ui');
-        const activeUI = document.getElementById('active-ui');
-        const projImg = document.getElementById('proj-img');
-        const projName = document.getElementById('proj-name');
-        const projCat = document.getElementById('proj-cat');
-        const projCampus = document.getElementById('proj-campus');
-        const projBase = document.getElementById('proj-base');
-        const projBid = document.getElementById('proj-bid');
-        const projBidder = document.getElementById('proj-bidder');
-        const projAuctionCategory = document.getElementById('proj-auction-category');
-        // const playerCard = document.getElementById('player-card-container');
-         
+                <script>
+                    const waitingUI = document.getElementById('waiting-ui');
+                    const activeUI = document.getElementById('active-ui');
+                    const projImg = document.getElementById('proj-img');
+                    const projName = document.getElementById('proj-name');
+                    const projCat = document.getElementById('proj-cat');
+                    const projCampus = document.getElementById('proj-campus');
+                    const projBase = document.getElementById('proj-base');
+                    const projBid = document.getElementById('proj-bid');
+                    const projBidder = document.getElementById('proj-bidder');
+                    const projAuctionCategory = document.getElementById('proj-auction-category');
+                    // const playerCard = document.getElementById('player-card-container');
 
 
-        
-        function updateUI(data) {
-            if (!data.isSessionActive || !data.auction || !data.auction.player) {
-                waitingUI.classList.remove('hidden');
-                activeUI.classList.add('hidden');
-                return;
-            }
 
-            waitingUI.classList.add('hidden');
-            activeUI.classList.remove('hidden');
 
-            const player = data.auction.player;
-            const currentBid = data.auction.currentBid;
-            
-            
+                    function updateUI(data) {
+                        if (!data.isSessionActive || !data.auction || !data.auction.player) {
+                            waitingUI.classList.remove('hidden');
+                            activeUI.classList.add('hidden');
+                            return;
+                        }
 
-            projName.textContent = player.name;
-            projCat.textContent = player.category || 'PLAYER';
-            projCampus.textContent = player.campus || 'N/A';
-            projAuctionCategory.textContent = player.auctionCategory || 'N/A';
-            projBase.textContent = '$' + (player.basePrice || 0).toLocaleString();
+                        waitingUI.classList.add('hidden');
+                        activeUI.classList.remove('hidden');
 
-            // Change auction category batch color according to category name: 
+                        const player = data.auction.player;
+                        const currentBid = data.auction.currentBid;
 
-            projAuctionCategory.textContent = player.auctionCategory || 'N/A';
 
-            let classes = ['text-xs', 'rounded-full', 'border']; // Base classes
-            let tierClasses = '';
 
-            if (player.auctionCategory === 'Platinum') {
-                tierClasses = 'text-blue-400 bg-blue-900/40 border-blue-700 font-bold px-3 py-1';
-            } else if (player.auctionCategory === 'Diamond') {
-                tierClasses = 'text-purple-400 bg-purple-900/40 border-purple-700 px-3 py-1';
-            } else if (player.auctionCategory === 'Gold') {
-                tierClasses = 'text-yellow-400 bg-yellow-900/30 border-yellow-700 px-6 py-1';
-            } else {
-                tierClasses = 'text-slate-300 border-white/40 bg-slate-600/60 px-6 py-1';
-            }
-            projAuctionCategory.className = `text-xs rounded-full border ${tierClasses}`;
-        }
-            
-            //
+                        projName.textContent = player.name;
+                        projCat.textContent = player.category || 'PLAYER';
+                        projCampus.textContent = player.campus || 'N/A';
+                        projAuctionCategory.textContent = player.auctionCategory || 'N/A';
+                        projBase.textContent = '$' + (player.basePrice || 0).toLocaleString();
 
-//     //    const player = data.auction.player;
-// const playerCard = document.getElementById('player-card-container');
+                        // Change auction category batch color according to category name: 
 
-// if (playerCard) {
-//     // 1. Remove any existing category classes first to prevent "class clashing"
-//     playerCard.classList.remove(
-//         'from-slate-900', 'via-blue-950', 'via-purple-950', 'via-yellow-950/20', 'to-slate-900', 
-//         'border-blue-500/40', 'border-purple-500/40', 'border-yellow-600/40', 'border-slate-800', 'bg-slate-900'
-//     );
+                        projAuctionCategory.textContent = player.auctionCategory || 'N/A';
 
-//     // 2. Apply new classes based on Category
-//     if (player.auctionCategory === 'Platinum') {
-//         playerCard.classList.add('bg-gradient-to-br', 'from-slate-900', 'via-blue-950', 'to-slate-900', 'border-blue-500/40');
-//     } else if (player.auctionCategory === 'Diamond') {
-//         playerCard.classList.add('bg-gradient-to-br', 'from-slate-900', 'via-purple-950', 'to-slate-900', 'border-purple-500/40');
-//     } else if (player.auctionCategory === 'Gold') {
-//         playerCard.classList.add('bg-gradient-to-br', 'from-slate-900', 'via-yellow-950/20', 'to-slate-900', 'border-yellow-600/40');
-//     } else {
-//         playerCard.classList.add('bg-slate-900', 'border-slate-800');
-//     }
-// }
+                        let classes = ['text-xs', 'rounded-full', 'border']; // Base classes
+                        let tierClasses = '';
 
-            // finish
+                        if (player.auctionCategory === 'Platinum') {
+                            tierClasses = 'text-blue-400 bg-blue-900/40 border-blue-700 font-bold px-3 py-1';
+                        } else if (player.auctionCategory === 'Diamond') {
+                            tierClasses = 'text-purple-400 bg-purple-900/40 border-purple-700 px-3 py-1';
+                        } else if (player.auctionCategory === 'Gold') {
+                            tierClasses = 'text-yellow-400 bg-yellow-900/30 border-yellow-700 px-6 py-1';
+                        } else {
+                            tierClasses = 'text-slate-300 border-white/40 bg-slate-600/60 px-6 py-1';
+                        }
+                        projAuctionCategory.className = `text-xs rounded-full border ${tierClasses}`;
+                    }
 
-            if (projImg.src !== player.playerImage) {
-                    projImg.src = player.playerImage || '/images/default-player.png';
-            }
+                    //
 
-            pollState();
-            setInterval(pollState, 1000);
-        </script>
+                    //     //    const player = data.auction.player;
+                    // const playerCard = document.getElementById('player-card-container');
+
+                    // if (playerCard) {
+                    //     // 1. Remove any existing category classes first to prevent "class clashing"
+                    //     playerCard.classList.remove(
+                    //         'from-slate-900', 'via-blue-950', 'via-purple-950', 'via-yellow-950/20', 'to-slate-900', 
+                    //         'border-blue-500/40', 'border-purple-500/40', 'border-yellow-600/40', 'border-slate-800', 'bg-slate-900'
+                    //     );
+
+                    //     // 2. Apply new classes based on Category
+                    //     if (player.auctionCategory === 'Platinum') {
+                    //         playerCard.classList.add('bg-gradient-to-br', 'from-slate-900', 'via-blue-950', 'to-slate-900', 'border-blue-500/40');
+                    //     } else if (player.auctionCategory === 'Diamond') {
+                    //         playerCard.classList.add('bg-gradient-to-br', 'from-slate-900', 'via-purple-950', 'to-slate-900', 'border-purple-500/40');
+                    //     } else if (player.auctionCategory === 'Gold') {
+                    //         playerCard.classList.add('bg-gradient-to-br', 'from-slate-900', 'via-yellow-950/20', 'to-slate-900', 'border-yellow-600/40');
+                    //     } else {
+                    //         playerCard.classList.add('bg-slate-900', 'border-slate-800');
+                    //     }
+                    // }
+
+                    // finish
+
+                    if (projImg.src !== player.playerImage) {
+                        projImg.src = player.playerImage || '/images/default-player.png';
+                    }
+
+                    pollState();
+                    setInterval(pollState, 1000);
+                </script>
 </body>
 
 </html>
