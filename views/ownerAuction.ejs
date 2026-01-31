@@ -184,7 +184,7 @@
         </style>
 
         <script>
-            const teamId = <%= team.id %>;
+            const teamId = '<%= team.id %>';
             const teamName = '<%= team.name %>';
             let remainingBudget = <%= team.remainingBudget %>;
             const totalBudget = <%= team.totalBudget %>;
@@ -270,14 +270,14 @@
                     }
                 }
 
-            currentBidAmount = data.auction.currentBid;
-            currentBidDisplay.textContent = '$' + currentBidAmount.toLocaleString();
-            highestBidderDisplay.textContent = data.auction.highestBidder ? data.auction.highestBidder.name :'';
+                currentBidAmount = data.auction.currentBid;
+                currentBidDisplay.textContent = '$' + currentBidAmount.toLocaleString();
+                highestBidderDisplay.textContent = data.auction.highestBidder ? data.auction.highestBidder.name : '';
 
                 const nextBid = currentBidAmount + bidIncrement;
                 nextBidVal.textContent = '$' + nextBid.toLocaleString();
 
-                const isWinning = data.auction.highestBidder?.id === teamId;
+                const isWinning = data.auction.highestBidder && String(data.auction.highestBidder.id) === String(teamId);
 
                 if (nextBid <= remainingBudget && !isWinning) {
                     bidBtn.disabled = false;
