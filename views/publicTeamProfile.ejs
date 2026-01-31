@@ -1,262 +1,191 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('layouts/public_header') %>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
-    <link href="/css/styles.css" rel="stylesheet">
-    <link href="/css/output.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --icl-green: #38b000;
-            --icl-green-dark: #008000;
-        }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .dark .glass {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        html:not(.dark) .glass {
-            background: rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-        }
-
-        .icl-gradient-text {
-            background: linear-gradient(135deg, #70e000, #38b000);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .sport-grid {
-            background-image: radial-gradient(rgba(56, 176, 0, 0.1) 1px, transparent 1px);
-            background-size: 30px 30px;
-        }
-
-        html:not(.dark) .sport-grid {
-            background-image: radial-gradient(rgba(0, 128, 0, 0.1) 1px, transparent 1px);
-        }
-    </style>
-</head>
-
-<body
-    class="text-gray-900 dark:text-gray-100 bg-white dark:bg-[#050a05] sport-grid min-h-screen flex flex-col pt-24 transition-colors duration-300">
-    <%- include('partials/publicNavbar') %>
-
-        <main class="max-w-6xl mx-auto px-4 py-12 flex-grow w-full">
-            <!-- Team Hero Cell -->
-            <div
-                class="glass rounded-[3rem] border border-black/5 dark:border-white/10 overflow-hidden mb-12 shadow-2xl">
-                <div class="h-48 bg-gradient-to-r from-lime-500/10 via-emerald-500/10 to-lime-500/10"></div>
-                <div class="px-8 pb-12">
-                    <div class="flex flex-col md:flex-row gap-8 items-start -mt-24 relative z-10">
-                        <div
-                            class="h-48 w-48 rounded-[2.5rem] border-8 border-white dark:border-[#050a05] bg-white p-6 shadow-2xl flex items-center justify-center">
-                            <img src="<%= team.teamLogo || '/images/default-team.png' %>" alt="<%= team.name %>"
-                                class="w-full h-full object-contain">
+    <main class="max-w-6xl mx-auto px-4 py-12 flex-grow w-full">
+        <!-- Team Hero Cell -->
+        <div class="glass rounded-[3rem] border border-black/5 dark:border-white/10 overflow-hidden mb-12 shadow-2xl">
+            <div class="h-48 bg-gradient-to-r from-lime-500/10 via-emerald-500/10 to-lime-500/10"></div>
+            <div class="px-8 pb-12">
+                <div class="flex flex-col md:flex-row gap-8 items-start -mt-24 relative z-10">
+                    <div
+                        class="h-48 w-48 rounded-[2.5rem] border-8 border-white dark:border-[#050a05] bg-white p-6 shadow-2xl flex items-center justify-center">
+                        <img src="<%= team.teamLogo || '/images/default-team.png' %>" alt="<%= team.name %>"
+                            class="w-full h-full object-contain">
+                    </div>
+                    <div class="flex-1 pt-4 md:pt-28 flex flex-col md:flex-row justify-between items-end gap-6">
+                        <div>
+                            <h1
+                                class="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-gray-900 dark:text-white">
+                                <%= team.name %>
+                            </h1>
+                            <div class="flex items-center gap-4 mt-2">
+                                <div class="h-1 w-12 bg-lime-500 rounded-full"></div>
+                                <span class="text-xs font-black uppercase tracking-[0.3em] text-gray-400">Official
+                                    Franchise</span>
+                            </div>
                         </div>
-                        <div class="flex-1 pt-4 md:pt-28 flex flex-col md:flex-row justify-between items-end gap-6">
+                        <div class="flex gap-4">
+                            <div class="glass px-6 py-4 rounded-2xl border border-white/5 text-center min-w-[120px]">
+                                <p class="text-[8px] font-black uppercase text-gray-500 tracking-widest mb-1">Squad
+                                    Size
+                                </p>
+                                <p class="text-3xl font-black italic text-gray-900 dark:text-white">
+                                    <%= team.Players ? team.Players.length : 0 %>
+                                </p>
+                            </div>
+                            <div class="glass px-6 py-4 rounded-2xl border border-white/5 text-center min-w-[150px]">
+                                <p class="text-[8px] font-black uppercase text-gray-500 tracking-widest mb-1">Squad
+                                    Value</p>
+                                <p class="text-3xl font-black italic text-lime-500">
+                                    $<%= team.Players ? team.Players.reduce((s, p)=> s + (p.soldPrice || 0),
+                                        0).toLocaleString() : 0 %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Sidebar -->
+            <div class="lg:col-span-1 space-y-8">
+                <!-- Owner Card -->
+                <div class="glass rounded-[2rem] border border-white/5 p-8 relative overflow-hidden group">
+                    <div
+                        class="absolute top-0 right-0 w-32 h-32 bg-lime-500/5 blur-3xl -z-10 group-hover:bg-lime-500/10 transition-all">
+                    </div>
+                    <h3 class="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-8">Franchise Owner
+                    </h3>
+                    <% if (team.owner) { %>
+                        <div class="flex items-center gap-6">
+                            <div
+                                class="h-20 w-20 rounded-2xl border-2 border-black/5 dark:border-white/10 overflow-hidden bg-gray-100 dark:bg-gray-900 shadow-xl">
+                                <img src="<%= team.owner.image || '/images/default-avatar.png' %>"
+                                    class="w-full h-full object-cover">
+                            </div>
                             <div>
-                                <h1
-                                    class="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-gray-900 dark:text-white">
-                                    <%= team.name %>
-                                </h1>
-                                <div class="flex items-center gap-4 mt-2">
-                                    <div class="h-1 w-12 bg-lime-500 rounded-full"></div>
-                                    <span class="text-xs font-black uppercase tracking-[0.3em] text-gray-400">Official
-                                        Franchise</span>
-                                </div>
-                            </div>
-                            <div class="flex gap-4">
-                                <div
-                                    class="glass px-6 py-4 rounded-2xl border border-white/5 text-center min-w-[120px]">
-                                    <p class="text-[8px] font-black uppercase text-gray-500 tracking-widest mb-1">Squad
-                                        Size
-                                    </p>
-                                    <p class="text-3xl font-black italic text-gray-900 dark:text-white">
-                                        <%= team.Players ? team.Players.length : 0 %>
-                                    </p>
-                                </div>
-                                <div
-                                    class="glass px-6 py-4 rounded-2xl border border-white/5 text-center min-w-[150px]">
-                                    <p class="text-[8px] font-black uppercase text-gray-500 tracking-widest mb-1">Squad
-                                        Value</p>
-                                    <p class="text-3xl font-black italic text-lime-500">
-                                        $<%= team.Players ? team.Players.reduce((s, p)=> s + (p.soldPrice || 0),
-                                            0).toLocaleString() : 0 %>
-                                    </p>
-                                </div>
+                                <h4 class="text-xl font-black italic uppercase text-gray-900 dark:text-white">
+                                    <%= team.owner.name %>
+                                </h4>
+                                <p class="text-xs font-bold text-gray-500 mt-1">Lead Executive</p>
                             </div>
                         </div>
-                    </div>
+                        <% } else { %>
+                            <p class="text-gray-500 font-bold italic">No Owner Assigned</p>
+                            <% } %>
                 </div>
-            </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Left Sidebar -->
-                <div class="lg:col-span-1 space-y-8">
-                    <!-- Owner Card -->
-                    <div class="glass rounded-[2rem] border border-white/5 p-8 relative overflow-hidden group">
-                        <div
-                            class="absolute top-0 right-0 w-32 h-32 bg-lime-500/5 blur-3xl -z-10 group-hover:bg-lime-500/10 transition-all">
-                        </div>
-                        <h3 class="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-8">Franchise Owner
-                        </h3>
-                        <% if (team.owner) { %>
-                            <div class="flex items-center gap-6">
-                                <div
-                                    class="h-20 w-20 rounded-2xl border-2 border-black/5 dark:border-white/10 overflow-hidden bg-gray-100 dark:bg-gray-900 shadow-xl">
-                                    <img src="<%= team.owner.image || '/images/default-avatar.png' %>"
-                                        class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <h4 class="text-xl font-black italic uppercase text-gray-900 dark:text-white">
-                                        <%= team.owner.name %>
-                                    </h4>
-                                    <p class="text-xs font-bold text-gray-500 mt-1">Lead Executive</p>
-                                </div>
-                            </div>
-                            <% } else { %>
-                                <p class="text-gray-500 font-bold italic">No Owner Assigned</p>
-                                <% } %>
-                    </div>
-
-                    <!-- Stats/Highlights -->
-                    <div class="glass rounded-[2rem] border border-white/5 p-8">
-                        <h3 class="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-8">Role
-                            Distribution
-                        </h3>
-                        <div class="space-y-4">
-                            <% const roles={}; if(team.Players) team.Players.forEach(p=> roles[p.category] =
-                                (roles[p.category] || 0) + 1);
-                                Object.keys(roles).forEach(role => {
-                                %>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs font-bold text-gray-400 capitalize">
-                                        <%= role %>
-                                    </span>
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-32 h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                            <div class="h-full bg-lime-500"
-                                                style="width: <%= (roles[role] / team.Players.length) * 100 %>%"></div>
-                                        </div>
-                                        <span class="text-[10px] font-black italic text-gray-900 dark:text-white w-4">
-                                            <%= roles[role] %>
-                                        </span>
+                <!-- Stats/Highlights -->
+                <div class="glass rounded-[2rem] border border-white/5 p-8">
+                    <h3 class="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-8">Role
+                        Distribution
+                    </h3>
+                    <div class="space-y-4">
+                        <% const roles={}; if(team.Players) team.Players.forEach(p=> roles[p.category] =
+                            (roles[p.category] || 0) + 1);
+                            Object.keys(roles).forEach(role => {
+                            %>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-gray-400 capitalize">
+                                    <%= role %>
+                                </span>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-32 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                        <div class="h-full bg-lime-500"
+                                            style="width: <%= (roles[role] / team.Players.length) * 100 %>%"></div>
                                     </div>
+                                    <span class="text-[10px] font-black italic text-gray-900 dark:text-white w-4">
+                                        <%= roles[role] %>
+                                    </span>
                                 </div>
-                                <% }) %>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Squad List -->
-                <div class="lg:col-span-2">
-                    <div class="glass rounded-[2.5rem] border border-white/5 overflow-hidden shadow-xl">
-                        <div
-                            class="px-8 py-6 border-b border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/2 flex justify-between items-center">
-                            <h3 class="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">Active Squad
-                            </h3>
-                            <span class="text-[10px] font-black italic uppercase text-lime-500">Season 2026
-                                Roster</span>
-                        </div>
-
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left">
-                                <thead
-                                    class="text-[8px] font-black uppercase text-gray-500 tracking-[0.2em] bg-black/20">
-                                    <tr>
-                                        <th class="px-8 py-4">Player</th>
-                                        <th class="px-8 py-4 text-center">Category</th>
-                                        <th class="px-8 py-4 text-right">Value</th>
-                                        <th class="px-8 py-4"></th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-white/5">
-                                    <% if (team.Players && team.Players.length> 0) { %>
-                                        <% team.Players.forEach(player=> { %>
-                                            <tr class="group hover:bg-white/5 transition-all">
-                                                <td class="px-8 py-6">
-                                                    <div class="flex items-center gap-4">
-                                                        <div
-                                                            class="h-14 w-14 rounded-xl border border-white/10 overflow-hidden shadow-lg">
-                                                            <img src="<%= player.playerImage || '/images/default-player.png' %>"
-                                                                class="w-full h-full object-cover">
-                                                        </div>
-                                                        <div>
-                                                            <p
-                                                                class="text-sm font-black italic uppercase text-gray-900 dark:text-white">
-                                                                <%= player.name %>
-                                                            </p>
-                                                            <p class="text-[10px] font-bold text-gray-500 uppercase">
-                                                                <%= player.playingStyle %>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-8 py-6">
-                                                    <div class="flex justify-center">
-                                                        <span
-                                                            class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[8px] font-black uppercase text-gray-400">
-                                                            <%= player.category %>
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td class="px-8 py-6 text-right">
-                                                    <p
-                                                        class="text-sm font-black italic text-gray-900 dark:text-white tracking-tighter">
-                                                        $
-                                                        <%= (player.soldPrice || 0).toLocaleString() %>
-                                                    </p>
-                                                    <p class="text-[8px] font-bold text-gray-500 uppercase">Final Bid
-                                                    </p>
-                                                </td>
-                                                <td class="px-8 py-6 text-right">
-                                                    <a href="/players/<%= player.hashedId %>"
-                                                        class="w-10 h-10 glass rounded-full flex items-center justify-center text-gray-500 hover:text-lime-500 hover:border-lime-500/50 transition-all opacity-0 group-hover:opacity-100">
-                                                        <i class="fas fa-chevron-right text-xs"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <% }) %>
-                                                <% } else { %>
-                                                    <tr>
-                                                        <td colspan="4" class="px-8 py-16 text-center">
-                                                            <p class="text-gray-500 italic font-bold">No players drafted
-                                                                yet.</p>
-                                                        </td>
-                                                    </tr>
-                                                    <% } %>
-                                </tbody>
-                            </table>
-                        </div>
+                            </div>
+                            <% }) %>
                     </div>
                 </div>
             </div>
-        </main>
 
-        <footer
-            class="py-12 border-t border-black/5 dark:border-white/5 mt-20 opacity-50 text-center text-xs font-bold tracking-[0.2em] uppercase text-gray-400">
-            &copy; <%= new Date().getFullYear() %> BICC INCUBATION CENTER
-        </footer>
-</body>
+            <!-- Squad List -->
+            <div class="lg:col-span-2">
+                <div class="glass rounded-[2.5rem] border border-white/5 overflow-hidden shadow-xl">
+                    <div
+                        class="px-8 py-6 border-b border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/2 flex justify-between items-center">
+                        <h3 class="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">Active Squad
+                        </h3>
+                        <span class="text-[10px] font-black italic uppercase text-lime-500">Season 2026
+                            Roster</span>
+                    </div>
 
-</html>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="text-[8px] font-black uppercase text-gray-500 tracking-[0.2em] bg-black/20">
+                                <tr>
+                                    <th class="px-8 py-4">Player</th>
+                                    <th class="px-8 py-4 text-center">Category</th>
+                                    <th class="px-8 py-4 text-right">Value</th>
+                                    <th class="px-8 py-4"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5">
+                                <% if (team.Players && team.Players.length> 0) { %>
+                                    <% team.Players.forEach(player=> { %>
+                                        <tr class="group hover:bg-white/5 transition-all">
+                                            <td class="px-8 py-6">
+                                                <div class="flex items-center gap-4">
+                                                    <div
+                                                        class="h-14 w-14 rounded-xl border border-white/10 overflow-hidden shadow-lg">
+                                                        <img src="<%= player.playerImage || '/images/default-player.png' %>"
+                                                            class="w-full h-full object-cover">
+                                                    </div>
+                                                    <div>
+                                                        <p
+                                                            class="text-sm font-black italic uppercase text-gray-900 dark:text-white">
+                                                            <%= player.name %>
+                                                        </p>
+                                                        <p class="text-[10px] font-bold text-gray-500 uppercase">
+                                                            <%= player.playingStyle %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-8 py-6">
+                                                <div class="flex justify-center">
+                                                    <span
+                                                        class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[8px] font-black uppercase text-gray-400">
+                                                        <%= player.category %>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td class="px-8 py-6 text-right">
+                                                <p
+                                                    class="text-sm font-black italic text-gray-900 dark:text-white tracking-tighter">
+                                                    $
+                                                    <%= (player.soldPrice || 0).toLocaleString() %>
+                                                </p>
+                                                <p class="text-[8px] font-bold text-gray-500 uppercase">Final Bid
+                                                </p>
+                                            </td>
+                                            <td class="px-8 py-6 text-right">
+                                                <a href="/players/<%= player.hashedId %>"
+                                                    class="w-10 h-10 glass rounded-full flex items-center justify-center text-gray-500 hover:text-lime-500 hover:border-lime-500/50 transition-all opacity-0 group-hover:opacity-100">
+                                                    <i class="fas fa-chevron-right text-xs"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="4" class="px-8 py-16 text-center">
+                                                        <p class="text-gray-500 italic font-bold">No players drafted
+                                                            yet.</p>
+                                                    </td>
+                                                </tr>
+                                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <%- include('layouts/public_footer') %>

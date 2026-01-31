@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= typeof title !=='undefined' ? title : 'BICC Incubation Center' %>
+    </title>
+    <link href="/css/styles.css" rel="stylesheet">
+    <link href="/css/output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <%- include('../partials/themeHeader') %>
+        <style>
+            :root {
+                --icl-green: #38b000;
+                --icl-green-dark: #008000;
+            }
+
+            body {
+                font-family: 'Outfit', sans-serif;
+            }
+
+            .glass {
+                background: rgba(255, 255, 255, 0.03);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .dark .glass {
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            html:not(.dark) .glass {
+                background: rgba(0, 0, 0, 0.03);
+                border: 1px solid rgba(0, 0, 0, 0.08);
+            }
+
+            .icl-gradient-text {
+                background: linear-gradient(135deg, #70e000, #38b000);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .sport-grid {
+                background-image: radial-gradient(rgba(56, 176, 0, 0.1) 1px, transparent 1px);
+                background-size: 30px 30px;
+            }
+
+            html:not(.dark) .sport-grid {
+                background-image: radial-gradient(rgba(0, 128, 0, 0.1) 1px, transparent 1px);
+            }
+
+            .team-card:hover .team-logo {
+                transform: scale(1.05);
+            }
+
+            .icl-bg-gradient {
+                background: linear-gradient(135deg, var(--icl-green), var(--icl-green-dark));
+            }
+
+            @keyframes marquee {
+                0% {
+                    transform: translateX(0);
+                }
+
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+
+            .animate-marquee {
+                display: flex;
+                width: 200%;
+                animation: marquee 20s linear infinite;
+            }
+
+            /* Custom Scrollbar for Dark Theme */
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #1f2937;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #4b5563;
+                border-radius: 4px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #6b7280;
+            }
+        </style>
+</head>
+
+<body
+    class="text-gray-900 dark:text-gray-100 bg-white dark:bg-[#050a05] sport-grid min-h-screen flex flex-col pt-24 transition-colors duration-300">
+    <%- include('../partials/publicNavbar') %>
