@@ -31,6 +31,7 @@ const router = Router();
 
 router.post('/bulk-upload', uploadCsv.single('csvFile'), playerController.handleBulkUpload);
 router.get('/bulk-upload', requireAdminAuth, playerController.renderBulkUpload);
+router.get('/download-template', requireAdminAuth, playerController.downloadTemplate);
 router.get('/playerslist', requireAdminOrOwner, playerController.renderAllPlayers);
 router.get('/profile/:id', requireAdminOrOwner, playerController.renderPlayerProfile);
 // router.get('/profile/delete/:id', requireAdminOrOwner, playerController.renderDelete);

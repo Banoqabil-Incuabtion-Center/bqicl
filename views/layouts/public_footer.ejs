@@ -1,7 +1,9 @@
-<footer
-    class="py-12 border-t border-black/5 dark:border-white/5 mt-20 opacity-50 text-center text-xs font-bold tracking-[0.2em] uppercase text-gray-400">
-    &copy; <%= new Date().getFullYear() %> BICC INCUBATION CENTER
-</footer>
-</body>
+<% if (typeof hideFooter==='undefined' || !hideFooter) { %>
+    <footer
+        class="py-12 border-t border-black/5 dark:border-white/5 mt-20 opacity-50 text-center text-xs font-bold tracking-[0.2em] uppercase text-gray-400">
+        &copy; <%= new Date().getFullYear() %> BICC INCUBATION CENTER
+    </footer>
+    <% } %>
+        </body>
 
-</html>
+        </html>

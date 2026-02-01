@@ -69,31 +69,45 @@ playerController.handleBulkUpload = async (req, res) => {
     .on("data", (data) => results.push(data))
     .on("end", async () => {
       try {
-        console.log("CSV Row Detected:", results[0]); // <--- CHECK THIS IN TERMINAL
-
         const cleanedResults = results.map((row) => ({
           name: row.name,
           email: row.email,
-          campus: row.campus,
-          category: row.category,
+          phoneNumber: row.phoneNumber,
+          playingStyle: row.playingStyle || 'right-handed',
+          category: row.category || 'Batsman',
+          battingOrder: row.battingOrder || 'Top-order',
+          bowlingType: row.bowlingType || null,
+          auctionCategory: row.auctionCategory || 'Silver',
           basePrice: parseInt(row.basePrice) || 0,
+          campus: row.campus,
           status: "available",
+          isSold: false,
+          soldPrice: 0
         }));
 
         const data = await Player.bulkCreate(cleanedResults, {
           ignoreDuplicates: true,
         });
 
-        console.log("Rows actually saved to DB:", data.length); // <--- CHECK THIS
-
         fs.unlinkSync(req.file.path);
-        req.flash("success", `${data.length} Players imported.`);
-        res.redirect("/admin/dashboard");
+        req.flash("success", `${data.length} Players imported successfully.`);
+        res.redirect("/player/playerslist");
       } catch (error) {
-        console.error("DB Error:", error);
+        console.error("Bulk Import DB Error:", error);
+        if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+        req.flash("error", "Import failed: " + error.message);
         res.redirect("back");
       }
     });
+};
+
+playerController.downloadTemplate = (req, res) => {
+  const headers = "name,email,phoneNumber,playingStyle,category,battingOrder,bowlingType,auctionCategory,basePrice,campus\n";
+  const sampleData = "John Doe,john@example.com,1234567890,right-handed,Batsman,Top-order,,Platinum,50000,Bahadurabad";
+
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', 'attachment; filename=player_import_template.csv');
+  res.status(200).send(headers + sampleData);
 };
 
 playerController.renderBulkUpload = (req, res) => {
