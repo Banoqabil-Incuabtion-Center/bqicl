@@ -171,103 +171,128 @@
             }
         </style>
 
-        <script>
-            // Init Pusher
-            const pusherKey = "<%= process.env.PUSHER_KEY %>";
-            const pusher = new Pusher(pusherKey, { cluster: '<%= process.env.PUSHER_CLUSTER || "ap2" %>' });
-            const channel = pusher.subscribe('auction-channel');
+        <%- include('partials/confirmModal') %>
 
-            channel.bind('bid-placed', (data) => {
-                // Update bid amount
-                const bidEl = document.querySelector('.text-green-500');
-                if (bidEl && data.amount) bidEl.textContent = '$' + Number(data.amount).toLocaleString();
+            <script>
+                // Init Pusher
+                const pusherKey = "<%= process.env.PUSHER_KEY %>";
+                const pusher = new Pusher(pusherKey, { cluster: '<%= process.env.PUSHER_CLUSTER || "ap2" %>' });
+                const channel = pusher.subscribe('auction-channel');
 
-                // Enable Mark Sold button immediately
-                const markSoldBtn = document.getElementById('markSoldBtn');
-                if (markSoldBtn) {
-                    markSoldBtn.disabled = false;
-                    markSoldBtn.classList.remove('bg-gray-300', 'dark:bg-gray-700', 'text-gray-500', 'cursor-not-allowed');
-                    markSoldBtn.classList.add('bg-green-500', 'hover:bg-green-600', 'text-white', 'shadow-lg', 'shadow-green-500/20', 'active:scale-95');
-                    markSoldBtn.title = 'Mark player as sold';
-                }
-            });
+                channel.bind('bid-placed', (data) => {
+                    // Update bid amount
+                    const bidEl = document.querySelector('.text-green-500');
+                    if (bidEl && data.amount) bidEl.textContent = '$' + Number(data.amount).toLocaleString();
 
-            channel.bind('new-player', () => location.reload());
-            channel.bind('player-sold', (data) => {
-                location.reload();
-            });
-            channel.bind('player-unsold', () => location.reload());
+                    // Enable Mark Sold button immediately
+                    const markSoldBtn = document.getElementById('markSoldBtn');
+                    if (markSoldBtn) {
+                        markSoldBtn.disabled = false;
+                        markSoldBtn.classList.remove('bg-gray-300', 'dark:bg-gray-700', 'text-gray-500', 'cursor-not-allowed');
+                        markSoldBtn.classList.add('bg-green-500', 'hover:bg-green-600', 'text-white', 'shadow-lg', 'shadow-green-500/20', 'active:scale-95');
+                        markSoldBtn.title = 'Mark player as sold';
+                    }
+                });
 
-            async function initSession() {
-                try {
-                    await fetch('/api/auction/session/start', { method: 'POST' });
+                channel.bind('new-player', () => location.reload());
+                channel.bind('player-sold', (data) => {
                     location.reload();
-                } catch (e) {
-                    console.error("Session start failed", e);
-                }
-            }
+                });
+                channel.bind('player-unsold', () => location.reload());
 
-            async function endSession() {
-                if (confirm('End Session?')) {
+                async function initSession() {
                     try {
-                        await fetch('/api/auction/session/end', { method: 'POST' });
+                        await fetch('/api/auction/session/start', { method: 'POST' });
                         location.reload();
                     } catch (e) {
-                        console.error("Session end failed", e);
+                        console.error("Session start failed", e);
                     }
                 }
-            }
 
-            async function pushToAuction(playerId) {
-                try {
-                    const res = await fetch('/api/auction/player/call', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ playerId })
+                async function endSession() {
+                    showConfirmModal({
+                        title: 'End Auction Session',
+                        message: 'Are you sure you want to end the current auction session? All bidding will be paused.',
+                        confirmText: 'End Session',
+                        cancelText: 'Cancel',
+                        type: 'danger',
+                        onConfirm: async () => {
+                            try {
+                                await fetch('/api/auction/session/end', { method: 'POST' });
+                                location.reload();
+                            } catch (e) {
+                                console.error("Session end failed", e);
+                            }
+                        }
                     });
-                    const data = await res.json();
-                    if (!data.success) {
-                        alert(data.message);
-                    } else {
-                        location.reload();
-                    }
-                } catch (err) {
-                    console.error(err);
-                    alert('Failed to call player. Please try again.');
                 }
-            }
 
-            async function markSold() {
-                if (confirm('Confirm Sale?')) {
+                async function pushToAuction(playerId) {
                     try {
-                        await fetch('/api/auction/sold', { method: 'POST' });
-                    } catch (e) {
-                        console.error("Mark sold failed", e);
+                        const res = await fetch('/api/auction/player/call', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ playerId })
+                        });
+                        const data = await res.json();
+                        if (!data.success) {
+                            alert(data.message);
+                        } else {
+                            location.reload();
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('Failed to call player. Please try again.');
                     }
                 }
-            }
 
-            async function markUnsold() {
-                try {
-                    const res = await fetch('/api/auction/unsold', { method: 'POST' });
-                    const data = await res.json();
-                    if (!data.success) alert(data.message);
-                } catch (err) { console.error(err); }
-            }
+                async function markSold() {
+                    showConfirmModal({
+                        title: 'Confirm Sale',
+                        message: 'Mark this player as SOLD to the highest bidder?',
+                        confirmText: 'Confirm Sale',
+                        cancelText: 'Cancel',
+                        type: 'success',
+                        onConfirm: async () => {
+                            try {
+                                await fetch('/api/auction/sold', { method: 'POST' });
+                            } catch (e) {
+                                console.error("Mark sold failed", e);
+                            }
+                        }
+                    });
+                }
 
-            async function pollState() {
-                try {
-                    const res = await fetch('/api/auction/state');
-                    const data = await res.json();
-                    if (data.auction) {
-                        const bidEl = document.querySelector('.text-green-500');
-                        if (bidEl) bidEl.textContent = '$' + data.auction.currentBid.toLocaleString();
-                    }
-                } catch (err) { }
-            }
+                async function markUnsold() {
+                    showConfirmModal({
+                        title: 'Mark Unsold',
+                        message: 'Mark this player as UNSOLD? They will be removed from bidding.',
+                        confirmText: 'Mark Unsold',
+                        cancelText: 'Cancel',
+                        type: 'warning',
+                        onConfirm: async () => {
+                            try {
+                                const res = await fetch('/api/auction/unsold', { method: 'POST' });
+                                const data = await res.json();
+                                if (!data.success) alert(data.message);
+                            } catch (err) { console.error(err); }
+                        }
+                    });
+                }
 
-            setInterval(pollState, 5000);
-        </script>
+                async function pollState() {
+                    try {
+                        const res = await fetch('/api/auction/state');
+                        const data = await res.json();
+                        if (data.auction) {
+                            const bidEl = document.querySelector('.text-green-500');
+                            if (bidEl) bidEl.textContent = '$' + data.auction.currentBid.toLocaleString();
+                        }
+                    } catch (err) { }
+                }
+
+                setInterval(pollState, 5000);
+            </script>
 
     </div>
     <%- include('layouts/admin_layout_footer') %>
