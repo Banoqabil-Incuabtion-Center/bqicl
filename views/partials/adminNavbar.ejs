@@ -8,7 +8,11 @@
     class="fixed md:static inset-y-0 left-0 w-64 bg-gray-800 border-r border-gray-700 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col">
 
     <div class="h-16 flex items-center justify-center border-b border-gray-700">
-        <h1 class="text-2xl font-bold text-blue-500 tracking-wider">ADMIN <span class="text-white">PANEL</span></h1>
+        <a href="/" class="flex items-center group">
+            <div class="h-12 w-12 sm:h-14 sm:w-14 p-1 transition-transform group-hover:scale-110 duration-300">
+                <img src="/logo.png" alt="ICL Logo" class="h-full w-full object-contain">
+            </div>
+        </a>
     </div>
 
     <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
@@ -50,7 +54,7 @@
     </nav>
 
     <div class="p-4 border-t border-gray-700">
-        <form id="adminLogoutForm" action="/auth/admin/signout" method="POST" class="hidden">
+        <form id="adminLogoutForm" action="/auth/admin/logout" method="POST" class="hidden">
             <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
         </form>
         <button type="button" onclick="confirmLogout()"

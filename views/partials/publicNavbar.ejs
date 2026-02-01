@@ -36,7 +36,7 @@
 
             <div class="flex items-center gap-4 sm:gap-6">
                 <% if (locals.user) { %>
-                    <a href="/<%= locals.user.role === 'admin' ? 'admin' : 'owner' %>/dashboard"
+                    <a href="/<%= locals.userType === 'admin' ? 'admin' : 'owner' %>/dashboard"
                         class="px-4 py-2 sm:px-6 sm:py-2.5 text-[10px] sm:text-sm font-bold bg-lime-500 text-black rounded-lg transition-all shadow-lg shadow-lime-900/40 hover:scale-105 active:scale-95 uppercase italic">
                         Dashboard <i class="fas fa-bolt ml-2 text-[10px]"></i>
                     </a>
@@ -86,7 +86,7 @@
                         class="text-sm font-bold text-lime-500 uppercase italic font-black">Admin
                         Access</a>
                     <% } else { %>
-                        <a href="/<%= locals.user.role === 'admin' ? 'admin' : 'owner' %>/dashboard"
+                        <a href="/<%= locals.userType === 'admin' ? 'admin' : 'owner' %>/dashboard"
                             class="text-sm font-black text-lime-500 uppercase italic">Dashboard</a>
                         <% } %>
             </div>
