@@ -260,9 +260,10 @@
                 projAuctionCategory.textContent = cat;
                 let tierStyles = 'inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4 backdrop-blur-md border';
 
-                if (cat === 'Platinum') tierStyles += ' border-blue-500/50 bg-blue-500/20 text-blue-400';
-                else if (cat === 'Diamond') tierStyles += ' border-purple-500/50 bg-purple-500/20 text-purple-400';
-                else if (cat === 'Gold') tierStyles += ' border-amber-500/50 bg-amber-500/20 text-amber-500';
+                if (cat === 'Platinum') tierStyles += ' border-[#E5E4E2]/50 bg-[#E5E4E2]/20 text-[#E5E4E2]';
+                else if (cat === 'Diamond') tierStyles += ' border-[#B9F2FF]/50 bg-[#B9F2FF]/20 text-[#B9F2FF]';
+                else if (cat === 'Gold') tierStyles += ' border-[#FFD700]/50 bg-[#FFD700]/20 text-[#FFD700]';
+                else if (cat === 'Silver') tierStyles += ' border-[#C0C0C0]/50 bg-[#C0C0C0]/20 text-[#C0C0C0]';
                 else tierStyles += ' border-white/10 bg-white/10 text-white';
 
                 projAuctionCategory.className = tierStyles;

@@ -257,7 +257,18 @@
                 if (player) {
                     displayName.textContent = player.name;
                     displayCat.textContent = player.category || 'PLAYER';
-                    displayTier.textContent = player.auctionCategory || 'STANDARD';
+
+                    const tier = player.auctionCategory || 'STANDARD';
+                    displayTier.textContent = tier;
+
+                    let tierClasses = 'px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border transition-all';
+                    if (tier === 'Platinum') tierClasses += ' bg-[#E5E4E2]/10 text-[#E5E4E2] border-[#E5E4E2]/20 shadow-[0_0_15px_rgba(229,228,226,0.2)]';
+                    else if (tier === 'Diamond') tierClasses += ' bg-[#B9F2FF]/10 text-[#B9F2FF] border-[#B9F2FF]/20 shadow-[0_0_15px_rgba(185,242,255,0.2)]';
+                    else if (tier === 'Gold') tierClasses += ' bg-[#FFD700]/10 text-[#FFD700] border-[#FFD700]/20 shadow-[0_0_15px_rgba(255,215,0,0.2)]';
+                    else if (tier === 'Silver') tierClasses += ' bg-[#C0C0C0]/10 text-[#C0C0C0] border-[#C0C0C0]/20 shadow-[0_0_15px_rgba(192,192,192,0.2)]';
+                    else tierClasses += ' bg-gray-100 dark:bg-gray-900 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700';
+
+                    displayTier.className = tierClasses;
                     displayStyle.innerHTML = `<i class="fas fa-bolt text-yellow-500"></i> ${player.playingStyle || '---'}`;
                     displayBase.innerHTML = `<i class="fas fa-tag text-emerald-500"></i> Base: $${player.basePrice.toLocaleString()}`;
                     if (player.playerImage) {
