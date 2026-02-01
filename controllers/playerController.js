@@ -202,9 +202,9 @@ playerController.renderAllPlayers = async (req, res) => {
     const whereClause = {};
     if (search) {
       whereClause[Op.or] = [
-        { name: { [Op.like]: `%${search}%` } },
-        { campus: { [Op.like]: `%${search}%` } },
-        { category: { [Op.like]: `%${search}%` } }
+        { name: { [Op.substring]: search } },
+        { campus: { [Op.substring]: search } },
+        { category: { [Op.substring]: search } }
       ];
     }
 
@@ -360,7 +360,7 @@ playerController.handleDelete = async (req, res) => {
 
     // Delete player
     await Player.destroy({
-      where: { Id: playerId }, // or hashedId if you store it in db
+      where: { id: playerId }, // fixed Id to id
     });
 
     req.flash("success", "Player deleted successfully!");
@@ -385,9 +385,9 @@ playerController.renderPublicPlayers = async (req, res) => {
     const whereClause = {};
     if (search) {
       whereClause[Op.or] = [
-        { name: { [Op.like]: `%${search}%` } },
-        { campus: { [Op.like]: `%${search}%` } },
-        { category: { [Op.like]: `%${search}%` } }
+        { name: { [Op.substring]: search } },
+        { campus: { [Op.substring]: search } },
+        { category: { [Op.substring]: search } }
       ];
     }
 
