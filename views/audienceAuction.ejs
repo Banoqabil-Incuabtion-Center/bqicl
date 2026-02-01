@@ -56,26 +56,124 @@
             }
         }
 
-        /* Sold Animation Styles */
+        /* FC 26 WALKOUT STYLES */
         .sold-overlay {
-            background: radial-gradient(circle at center, rgba(56, 176, 0, 0.2) 0%, rgba(0, 0, 0, 0.98) 70%);
+            background: #000;
+            overflow: hidden;
         }
 
-        .sold-text-animate {
-            animation: sold-stamp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        .fc-bg-glow {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(56, 176, 0, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            animation: fc-glow-pulse 4s infinite alternate;
         }
 
-        @keyframes sold-stamp {
+        @keyframes fc-glow-pulse {
             0% {
-                transform: scale(5) rotate(-20deg);
-                opacity: 0;
-                filter: blur(20px);
+                opacity: 0.3;
+                transform: scale(1);
             }
 
             100% {
-                transform: scale(1) rotate(-5deg);
+                opacity: 0.6;
+                transform: scale(1.2);
+            }
+        }
+
+        .walkout-flare {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: skewX(-20deg) translateX(-150%);
+            animation: flare-sweep 2s infinite linear;
+        }
+
+        @keyframes flare-sweep {
+            100% {
+                transform: skewX(-20deg) translateX(150%);
+            }
+        }
+
+        .player-reveal {
+            animation: player-walkout 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes player-walkout {
+            0% {
+                transform: scale(0.5) translateY(100px);
+                opacity: 0;
+                filter: blur(20px) brightness(2);
+            }
+
+            100% {
+                transform: scale(1) translateY(0);
                 opacity: 1;
-                filter: blur(0);
+                filter: blur(0) brightness(1);
+            }
+        }
+
+        .team-reveal {
+            animation: team-drop 0.8s cubic-bezier(0.68, -0.6, 0.32, 1.6) forwards;
+        }
+
+        @keyframes team-drop {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .sold-stamp-impact {
+            animation: sold-impact 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes sold-impact {
+            0% {
+                transform: scale(3);
+                opacity: 0;
+                filter: brightness(5);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                filter: brightness(1);
+            }
+        }
+
+        .screen-shake {
+            animation: fc-shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+        }
+
+        @keyframes fc-shake {
+
+            10%,
+            90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+
+            20%,
+            80% {
+                transform: translate3d(2px, 0, 0);
+            }
+
+            30%,
+            50%,
+            70% {
+                transform: translate3d(-4px, 0, 0);
+            }
+
+            40%,
+            60% {
+                transform: translate3d(4px, 0, 0);
             }
         }
 
@@ -86,7 +184,7 @@
             background: #bef264;
             border-radius: 50%;
             pointer-events: none;
-            box-shadow: 0 0 10px #bef264;
+            box-shadow: 0 0 15px #bef264;
         }
 
         @keyframes sparkle-fountain {
@@ -101,22 +199,27 @@
             }
         }
 
-        .entrance-scale {
-            animation: entrance-scale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        .fc-flash {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 300;
+            opacity: 0;
+            pointer-events: none;
         }
 
-        @keyframes entrance-scale {
+        @keyframes flash-burst {
             0% {
-                transform: scale(0);
-                opacity: 0;
+                opacity: 1;
             }
 
             100% {
-                transform: scale(1);
-                opacity: 1;
+                opacity: 0;
             }
         }
     </style>
+
+    <div id="fc-flash" class="fc-flash"></div>
 
     <main class="flex-grow flex flex-col items-center relative w-full px-4 py-8 md:py-12 overflow-hidden">
         <!-- Back Button Area -->
@@ -161,7 +264,6 @@
             <!-- Active Auction UI -->
             <div id="active-ui" class="hidden">
                 <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-
                     <!-- Left Column: Player Presentation -->
                     <div class="relative group">
                         <div class="player-glow opacity-0 group-hover:opacity-100 transition-opacity duration-700">
@@ -170,18 +272,13 @@
                             class="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden premium-card border-white/10 shimmer-effect">
                             <img id="proj-img" src="/images/default-player.png" alt="Player"
                                 class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
-
-                            <!-- Player Overlay Info -->
                             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-8 md:p-10">
                                 <span id="proj-auction-category"
-                                    class="inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4 bg-white/10 backdrop-blur-md border border-white/10 text-white">
-                                    Category
-                                </span>
+                                    class="inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4 bg-white/10 backdrop-blur-md border border-white/10 text-white">Category</span>
                                 <h2 id="proj-name"
                                     class="text-5xl md:text-6xl font-black text-white italic uppercase tracking-tighter leading-none mb-2">
-                                    ---
-                                </h2>
+                                    ---</h2>
                                 <p
                                     class="text-lime-500 font-bold tracking-widest uppercase text-xs flex items-center gap-2">
                                     <span class="h-1 w-8 bg-lime-500/50"></span>
@@ -193,14 +290,11 @@
 
                     <!-- Right Column: Auction Data -->
                     <div class="space-y-8">
-                        <!-- Bid Dashboard -->
                         <div class="premium-card p-10 md:p-12 rounded-[3rem] relative overflow-hidden glow-pulse">
                             <div class="flex flex-col items-center lg:items-start text-center lg:text-left space-y-2">
                                 <span class="text-[10px] font-black uppercase tracking-[0.4em] text-lime-500/80">Live
                                     Valuation</span>
-                                <div id="proj-bid" class="responsive-bid font-black text-lime-500 italic">
-                                    $0
-                                </div>
+                                <div id="proj-bid" class="responsive-bid font-black text-lime-500 italic">$0</div>
                                 <div id="bidder-badge"
                                     class="flex items-center gap-3 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 mt-4 opacity-0 transition-opacity duration-500">
                                     <span class="relative flex h-2 w-2">
@@ -212,12 +306,10 @@
                                         class="text-[10px] font-black uppercase tracking-widest text-red-400">---</span>
                                 </div>
                                 <div id="no-bidder-badge"
-                                    class="text-[10px] font-black uppercase tracking-widest text-gray-500 mt-4">
-                                    Opening biddings...
-                                </div>
+                                    class="text-[10px] font-black uppercase tracking-widest text-gray-500 mt-4">Opening
+                                    biddings...</div>
                             </div>
 
-                            <!-- Stat Grid -->
                             <div class="grid grid-cols-2 gap-4 mt-12">
                                 <div
                                     class="bg-white/5 p-5 rounded-2xl border border-white/5 hover:bg-white/10 transition-colors">
@@ -241,14 +333,11 @@
                                     class="bg-white/5 p-5 rounded-2xl border border-white/5 hover:bg-white/10 transition-colors">
                                     <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">
                                         Session</p>
-                                    <p class="text-2xl font-black text-lime-500 flex items-center gap-2">
-                                        LIVE
-                                    </p>
+                                    <p class="text-2xl font-black text-lime-500 flex items-center gap-2">LIVE</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Recent Bids -->
                         <div class="premium-card p-8 rounded-3xl border-white/5">
                             <div class="flex items-center justify-between mb-6">
                                 <h3
@@ -261,11 +350,9 @@
                                 </button>
                             </div>
                             <div id="recent-bids-container" class="space-y-3">
-                                <!-- Mock layout for empty state -->
                                 <div
                                     class="flex items-center justify-center py-4 text-gray-600 italic text-xs font-semibold">
-                                    Awaiting initial tactical bids...
-                                </div>
+                                    Awaiting initial tactical bids...</div>
                             </div>
                         </div>
                     </div>
@@ -279,7 +366,6 @@
         class="hidden fixed inset-0 z-[100] items-center justify-center bg-black/80 backdrop-blur-xl p-4">
         <div
             class="bg-gray-950 border border-white/10 w-full max-w-2xl rounded-[2.5rem] flex flex-col max-h-[80vh] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
-            <!-- Modal Header -->
             <div class="p-8 border-b border-white/5 flex items-center justify-between">
                 <div>
                     <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter">Bid <span
@@ -292,61 +378,62 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-
-            <!-- Modal Body (Scrollable) -->
-            <div id="modal-bids-container" class="flex-1 overflow-y-auto p-8 space-y-4 custom-scrollbar">
-                <!-- Bids will be injected here -->
-            </div>
-
-            <!-- Modal Footer -->
+            <div id="modal-bids-container" class="flex-1 overflow-y-auto p-8 space-y-4 custom-scrollbar"></div>
             <div class="p-8 border-t border-white/5 text-center">
                 <button onclick="closeHistoryModal()"
-                    class="px-8 py-3 rounded-xl bg-lime-500 text-black font-black uppercase text-[10px] tracking-widest hover:scale-105 transition-transform shadow-lg shadow-lime-500/20">
-                    Return to Arena
-                </button>
+                    class="px-8 py-3 rounded-xl bg-lime-500 text-black font-black uppercase text-[10px] tracking-widest hover:scale-105 transition-transform shadow-lg shadow-lime-500/20">Return
+                    to Arena</button>
             </div>
         </div>
     </div>
 
-    <!-- SOLD Celebration Overlay (Centered) -->
-    <div id="sold-overlay"
-        class="hidden fixed inset-0 z-[200] items-center justify-center sold-overlay backdrop-blur-sm">
+    <!-- SOLD Celebration Overlay (FC 26 WALKOUT STYLE) -->
+    <div id="sold-overlay" class="hidden fixed inset-0 z-[200] items-center justify-center sold-overlay">
+        <div class="fc-bg-glow"></div>
+        <div class="walkout-flare"></div>
         <div id="sparkle-container" class="absolute inset-0 pointer-events-none"></div>
 
-        <div class="relative w-full max-w-2xl px-4 flex flex-col items-center justify-center text-center space-y-8">
-            <!-- 1. Team Logo -->
-            <div class="relative entrance-scale delay-100">
-                <div class="absolute inset-0 bg-lime-500/20 blur-3xl rounded-full scale-110"></div>
-                <div class="relative bg-white p-4 rounded-3xl shadow-2xl border border-white/20">
-                    <img id="sold-team-logo" src="" class="h-32 w-32 md:h-40 md:w-40 object-contain">
-                </div>
-                <p id="sold-team-name" class="mt-4 text-2xl font-black text-lime-500 uppercase tracking-[0.2em] italic">
-                    Team Name</p>
-            </div>
-
-            <!-- 2. Player Image -->
-            <div class="relative entrance-scale delay-300">
-                <div class="absolute inset-0 bg-white/10 blur-3xl rounded-full scale-125"></div>
-                <div class="relative rounded-full p-2 bg-gradient-to-tr from-lime-500 to-emerald-500">
+        <div class="relative w-full max-w-3xl px-4 flex flex-col items-center justify-center text-center">
+            <!-- Phase 1: Player spotlight -->
+            <div id="player-reveal-container" class="relative mb-6 opacity-0">
+                <div class="absolute inset-0 bg-white/20 blur-[100px] rounded-full scale-110"></div>
+                <div
+                    class="relative rounded-[2rem] p-2 bg-gradient-to-tr from-lime-500 via-white to-emerald-500 shadow-[0_0_80px_rgba(163,230,53,0.3)]">
                     <img id="sold-player-img" src=""
-                        class="h-48 w-48 md:h-60 md:w-60 rounded-full object-cover border-8 border-gray-950 shadow-2xl">
+                        class="h-56 w-56 md:h-72 md:w-72 rounded-[1.5rem] object-cover border-4 border-gray-950 shadow-2xl">
                 </div>
                 <p id="sold-player-name"
-                    class="mt-4 text-4xl md:text-5xl font-black text-white italic uppercase tracking-tighter">Player
-                    Name</p>
+                    class="mt-4 text-4xl md:text-6xl font-black text-white italic uppercase tracking-tighter leading-none">
+                    PLAYER NAME</p>
             </div>
 
-            <!-- 3. SOLD message + Price -->
-            <div class="flex flex-col items-center space-y-2">
-                <h1
-                    class="sold-text-animate text-8xl md:text-[10rem] font-black text-lime-500 italic uppercase tracking-tighter leading-none drop-shadow-[0_0_50px_rgba(163,230,53,0.5)]">
+            <!-- Phase 2: Team Drop info -->
+            <div id="team-reveal-container" class="relative mb-6 opacity-0">
+                <div
+                    class="flex items-center gap-4 bg-white/5 backdrop-blur-3xl border border-white/10 p-4 md:p-6 rounded-[1.5rem] shadow-2xl">
+                    <div
+                        class="relative h-16 w-16 md:h-20 md:w-20 bg-white p-2 rounded-xl shadow-xl border border-black/5">
+                        <img id="sold-team-logo" src="" class="h-full w-full object-contain">
+                    </div>
+                    <div class="text-left">
+                        <p class="text-[9px] font-black text-lime-500 uppercase tracking-[0.4em] mb-0.5">Acquired By</p>
+                        <p id="sold-team-name"
+                            class="text-2xl md:text-3xl font-black text-white uppercase italic tracking-tight">TEAM NAME
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 3: SOLD Impact -->
+            <div id="impact-reveal-container" class="flex flex-col items-center opacity-0">
+                <h1 id="sold-stamp"
+                    class="text-7xl md:text-9xl font-black text-lime-500 italic uppercase tracking-tighter leading-none drop-shadow-[0_0_80px_rgba(163,230,53,0.6)] mb-4">
                     SOLD!
                 </h1>
-                <div
-                    class="entrance-scale delay-700 bg-black/40 backdrop-blur-xl px-12 py-4 rounded-2xl border border-white/10">
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em] mb-1">Final Investment</p>
-                    <p id="sold-final-price" class="text-5xl md:text-6xl font-black text-white italic tracking-tighter">
-                        $0</p>
+                <div class="bg-lime-500 text-black px-10 py-3 rounded-xl shadow-[0_0_40px_rgba(163,230,53,0.4)]">
+                    <p class="text-[9px] font-black uppercase tracking-[0.4em] mb-0.5 opacity-70">Final Valuation</p>
+                    <p id="sold-final-price"
+                        class="text-4xl md:text-5xl font-black italic tracking-tighter leading-none">$0</p>
                 </div>
             </div>
         </div>
@@ -354,7 +441,6 @@
 
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>
-        // Init Pusher
         const pusherKey = "<%= process.env.PUSHER_KEY %>";
         const pusher = new Pusher(pusherKey, { cluster: '<%= process.env.PUSHER_CLUSTER || "ap2" %>' });
         const channel = pusher.subscribe('auction-channel');
@@ -373,11 +459,9 @@
         const bidderBadge = document.getElementById('bidder-badge');
         const noBidderBadge = document.getElementById('no-bidder-badge');
 
-        // Modal Elements
         const historyModal = document.getElementById('history-modal');
         const modalBidsContainer = document.getElementById('modal-bids-container');
 
-        // Sold Overlay Elements
         const soldOverlay = document.getElementById('sold-overlay');
         const soldTeamLogo = document.getElementById('sold-team-logo');
         const soldPlayerImg = document.getElementById('sold-player-img');
@@ -385,6 +469,12 @@
         const soldTeamName = document.getElementById('sold-team-name');
         const soldFinalPrice = document.getElementById('sold-final-price');
         const sparkleContainer = document.getElementById('sparkle-container');
+        const fcFlash = document.getElementById('fc-flash');
+
+        const pReveal = document.getElementById('player-reveal-container');
+        const tReveal = document.getElementById('team-reveal-container');
+        const iReveal = document.getElementById('impact-reveal-container');
+        const sStamp = document.getElementById('sold-stamp');
 
         let currentAuctionId = null;
         let allRecentBids = [];
@@ -393,33 +483,26 @@
             try {
                 const response = await fetch('/api/auction/state');
                 const data = await response.json();
-
-                if (data.success) {
-                    updateUI(data);
-                }
+                if (data.success) updateUI(data);
             } catch (error) {
                 console.error('State poll failure:', error);
             }
         }
 
         function updateUI(data) {
-            // If an animation is playing, don't update background UI yet
             if (!soldOverlay.classList.contains('hidden')) return;
-
             if (!data.isSessionActive || !data.auction || !data.auction.player) {
                 waitingUI.classList.remove('hidden');
                 activeUI.classList.add('hidden');
                 currentAuctionId = null;
                 return;
             }
-
             waitingUI.classList.add('hidden');
             activeUI.classList.remove('hidden');
 
             const player = data.auction.player;
             const auction = data.auction;
 
-            // Only update if player changed or first run
             if (currentAuctionId !== player.id) {
                 currentAuctionId = player.id;
                 projName.textContent = player.name;
@@ -427,34 +510,25 @@
                 projCampus.textContent = player.campus || 'N/A';
                 projBase.textContent = '$' + (player.basePrice || 0).toLocaleString();
                 projImg.src = player.playerImage || '/images/default-player.png';
-
-                // Add appearance animation
                 activeUI.classList.add('animate-in', 'fade-in', 'slide-in-from-bottom-4', 'duration-700');
 
-                // Tier-based category styling
                 const cat = player.auctionCategory || 'N/A';
                 projAuctionCategory.textContent = cat;
                 let tierStyles = 'inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4 backdrop-blur-md border';
-
                 if (cat === 'Platinum') tierStyles += ' border-[#E5E4E2]/50 bg-[#E5E4E2]/20 text-[#E5E4E2]';
                 else if (cat === 'Diamond') tierStyles += ' border-[#B9F2FF]/50 bg-[#B9F2FF]/20 text-[#B9F2FF]';
                 else if (cat === 'Gold') tierStyles += ' border-[#FFD700]/50 bg-[#FFD700]/20 text-[#FFD700]';
                 else if (cat === 'Silver') tierStyles += ' border-[#C0C0C0]/50 bg-[#C0C0C0]/20 text-[#C0C0C0]';
                 else tierStyles += ' border-white/10 bg-white/10 text-white';
-
                 projAuctionCategory.className = tierStyles;
             }
 
-            // Always update bid info
             const newBidVal = auction.currentBid || 0;
             const newBidText = '$' + newBidVal.toLocaleString();
-
             if (projBid.textContent !== newBidText) {
                 projBid.textContent = newBidText;
-
-                // Trigger pulse animation
                 projBid.classList.remove('bid-pulse');
-                void projBid.offsetWidth; // Force reflow
+                void projBid.offsetWidth;
                 projBid.classList.add('bid-pulse');
             }
 
@@ -467,11 +541,8 @@
                 noBidderBadge.classList.remove('hidden');
             }
 
-            // Update bid history
             if (data.recentBids && data.recentBids.length > 0) {
-                allRecentBids = data.recentBids; // Store globally for modal
-
-                // Show only the latest 1 in main view
+                allRecentBids = data.recentBids;
                 recentBidsContainer.innerHTML = data.recentBids.slice(0, 1).map(bid => `
                 <div class="flex items-center justify-between py-6 px-6 rounded-2xl bg-white/5 border border-white/10 animate-in slide-in-from-right duration-500 shadow-2xl">
                     <div class="flex items-center gap-4">
@@ -482,19 +553,13 @@
                         </div>
                     </div>
                     <span class="text-xl font-black text-lime-500 italic bg-lime-500/10 px-4 py-2 rounded-xl border border-lime-500/20 shadow-inner">$${bid.amount.toLocaleString()}</span>
-                </div>
-            `).join('');
+                </div>`).join('');
             } else {
                 allRecentBids = [];
-                recentBidsContainer.innerHTML = `
-                    <div class="flex items-center justify-center py-4 text-gray-600 italic text-xs font-semibold">
-                        Awaiting initial tactical bids...
-                    </div>
-                 `;
+                recentBidsContainer.innerHTML = `<div class="flex items-center justify-center py-4 text-gray-600 italic text-xs font-semibold">Awaiting initial tactical bids...</div>`;
             }
         }
 
-        // Modal Logic
         function openHistoryModal() {
             historyModal.classList.remove('hidden');
             historyModal.classList.add('flex');
@@ -511,94 +576,80 @@
         function renderModalBids() {
             if (allRecentBids.length > 0) {
                 modalBidsContainer.innerHTML = allRecentBids.map((bid, index) => `
-                    <div class="flex items-center justify-between py-4 px-6 rounded-xl ${index === 0 ? 'bg-lime-500/10 border border-lime-500/20' : 'bg-white/5 border border-white/5'} transition-all">
-                        <div class="flex items-center gap-4">
-                            <div class="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-[10px] font-black text-gray-400">
-                                ${allRecentBids.length - index}
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-xs font-black text-white uppercase tracking-wider">${bid.teamName}</span>
-                                <span class="text-[8px] font-bold text-gray-500 uppercase tracking-widest">${index === 0 ? 'Current Highest' : 'Previous Bid'}</span>
-                            </div>
+                <div class="flex items-center justify-between py-4 px-6 rounded-xl ${index === 0 ? 'bg-lime-500/10 border border-lime-500/20' : 'bg-white/5 border border-white/5'} transition-all">
+                    <div class="flex items-center gap-4">
+                        <div class="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-[10px] font-black text-gray-400">${allRecentBids.length - index}</div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-black text-white uppercase tracking-wider">${bid.teamName}</span>
+                            <span class="text-[8px] font-bold text-gray-500 uppercase tracking-widest">${index === 0 ? 'Current Highest' : 'Previous Bid'}</span>
                         </div>
-                        <span class="text-sm font-black ${index === 0 ? 'text-lime-500' : 'text-gray-300'}">$${bid.amount.toLocaleString()}</span>
                     </div>
-                `).join('');
+                    <span class="text-sm font-black ${index === 0 ? 'text-lime-500' : 'text-gray-300'}">$${bid.amount.toLocaleString()}</span>
+                </div>`).join('');
             } else {
-                modalBidsContainer.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-20 text-gray-600 italic">
-                        <i class="fas fa-gavel text-3xl mb-4 opacity-20"></i>
-                        <p class="text-xs font-semibold uppercase tracking-widest">No history recorded yet</p>
-                    </div>
-                `;
+                modalBidsContainer.innerHTML = `<div class="flex flex-col items-center justify-center py-20 text-gray-600 italic"><i class="fas fa-gavel text-3xl mb-4 opacity-20"></i><p class="text-xs font-semibold uppercase tracking-widest">No history recorded yet</p></div>`;
             }
         }
 
-        // Celebrate Logic
         function triggerSoldAnimation(data) {
             soldTeamLogo.src = data.teamLogo || '/images/default-team.png';
             soldPlayerImg.src = data.playerImage || '/images/default-player.png';
-            soldPlayerName.textContent = data.name; // Pusher controller sends 'name' not 'playerName' usually, checking...
-            // Checking auctionApiController.js: player-sold event sends playerId, name, playerImage, teamName, teamLogo, amount
             soldPlayerName.textContent = data.name;
             soldTeamName.textContent = data.teamName;
             soldFinalPrice.textContent = '$' + Number(data.amount).toLocaleString();
 
+            // 1. Initial Flash
+            fcFlash.style.animation = 'flash-burst 0.5s ease-out forwards';
             soldOverlay.classList.remove('hidden');
             soldOverlay.classList.add('flex');
 
-            createSparkles();
+            // 2. Start SEQ: Player Reveal
+            setTimeout(() => {
+                pReveal.classList.add('player-reveal', 'opacity-100');
+                createSparkles(40);
+            }, 500);
 
-            // Set a timeout to hide the overlay after 10 seconds and reload
+            // 3. Team Drop
+            setTimeout(() => {
+                tReveal.classList.add('team-reveal', 'opacity-100');
+            }, 1800);
+
+            // 4. SOLD Impact & Shake
+            setTimeout(() => {
+                iReveal.classList.add('opacity-100');
+                sStamp.classList.add('sold-stamp-impact');
+                document.body.classList.add('screen-shake');
+                createSparkles(60, true);
+                setTimeout(() => document.body.classList.remove('screen-shake'), 500);
+            }, 2800);
+
             setTimeout(() => {
                 soldOverlay.classList.add('hidden');
-                soldOverlay.classList.remove('flex');
                 sparkleContainer.innerHTML = '';
                 location.reload();
-            }, 10000);
+            }, 12000);
         }
 
-        function createSparkles() {
-            const count = 100;
+        function createSparkles(count, impact = false) {
             for (let i = 0; i < count; i++) {
                 const sparkle = document.createElement('div');
                 sparkle.className = 'sparkle';
-
-                // Random destination using CSS variables
-                const tx = (Math.random() - 0.5) * 1000;
-                const ty = (Math.random() - 1) * 800; // Fountain effect
+                const tx = (Math.random() - 0.5) * (impact ? 1500 : 800);
+                const ty = (Math.random() - 0.5) * (impact ? 1200 : 600);
                 sparkle.style.setProperty('--tx', `${tx}px`);
                 sparkle.style.setProperty('--ty', `${ty}px`);
-
-                // Start from center
                 sparkle.style.left = '50%';
                 sparkle.style.top = '50%';
-
-                sparkle.style.animation = `sparkle-fountain ${1 + Math.random() * 2}s cubic-bezier(0.1, 0.8, 0.3, 1) forwards`;
-                sparkle.style.animationDelay = `${Math.random() * 0.5}s`;
-
+                sparkle.style.animation = `sparkle-fountain ${impact ? 1 : 2}s cubic-bezier(0.1, 0.8, 0.3, 1) forwards`;
                 sparkleContainer.appendChild(sparkle);
             }
         }
 
-        // Pusher Event Handler
-        channel.bind('bid-placed', (data) => {
-            pollState();
-        });
+        channel.bind('bid-placed', (data) => pollState());
+        channel.bind('player-sold', (data) => triggerSoldAnimation(data));
+        channel.bind('player-unsold', () => location.reload());
+        channel.bind('new-player', () => location.reload());
 
-        channel.bind('player-sold', (data) => {
-            triggerSoldAnimation(data);
-        });
-
-        channel.bind('player-unsold', () => {
-            location.reload();
-        });
-
-        channel.bind('new-player', () => {
-            location.reload();
-        });
-
-        // Initialize polling
         pollState();
         setInterval(pollState, 2000);
     </script>
