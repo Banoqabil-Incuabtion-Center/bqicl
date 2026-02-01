@@ -43,7 +43,7 @@ authController.handleRegister = async (req, res) => {
 
 
       req.flash('success', 'Registration successful! Please log in.');
-      return res.redirect('/auth/admin/signin');
+      return res.redirect('/auth/admin/login');
 
    } catch (error) {
       console.error("Error creating admin:", error);
@@ -75,7 +75,7 @@ authController.handleSignin = async (req, res) => {
 
       if (!admin) {
          req.flash('error', 'Invalid email or password.');
-         return res.status(400).redirect('/auth/admin/signin');
+         return res.status(400).redirect('/auth/admin/login');
       }
       // console.log(admin.id)
 
@@ -83,7 +83,7 @@ authController.handleSignin = async (req, res) => {
       if (!validPassword) {
          // console.log("Password did not match");
          req.flash('error', 'Invalid email or password.');
-         return res.status(400).redirect('/auth/admin/signin');
+         return res.status(400).redirect('/auth/admin/login');
       }
       // console.log("Password matched");
 

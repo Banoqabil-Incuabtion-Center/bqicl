@@ -190,13 +190,27 @@ playerController.handleRegister = async (req, res) => {
 
 playerController.renderAllPlayers = async (req, res) => {
   try {
-    // Pagination Setup
+    const { Sequelize } = db;
+    const { Op } = Sequelize;
+
+    // Pagination and Search Setup
     const page = parseInt(req.query.page) || 1;
-    const limit = 8; // Number of players per page
+    const search = req.query.search || '';
+    const limit = 8;
     const offset = (page - 1) * limit;
+
+    const whereClause = {};
+    if (search) {
+      whereClause[Op.or] = [
+        { name: { [Op.like]: `%${search}%` } },
+        { campus: { [Op.like]: `%${search}%` } },
+        { category: { [Op.like]: `%${search}%` } }
+      ];
+    }
 
     // Use findAndCountAll to get total count for pagination logic
     const { count, rows: players } = await Player.findAndCountAll({
+      where: whereClause,
       limit: limit,
       offset: offset,
       order: [["createdAt", "DESC"]],
@@ -216,6 +230,7 @@ playerController.renderAllPlayers = async (req, res) => {
       currentPage: page,
       totalPages: totalPages,
       hasPlayers: count > 0,
+      search: search
     });
   } catch (error) {
     console.error("Error fetching players:", error);
@@ -359,11 +374,25 @@ playerController.handleDelete = async (req, res) => {
 
 playerController.renderPublicPlayers = async (req, res) => {
   try {
+    const { Sequelize } = db;
+    const { Op } = Sequelize;
+
     const page = parseInt(req.query.page) || 1;
+    const search = req.query.search || '';
     const limit = 12;
     const offset = (page - 1) * limit;
 
+    const whereClause = {};
+    if (search) {
+      whereClause[Op.or] = [
+        { name: { [Op.like]: `%${search}%` } },
+        { campus: { [Op.like]: `%${search}%` } },
+        { category: { [Op.like]: `%${search}%` } }
+      ];
+    }
+
     const { count, rows: players } = await Player.findAndCountAll({
+      where: whereClause,
       limit: limit,
       offset: offset,
       order: [["createdAt", "DESC"]],
@@ -381,6 +410,7 @@ playerController.renderPublicPlayers = async (req, res) => {
       players: securePlayers,
       currentPage: page,
       totalPages: totalPages,
+      search: search
     });
   } catch (error) {
     console.error("Public players error:", error);

@@ -5,6 +5,28 @@
             <h1 class="text-5xl md:text-7xl font-black italic uppercase icl-gradient-text mb-4">The Roster</h1>
             <p class="text-gray-600 dark:text-gray-400 font-medium">Meet the elite talent competing in the
                 Incubation Cricket League.</p>
+
+            <!-- Search Area -->
+            <div class="mt-12 max-w-2xl mx-auto">
+                <form action="" method="GET" class="relative group">
+                    <div
+                        class="absolute -inset-1 bg-gradient-to-r from-lime-500/20 to-emerald-500/20 blur-xl rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500">
+                    </div>
+                    <div class="relative flex gap-3">
+                        <div class="relative flex-1">
+                            <i
+                                class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-lime-500 transition-colors"></i>
+                            <input type="text" name="search" value="<%= typeof search !== 'undefined' ? search : '' %>"
+                                placeholder="Search by name, campus or category..."
+                                class="w-full bg-white dark:bg-gray-900 border border-black/5 dark:border-white/10 rounded-2xl pl-14 pr-6 py-4 text-sm font-bold focus:outline-none focus:border-lime-500/50 transition-all shadow-sm">
+                        </div>
+                        <button type="submit"
+                            class="bg-lime-500 hover:bg-lime-400 text-black px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-lime-500/20">
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
         </header>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -65,18 +87,18 @@
         <% if (totalPages> 1) { %>
             <div class="mt-20 flex justify-center gap-2">
                 <% if (currentPage> 1) { %>
-                    <a href="?page=<%= currentPage - 1 %>"
+                    <a href="?page=<%= currentPage - 1 %><%= typeof search !== 'undefined' && search ? '&search=' + search : '' %>"
                         class="w-10 h-10 glass rounded-lg flex items-center justify-center hover:bg-lime-500 hover:text-black transition-all"><i
                             class="fas fa-chevron-left"></i></a>
                     <% } %>
                         <% for(let i=1; i<=totalPages; i++) { %>
-                            <a href="?page=<%= i %>"
+                            <a href="?page=<%= i %><%= typeof search !== 'undefined' && search ? '&search=' + search : '' %>"
                                 class="w-10 h-10 glass rounded-lg flex items-center justify-center transition-all <%= currentPage === i ? 'bg-lime-500 text-black font-bold' : 'hover:bg-white/10' %>">
                                 <%= i %>
                             </a>
                             <% } %>
                                 <% if (currentPage < totalPages) { %>
-                                    <a href="?page=<%= currentPage + 1 %>"
+                                    <a href="?page=<%= currentPage + 1 %><%= typeof search !== 'undefined' && search ? '&search=' + search : '' %>"
                                         class="w-10 h-10 glass rounded-lg flex items-center justify-center hover:bg-lime-500 hover:text-black transition-all"><i
                                             class="fas fa-chevron-right"></i></a>
                                     <% } %>

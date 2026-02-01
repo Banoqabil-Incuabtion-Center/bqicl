@@ -41,10 +41,14 @@
 
             <p
                 class="text-lg md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mb-14 font-medium leading-relaxed tracking-tight">
-                Welcome to the digital auction arena of the <span class="text-gray-900 dark:text-white">Incubation
-                    Cricket
-                    League</span>.
-                Strategize your bids, build your dream squad, and lead your franchise to victory.
+
+                <!-- add tag line new tag line -->
+                <span
+                    class="block mt-4 text-icl-green dark:text-lime-400 font-black italic uppercase tracking-tighter text-xl md:text-3xl animate-pulse">
+                    Where Innovators Become Champions.
+                    <br> Own the Pitch. Rule the Game.
+                </span>
+
             </p>
 
             <!-- Major Action Buttons -->
@@ -107,51 +111,51 @@
                     class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-white dark:from-[#050a05] to-transparent z-10">
                 </div>
 
-                <div class="animate-marquee gap-20 items-center">
-                    <span
-                        class="text-4xl font-black text-gray-900/10 dark:text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
-                        <div
-                            class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
-                            <img src="/alkhidmat.png" alt="Alkhidmat"
-                                class="h-full w-full object-contain mix-blend-multiply">
-                        </div>
-                        ALKHIDMAT KARACHI
-                    </span>
-                    <span
-                        class="text-4xl font-black text-gray-900/10 dark:text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
-                        <div
-                            class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
-                            <img src="/banoqabil.png" alt="Banoqabil"
-                                class="h-full w-full object-contain mix-blend-multiply">
-                        </div>
-                        Banoqabil Pakistan
-                    </span>
-
-                    <!-- Duplicate for infinite effect -->
-                    <span
-                        class="text-4xl font-black text-gray-900/10 dark:text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
-                        <div
-                            class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
-                            <img src="/alkhidmat.png" alt="Alkhidmat"
-                                class="h-full w-full object-contain mix-blend-multiply">
-                        </div>
-                        ALKHIDMAT KARACHI
-                    </span>
-                    <span
-                        class="text-4xl font-black text-gray-900/10 dark:text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
-                        <div
-                            class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg group">
-                            <img src="/banoqabil.png" alt="Banoqabil"
-                                class="h-full w-full object-contain mix-blend-multiply">
-                        </div>
-                        Banoqabil Pakistan
-                    </span>
-                </div>
+                <marquee behavior="scroll" direction="left" scrollamount="10" class="flex gap-20 items-center">
+                    <div class="flex items-center gap-10">
+                        <span
+                            class="text-4xl font-black text-gray-900/10 dark:text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
+                            <div
+                                class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg">
+                                <img src="/alkhidmat.png" alt="Alkhidmat"
+                                    class="h-full w-full object-contain mix-blend-multiply">
+                            </div>
+                            ALKHIDMAT
+                        </span>
+                        <span
+                            class="text-4xl font-black text-gray-900/10 dark:text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
+                            <div
+                                class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg">
+                                <img src="/banoqabil.png" alt="Banoqabil"
+                                    class="h-full w-full object-contain mix-blend-multiply">
+                            </div>
+                            Banoqabil Pakistan
+                        </span>
+                        <span
+                            class="text-4xl font-black text-gray-900/10 dark:text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
+                            <div
+                                class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg">
+                                <img src="/alkhidmat.png" alt="Alkhidmat"
+                                    class="h-full w-full object-contain mix-blend-multiply">
+                            </div>
+                            ALKHIDMAT
+                        </span>
+                        <span
+                            class="text-4xl font-black text-gray-900/10 dark:text-white/20 whitespace-nowrap italic uppercase flex items-center gap-6">
+                            <div
+                                class="h-12 w-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-lg">
+                                <img src="/banoqabil.png" alt="Banoqabil"
+                                    class="h-full w-full object-contain mix-blend-multiply">
+                            </div>
+                            Banoqabil Pakistan
+                        </span>
+                    </div>
+                </marquee>
             </div>
 
             <!-- Features / Roles -->
             <div class="grid md:grid-cols-2 gap-8 max-w-5xl w-full">
-                <a href="/auth/owner/signin" class="group relative overflow-hidden rounded-3xl">
+                <a href="/auth/owner/login" class="group relative overflow-hidden rounded-3xl">
                     <div
                         class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=1000')] bg-cover bg-center brightness-50 group-hover:scale-110 transition-transform duration-700">
                     </div>
@@ -172,7 +176,7 @@
                     </div>
                 </a>
 
-                <a href="/auth/admin/signin" class="group relative overflow-hidden rounded-3xl">
+                <a href="/auth/admin/login" class="group relative overflow-hidden rounded-3xl">
                     <div
                         class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=1000')] bg-cover bg-center brightness-50 group-hover:scale-110 transition-transform duration-700">
                     </div>
@@ -209,9 +213,9 @@
                         <span class="icl-gradient-text">Incubation Cricket League</span>
                     </h2>
                     <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-medium">
-                        The ICL is more than just a tournament; it's a high-stakes arena where strategy meets
+                        The ICL is more than just a league; it's a high-stakes arena where strategy meets
                         passion.
-                        Born from the vision of Alkhidmat Karachi and Bano Qabil, this league brings together the
+                        Born from the vision of Alkhidmat and Bano Qabil, this league brings together the
                         brightest
                         minds from our incubation centers to compete on the cricket pitch.
                     </p>

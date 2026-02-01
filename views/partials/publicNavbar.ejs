@@ -42,9 +42,9 @@
                     </a>
                     <% } else { %>
                         <div class="hidden sm:flex gap-4 items-center">
-                            <a href="/auth/owner/signin"
+                            <a href="/auth/owner/login"
                                 class="px-5 py-2 text-xs font-bold border-2 border-white/10 text-white hover:bg-white hover:text-black rounded-lg transition-all uppercase tracking-widest italic">Owner</a>
-                            <a href="/auth/admin/signin"
+                            <a href="/auth/admin/login"
                                 class="px-5 py-2 text-xs font-bold border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded-lg transition-all uppercase tracking-widest italic">Admin</a>
                         </div>
                         <% } %>
@@ -80,9 +80,9 @@
                     Auction</a>
                 <hr class="border-white/5 my-2">
                 <% if (!locals.user) { %>
-                    <a href="/auth/owner/signin" class="text-sm font-bold text-gray-400 uppercase italic">Owner
+                    <a href="/auth/owner/login" class="text-sm font-bold text-gray-400 uppercase italic">Owner
                         Portal</a>
-                    <a href="/auth/admin/signin"
+                    <a href="/auth/admin/login"
                         class="text-sm font-bold text-lime-500 uppercase italic font-black">Admin
                         Access</a>
                     <% } else { %>

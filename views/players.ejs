@@ -5,23 +5,39 @@
                 <% } %>
 
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                        <div>
+                        <div class="flex-1 w-full md:w-auto">
                             <h3 class="text-3xl font-black text-gray-900 dark:text-white">Players Pool</h3>
                             <p class="text-sm text-gray-500 font-medium mt-1">Browse and manage all registered players
                                 in the auction.</p>
+
+                            <!-- Search Bar -->
+                            <form action="" method="GET" class="mt-6 flex gap-3 max-w-md">
+                                <div class="relative flex-1">
+                                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                    <input type="text" name="search"
+                                        value="<%= typeof search !== 'undefined' ? search : '' %>"
+                                        placeholder="Search by name, campus or category..."
+                                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl pl-11 pr-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all">
+                                </div>
+                                <button type="submit"
+                                    class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all">
+                                    Search
+                                </button>
+                            </form>
                         </div>
                         <% if (locals.userType==='admin' ) { %>
-                            <div class="flex items-center gap-3">
-            <a href="/player/bulk-upload"
-                class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 px-6 py-3 rounded-2xl text-sm font-black transition-all hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 shadow-sm">
-                <i class="fas fa-file-upload text-blue-500"></i> 
-                <span>Bulk Upload</span>
-            </a>
-                            <a href="/auth/player/register"
-                                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl text-sm font-black transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2 group">
-                                <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span>Enroll New
-                                    Player</span>
-                            </a>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <a href="/player/bulk-upload"
+                                    class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 px-6 py-3 rounded-2xl text-sm font-black transition-all hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 shadow-sm">
+                                    <i class="fas fa-file-upload text-blue-500"></i>
+                                    <span>Bulk Upload</span>
+                                </a>
+                                <a href="/auth/player/register"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl text-sm font-black transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2 group">
+                                    <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span>Enroll
+                                        New
+                                        Player</span>
+                                </a>
                             </div>
                             <% } %>
                     </div>
@@ -169,7 +185,7 @@
 
                                     <div class="flex items-center gap-3">
                                         <% if (currentPage> 1) { %>
-                                            <a href="?page=<%= currentPage - 1 %>"
+                                            <a href="?page=<%= currentPage - 1 %><%= typeof search !== 'undefined' && search ? '&search=' + search : '' %>"
                                                 class="h-10 w-10 flex items-center justify-center rounded-xl bg-white dark:bg-gray-800 text-gray-400 hover:text-blue-600 transition-all border border-gray-200 dark:border-gray-700 shadow-sm">
                                                 <i class="fas fa-chevron-left text-xs"></i>
                                             </a>
@@ -177,7 +193,7 @@
 
                                                 <div class="flex gap-2">
                                                     <% for(let i=1; i <=totalPages; i++) { %>
-                                                        <a href="?page=<%= i %>"
+                                                        <a href="?page=<%= i %><%= typeof search !== 'undefined' && search ? '&search=' + search : '' %>"
                                                             class="h-10 min-w-[40px] px-3 flex items-center justify-center rounded-xl text-xs font-black transition-all <%= currentPage === i ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700' %>">
                                                             <%= i %>
                                                         </a>
@@ -185,24 +201,20 @@
                                                 </div>
 
                                                 <% if (currentPage < totalPages) { %>
-                                                    <a href="?page=<%= currentPage + 1 %>"
+                                                    <a href="?page=<%= currentPage + 1 %><%= typeof search !== 'undefined' && search ? '&search=' + search : '' %>"
                                                         class="h-10 w-10 flex items-center justify-center rounded-xl bg-white dark:bg-gray-800 text-gray-400 hover:text-blue-600 transition-all border border-gray-200 dark:border-gray-700 shadow-sm">
                                                         <i class="fas fa-chevron-right text-xs"></i>
                                                     </a>
                                                     <% } %>
                                     </div>
 
-                        
+
                                 </div>
-                                <% } %>                         
-                    </div>             
+                                <% } %>
+                    </div>
 
                     <% if (locals.userType==='admin' ) { %>
                         <%- include('layouts/admin_layout_footer') %>
                             <% } else { %>
                                 <%- include('layouts/owner_layout_footer') %>
                                     <% } %>
-
-                                    
-
-                                    
