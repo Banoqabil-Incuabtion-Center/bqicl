@@ -1,5 +1,6 @@
 <% if (typeof hideFooter==='undefined' || !hideFooter) { %>
-    <footer class="bg-gray-950 border-t border-white/5 pt-20 pb-10 px-6 ">
+    <footer
+        class="bg-white dark:bg-gray-950 border-t border-black/5 dark:border-white/5 pt-20 pb-10 px-6 transition-colors duration-300">
         <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16 text-center md:text-left">
                 <!-- Presented By -->
@@ -7,12 +8,14 @@
                     <h4 class="text-[10px] font-black tracking-[0.3em] uppercase text-gray-500">Presented By</h4>
                     <div class="flex items-center gap-6">
                         <div
-                            class="h-16 w-auto p-2 bg-white/5 rounded-xl border border-white/10 flex items-center justify-center">
-                            <img src="/alkhidmat.png" alt="Alkhidmat" class="h-full w-auto object-contain">
+                            class="h-16 w-auto p-2 bg-black/5 dark:bg-white/5 rounded-xl border border-black/10 dark:border-white/10 flex items-center justify-center">
+                            <img src="/alkhidmat.png" alt="Alkhidmat"
+                                class="h-full w-auto object-contain mix-blend-multiply dark:mix-blend-normal">
                         </div>
                         <div
-                            class="h-16 w-auto p-2 bg-white/5 rounded-xl border border-white/10 flex items-center justify-center">
-                            <img src="/banoqabil.png" alt="Bano Qabil" class="h-full w-auto object-contain">
+                            class="h-16 w-auto p-2 bg-black/5 dark:bg-white/5 rounded-xl border border-black/10 dark:border-white/10 flex items-center justify-center">
+                            <img src="/banoqabil.png" alt="Bano Qabil"
+                                class="h-full w-auto object-contain mix-blend-multiply dark:mix-blend-normal">
                         </div>
                     </div>
                 </div>
@@ -21,7 +24,8 @@
                 <div class="space-y-6 flex flex-col items-center md:items-start">
                     <h4 class="text-[10px] font-black tracking-[0.3em] uppercase text-gray-500">Organized By</h4>
                     <div class="flex flex-col gap-2">
-                        <span class="text-white font-black italic uppercase tracking-tighter text-2xl">Bano
+                        <span
+                            class="text-gray-900 dark:text-white font-black italic uppercase tracking-tighter text-2xl">Bano
                             Qabil</span>
                         <span class="text-lime-500 font-black uppercase tracking-widest text-[10px]">Incubation Center
                             Bahadurabad</span>
@@ -33,15 +37,15 @@
                     <h4 class="text-[10px] font-black tracking-[0.3em] uppercase text-gray-500">Connect With Us</h4>
                     <div class="flex gap-4">
                         <a href="#"
-                            class="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-lime-500 hover:text-black transition-all">
+                            class="h-10 w-10 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-gray-400 hover:bg-lime-500 hover:text-black transition-all">
                             <i class="fab fa-facebook-f"></i>
                         </a>
                         <a href="#"
-                            class="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-lime-500 hover:text-black transition-all">
+                            class="h-10 w-10 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-gray-400 hover:bg-lime-500 hover:text-black transition-all">
                             <i class="fab fa-instagram"></i>
                         </a>
                         <a href="#"
-                            class="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-lime-500 hover:text-black transition-all">
+                            class="h-10 w-10 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-gray-400 hover:bg-lime-500 hover:text-black transition-all">
                             <i class="fab fa-twitter"></i>
                         </a>
                     </div>
@@ -49,7 +53,8 @@
             </div>
 
             <!-- Bottom Bar -->
-            <div class="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-white/5 gap-6">
+            <div
+                class="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-black/5 dark:border-white/5 gap-6">
                 <div class="flex items-center gap-4">
                     <div
                         class="h-8 w-8 bg-lime-500 rounded-lg flex items-center justify-center font-black text-black text-[10px] italic">
