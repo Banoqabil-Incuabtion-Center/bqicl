@@ -55,6 +55,67 @@
                 filter: brightness(1);
             }
         }
+
+        /* Sold Animation Styles */
+        .sold-overlay {
+            background: radial-gradient(circle at center, rgba(56, 176, 0, 0.2) 0%, rgba(0, 0, 0, 0.98) 70%);
+        }
+
+        .sold-text-animate {
+            animation: sold-stamp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes sold-stamp {
+            0% {
+                transform: scale(5) rotate(-20deg);
+                opacity: 0;
+                filter: blur(20px);
+            }
+
+            100% {
+                transform: scale(1) rotate(-5deg);
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #bef264;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 10px #bef264;
+        }
+
+        @keyframes sparkle-fountain {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .entrance-scale {
+            animation: entrance-scale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes entrance-scale {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
     </style>
 
     <main class="flex-grow flex flex-col items-center relative w-full px-4 py-8 md:py-12 overflow-hidden">
@@ -247,7 +308,57 @@
         </div>
     </div>
 
+    <!-- SOLD Celebration Overlay (Centered) -->
+    <div id="sold-overlay"
+        class="hidden fixed inset-0 z-[200] items-center justify-center sold-overlay backdrop-blur-sm">
+        <div id="sparkle-container" class="absolute inset-0 pointer-events-none"></div>
+
+        <div class="relative w-full max-w-2xl px-4 flex flex-col items-center justify-center text-center space-y-8">
+            <!-- 1. Team Logo -->
+            <div class="relative entrance-scale delay-100">
+                <div class="absolute inset-0 bg-lime-500/20 blur-3xl rounded-full scale-110"></div>
+                <div class="relative bg-white p-4 rounded-3xl shadow-2xl border border-white/20">
+                    <img id="sold-team-logo" src="" class="h-32 w-32 md:h-40 md:w-40 object-contain">
+                </div>
+                <p id="sold-team-name" class="mt-4 text-2xl font-black text-lime-500 uppercase tracking-[0.2em] italic">
+                    Team Name</p>
+            </div>
+
+            <!-- 2. Player Image -->
+            <div class="relative entrance-scale delay-300">
+                <div class="absolute inset-0 bg-white/10 blur-3xl rounded-full scale-125"></div>
+                <div class="relative rounded-full p-2 bg-gradient-to-tr from-lime-500 to-emerald-500">
+                    <img id="sold-player-img" src=""
+                        class="h-48 w-48 md:h-60 md:w-60 rounded-full object-cover border-8 border-gray-950 shadow-2xl">
+                </div>
+                <p id="sold-player-name"
+                    class="mt-4 text-4xl md:text-5xl font-black text-white italic uppercase tracking-tighter">Player
+                    Name</p>
+            </div>
+
+            <!-- 3. SOLD message + Price -->
+            <div class="flex flex-col items-center space-y-2">
+                <h1
+                    class="sold-text-animate text-8xl md:text-[10rem] font-black text-lime-500 italic uppercase tracking-tighter leading-none drop-shadow-[0_0_50px_rgba(163,230,53,0.5)]">
+                    SOLD!
+                </h1>
+                <div
+                    class="entrance-scale delay-700 bg-black/40 backdrop-blur-xl px-12 py-4 rounded-2xl border border-white/10">
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em] mb-1">Final Investment</p>
+                    <p id="sold-final-price" class="text-5xl md:text-6xl font-black text-white italic tracking-tighter">
+                        $0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>
+        // Init Pusher
+        const pusherKey = "<%= process.env.PUSHER_KEY %>";
+        const pusher = new Pusher(pusherKey, { cluster: '<%= process.env.PUSHER_CLUSTER || "ap2" %>' });
+        const channel = pusher.subscribe('auction-channel');
+
         const waitingUI = document.getElementById('waiting-ui');
         const activeUI = document.getElementById('active-ui');
         const projImg = document.getElementById('proj-img');
@@ -266,6 +377,15 @@
         const historyModal = document.getElementById('history-modal');
         const modalBidsContainer = document.getElementById('modal-bids-container');
 
+        // Sold Overlay Elements
+        const soldOverlay = document.getElementById('sold-overlay');
+        const soldTeamLogo = document.getElementById('sold-team-logo');
+        const soldPlayerImg = document.getElementById('sold-player-img');
+        const soldPlayerName = document.getElementById('sold-player-name');
+        const soldTeamName = document.getElementById('sold-team-name');
+        const soldFinalPrice = document.getElementById('sold-final-price');
+        const sparkleContainer = document.getElementById('sparkle-container');
+
         let currentAuctionId = null;
         let allRecentBids = [];
 
@@ -283,6 +403,9 @@
         }
 
         function updateUI(data) {
+            // If an animation is playing, don't update background UI yet
+            if (!soldOverlay.classList.contains('hidden')) return;
+
             if (!data.isSessionActive || !data.auction || !data.auction.player) {
                 waitingUI.classList.remove('hidden');
                 activeUI.classList.add('hidden');
@@ -410,6 +533,70 @@
                 `;
             }
         }
+
+        // Celebrate Logic
+        function triggerSoldAnimation(data) {
+            soldTeamLogo.src = data.teamLogo || '/images/default-team.png';
+            soldPlayerImg.src = data.playerImage || '/images/default-player.png';
+            soldPlayerName.textContent = data.name; // Pusher controller sends 'name' not 'playerName' usually, checking...
+            // Checking auctionApiController.js: player-sold event sends playerId, name, playerImage, teamName, teamLogo, amount
+            soldPlayerName.textContent = data.name;
+            soldTeamName.textContent = data.teamName;
+            soldFinalPrice.textContent = '$' + Number(data.amount).toLocaleString();
+
+            soldOverlay.classList.remove('hidden');
+            soldOverlay.classList.add('flex');
+
+            createSparkles();
+
+            // Set a timeout to hide the overlay after 10 seconds and reload
+            setTimeout(() => {
+                soldOverlay.classList.add('hidden');
+                soldOverlay.classList.remove('flex');
+                sparkleContainer.innerHTML = '';
+                location.reload();
+            }, 10000);
+        }
+
+        function createSparkles() {
+            const count = 100;
+            for (let i = 0; i < count; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+
+                // Random destination using CSS variables
+                const tx = (Math.random() - 0.5) * 1000;
+                const ty = (Math.random() - 1) * 800; // Fountain effect
+                sparkle.style.setProperty('--tx', `${tx}px`);
+                sparkle.style.setProperty('--ty', `${ty}px`);
+
+                // Start from center
+                sparkle.style.left = '50%';
+                sparkle.style.top = '50%';
+
+                sparkle.style.animation = `sparkle-fountain ${1 + Math.random() * 2}s cubic-bezier(0.1, 0.8, 0.3, 1) forwards`;
+                sparkle.style.animationDelay = `${Math.random() * 0.5}s`;
+
+                sparkleContainer.appendChild(sparkle);
+            }
+        }
+
+        // Pusher Event Handler
+        channel.bind('bid-placed', (data) => {
+            pollState();
+        });
+
+        channel.bind('player-sold', (data) => {
+            triggerSoldAnimation(data);
+        });
+
+        channel.bind('player-unsold', () => {
+            location.reload();
+        });
+
+        channel.bind('new-player', () => {
+            location.reload();
+        });
 
         // Initialize polling
         pollState();

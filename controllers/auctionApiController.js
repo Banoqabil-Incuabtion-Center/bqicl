@@ -179,9 +179,9 @@ auctionApiController.callPlayer = async (req, res) => {
             image: player.playerImage,
             basePrice: player.basePrice,
             category: player.category,
-          
+
         });
-        console.log("controllers",player.campus)
+        console.log("controllers", player.campus)
 
         res.json({
             success: true,
@@ -191,7 +191,7 @@ auctionApiController.callPlayer = async (req, res) => {
                 playerName: player.name,
                 basePrice: player.basePrice,
                 currentBid: player.basePrice,
-                
+
             }
         });
     } catch (error) {
@@ -325,6 +325,7 @@ auctionApiController.markSold = async (req, res) => {
             name: player.name,
             playerImage: player.playerImage,
             teamName: team.name,
+            teamLogo: team.teamLogo,
             amount: auction.currentBid
         });
 
@@ -408,13 +409,13 @@ auctionApiController.getBidHistory = async (req, res) => {
     }
 };
 
-auctionApiController.renderAuctionPage = async (req,res) => {
-     try {
-      res.render("audienceAuction", { title: "Audience Auciton" });
-   } catch (error) {
-      console.error("Error in GET /audeince auction:", error);
-      res.status(500).json({ message: "Internal server error" });
-   }
+auctionApiController.renderAuctionPage = async (req, res) => {
+    try {
+        res.render("audienceAuction", { title: "Audience Auciton" });
+    } catch (error) {
+        console.error("Error in GET /audeince auction:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 }
 
 
