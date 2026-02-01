@@ -56,9 +56,11 @@
                                 </div>
                             </div>
                             <button onclick="pushToAuction('<%= player.id %>')"
-                                class="<%= isSessionActive ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed' %> px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all"
-                                <%=!isSessionActive ? 'disabled' : '' %>>
-                                Call
+                                class="<%= isSessionActive && !activeAuction ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed' %> px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all"
+                                <%=(!isSessionActive || activeAuction) ? 'disabled' : '' %>
+                                title="<%= activeAuction ? 'Complete current auction first' : (!isSessionActive
+                                    ? 'Start session first' : 'Call player to auction' ) %>">
+                                    Call
                             </button>
                         </div>
                         <% }) %>
@@ -120,11 +122,16 @@
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                         <button onclick="markSold()"
-                                            class="group relative bg-green-500 hover:bg-green-600 text-white py-5 rounded-2xl font-black text-2xl transition-all shadow-lg shadow-green-500/20 active:scale-95 overflow-hidden">
-                                            <span class="relative z-10">Mark Sold</span>
-                                            <div
-                                                class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                            </div>
+                                            class="group relative py-5 rounded-2xl font-black text-2xl transition-all overflow-hidden <%= activeAuction.lastBidTeamId ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/20 active:scale-95' : 'bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed' %>"
+                                            <%=!activeAuction.lastBidTeamId ? 'disabled' : '' %>
+                                            title="<%= !activeAuction.lastBidTeamId ? 'No bids placed yet'
+                                                : 'Mark player as sold' %>">
+                                                <span class="relative z-10">Mark Sold</span>
+                                                <% if (activeAuction.lastBidTeamId) { %>
+                                                    <div
+                                                        class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                                                    </div>
+                                                    <% } %>
                                         </button>
                                         <button onclick="markUnsold()"
                                             class="bg-red-500/10 text-red-500 border-2 border-red-500/20 hover:bg-red-500 hover:text-white py-5 rounded-2xl font-black text-2xl transition-all active:scale-95">
@@ -204,14 +211,21 @@
 
             async function pushToAuction(playerId) {
                 try {
-                    await fetch('/api/auction/player/call', {
+                    const res = await fetch('/api/auction/player/call', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ playerId })
                     });
                     const data = await res.json();
-                    if (!data.success) alert(data.message);
-                } catch (err) { console.error(err); }
+                    if (!data.success) {
+                        alert(data.message);
+                    } else {
+                        location.reload();
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Failed to call player. Please try again.');
+                }
             }
 
             async function markSold() {

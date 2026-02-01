@@ -149,6 +149,20 @@ auctionApiController.callPlayer = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Auction session not active' });
         }
 
+        // Check if there's already an active auction - only one player can be bid on at a time
+        const existingActiveAuction = await Auction.findOne({
+            where: { status: 'active' },
+            include: [{ model: Player, as: 'currentPlayer' }]
+        });
+
+        if (existingActiveAuction) {
+            const currentPlayerName = existingActiveAuction.currentPlayer ? existingActiveAuction.currentPlayer.name : 'Unknown Player';
+            return res.status(400).json({
+                success: false,
+                message: `Cannot call a new player. "${currentPlayerName}" is currently being auctioned. Please mark them as Sold or Unsold first.`
+            });
+        }
+
         const player = await Player.findByPk(playerId);
         if (!player) {
             return res.status(404).json({ success: false, message: 'Player not found' });
@@ -157,9 +171,6 @@ auctionApiController.callPlayer = async (req, res) => {
         if (player.status !== 'available') {
             return res.status(400).json({ success: false, message: 'Player not available for auction' });
         }
-
-        // End any existing active auction
-        await Auction.update({ status: 'completed' }, { where: { status: 'active' } });
 
         // Create new auction for this player
         const auction = await Auction.create({
