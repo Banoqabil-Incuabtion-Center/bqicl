@@ -114,13 +114,15 @@
                                                                 <i class="fas fa-baseball-bat-ball text-blue-500"></i>
                                                                 <% } else if (player.category==='Bowler' ) { %>
                                                                     <i class="fas fa-baseball text-red-500"></i>
+                                                                <% } else if (player.category==='Wicket-keeper-batsman' ) { %>
+                                                                    <i class="fas fa-hands text-red-500"></i>
                                                                     <% } else if (player.category==='All-rounder' ) { %>
                                                                         <i class="fas fa-bolt text-yellow-500"></i>
                                                                         <% } else { %>
                                                                             <i class="fas fa-hands text-green-500"></i>
                                                                             <% } %>
                                                                                 <span
-                                                                                    class="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">
+                                                                                    class="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">
                                                                                     <%= player.category %>
                                                                                 </span>
                                                         </div>
