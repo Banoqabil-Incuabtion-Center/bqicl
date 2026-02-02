@@ -12,11 +12,11 @@ import csrfProtection from '../middlewares/csrfMiddleware.js';
 
 const router = Router();
 
-// 2. ADMIN SIGN IN
-router.get('/admin/signin', authController.renderSignin);
-router.post('/admin/signin', validator(loginSchema, 'adminSignin'), authController.handleSignin);
-// 3. ADMIN SIGN OUT 
-router.post('/admin/signout', requireAdminAuth, authController.handleSignout);
+// 2. ADMIN LOGIN
+router.get('/admin/login', authController.renderSignin);
+router.post('/admin/login', validator(loginSchema, 'adminLogin'), authController.handleSignin);
+// 3. ADMIN LOGOUT 
+router.post('/admin/logout', requireAdminAuth, authController.handleSignout);
 
 
 
@@ -25,12 +25,12 @@ router.post('/admin/signout', requireAdminAuth, authController.handleSignout);
 router.get('/owner/register', requireAdminAuth, ownerController.renderRegister);
 router.post('/owner/register', requireAdminAuth, upload.single('image'), csrfProtection, validator(registerSchema), ownerController.handleRegister);
 
-// 2. OWNER SIGN IN
-router.get('/owner/signin', ownerController.renderSignin);
-router.post('/owner/signin', validator(loginSchema, 'ownerSignin'), ownerController.handleSignin);
+// 2. OWNER LOGIN
+router.get('/owner/login', ownerController.renderSignin);
+router.post('/owner/login', validator(loginSchema, 'ownerLogin'), ownerController.handleSignin);
 
-// 3. OWNER SIGN OUT 
-router.post('/owner/signout', requireOwnerAuth, authController.handleSignout);
+// 3. OWNER LOGOUT 
+router.post('/owner/logout', requireOwnerAuth, authController.handleSignout);
 
 // // 4. OWNER PASSWORD RESET
 // router.get('/owner/forget-password', authController.renderForgetPassword);

@@ -1,7 +1,7 @@
 <%- include('themeHeader') %>
 
     <nav
-        class="fixed top-0 w-full z-50 glass border-b border-black/5 dark:border-white/5 h-20 md:h-24 flex items-center transition-colors duration-300">
+        class="fixed top-0 w-full z-50 glass border-b border-black/5 dark:border-white/5 h-16 md:h-20 flex items-center transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 w-full flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <a href="/" class="flex items-center gap-4">
@@ -9,7 +9,8 @@
                         <img src="/logo.png" alt="ICL Logo" class="h-full w-full object-contain">
                     </div>
                     <div>
-                        <span class="text-lg sm:text-2xl font-black tracking-tighter text-white uppercase italic">
+                        <span
+                            class="text-lg sm:text-2xl font-black tracking-tighter text-gray-900 dark:text-white uppercase italic">
                             ICL
                         </span>
                         <div
@@ -22,32 +23,30 @@
             <!-- Desktop Links -->
             <div class="hidden lg:flex items-center gap-8">
                 <a href="/" data-nav="home"
-                    class="nav-link text-xs font-black uppercase tracking-widest transition-all italic text-gray-400 hover:text-white">Home</a>
+                    class="nav-link text-xs font-black uppercase tracking-widest transition-all italic text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Home</a>
                 <a href="/#about" data-nav="about"
-                    class="nav-link text-xs font-black uppercase tracking-widest transition-all italic text-gray-400 hover:text-white">About</a>
+                    class="nav-link text-xs font-black uppercase tracking-widest transition-all italic text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">About</a>
                 <a href="/players" data-nav="players"
-                    class="nav-link text-xs font-black uppercase tracking-widest transition-all italic text-gray-400 hover:text-white">Players</a>
+                    class="nav-link text-xs font-black uppercase tracking-widest transition-all italic text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Players</a>
                 <a href="/teams" data-nav="teams"
-                    class="nav-link text-xs font-black uppercase tracking-widest transition-all italic text-gray-400 hover:text-white">Teams</a>
+                    class="nav-link text-xs font-black uppercase tracking-widest transition-all italic text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Teams</a>
                 <a href="/auction" data-nav="auction"
-                    class="nav-link text-xs font-black uppercase tracking-widest transition-all italic text-lime-500 hover:text-lime-400 shadow-lime-500/10">Live
+                    class="nav-link text-xs font-black uppercase tracking-widest transition-all italic text-lime-600 dark:text-lime-500 hover:text-lime-700 dark:hover:text-lime-400 shadow-lime-500/10">Live
                     Auction</a>
             </div>
 
+            <!-- Right Side Actions -->
             <div class="flex items-center gap-4 sm:gap-6">
                 <% if (locals.user) { %>
-                    <a href="/<%= locals.user.role === 'admin' ? 'admin' : 'owner' %>/dashboard"
+                    <a href="/<%= locals.userType === 'admin' ? 'admin' : 'owner' %>/dashboard"
                         class="px-4 py-2 sm:px-6 sm:py-2.5 text-[10px] sm:text-sm font-bold bg-lime-500 text-black rounded-lg transition-all shadow-lg shadow-lime-900/40 hover:scale-105 active:scale-95 uppercase italic">
                         Dashboard <i class="fas fa-bolt ml-2 text-[10px]"></i>
                     </a>
                     <% } else { %>
-                        <div class="hidden sm:flex gap-4 items-center">
-                            <a href="/auth/owner/signin"
-                                class="px-5 py-2 text-xs font-bold border-2 border-white/10 text-white hover:bg-white hover:text-black rounded-lg transition-all uppercase tracking-widest italic">Owner</a>
-                            <a href="/auth/admin/signin"
-                                class="px-5 py-2 text-xs font-bold border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded-lg transition-all uppercase tracking-widest italic">Admin</a>
-                        </div>
+                        <a href="/auth/owner/login"
+                            class="px-5 py-2 text-xs font-bold border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded-lg transition-all uppercase tracking-widest italic">Franchise</a>
                         <% } %>
+
                             <!-- Theme Toggle -->
                             <button id="theme-toggle"
                                 class="p-2.5 rounded-xl bg-black/5 dark:bg-white/5 text-gray-500 dark:text-gray-400 hover:text-lime-500 dark:hover:text-lime-400 transition-all border border-black/5 dark:border-white/5">
@@ -61,6 +60,7 @@
                                 <i class="fas fa-bars"></i>
                             </button>
             </div>
+        </div>
         </div>
 
         <!-- Mobile Menu -->
@@ -80,13 +80,10 @@
                     Auction</a>
                 <hr class="border-white/5 my-2">
                 <% if (!locals.user) { %>
-                    <a href="/auth/owner/signin" class="text-sm font-bold text-gray-400 uppercase italic">Owner
+                    <a href="/auth/owner/login" class="text-sm font-bold text-lime-500 uppercase italic">Franchise
                         Portal</a>
-                    <a href="/auth/admin/signin"
-                        class="text-sm font-bold text-lime-500 uppercase italic font-black">Admin
-                        Access</a>
                     <% } else { %>
-                        <a href="/<%= locals.user.role === 'admin' ? 'admin' : 'owner' %>/dashboard"
+                        <a href="/<%= locals.userType === 'admin' ? 'admin' : 'owner' %>/dashboard"
                             class="text-sm font-black text-lime-500 uppercase italic">Dashboard</a>
                         <% } %>
             </div>
@@ -99,9 +96,9 @@
             window.addEventListener('scroll', () => {
                 const nav = document.querySelector('nav');
                 if (window.scrollY > 20) {
-                    nav.classList.add('bg-black/80', 'backdrop-blur-xl');
+                    nav.classList.add('bg-white/80', 'dark:bg-black/80', 'backdrop-blur-xl', 'shadow-sm');
                 } else {
-                    nav.classList.remove('bg-black/80', 'backdrop-blur-xl');
+                    nav.classList.remove('bg-white/80', 'dark:bg-black/80', 'backdrop-blur-xl', 'shadow-sm');
                 }
             });
 
@@ -112,33 +109,33 @@
 
                 links.forEach(l => {
                     if (l.getAttribute('data-nav') === 'auction') {
-                        l.classList.add('text-lime-500');
-                        l.classList.remove('text-white', 'text-gray-400');
+                        l.classList.add('text-lime-600', 'dark:text-lime-500');
+                        l.classList.remove('text-gray-900', 'dark:text-white', 'text-gray-600', 'dark:text-gray-400');
                     } else {
-                        l.classList.remove('text-lime-500', 'text-white');
-                        l.classList.add('text-gray-400');
+                        l.classList.remove('text-lime-600', 'dark:text-lime-500', 'text-gray-900', 'dark:text-white');
+                        l.classList.add('text-gray-600', 'dark:text-gray-400');
                     }
                 });
 
                 if (path === '/' || path === '') {
                     document.querySelectorAll('[data-nav="home"]').forEach(l => {
-                        l.classList.add('text-lime-500', 'font-black');
-                        l.classList.remove('text-gray-400', 'text-white');
+                        l.classList.add('text-lime-600', 'dark:text-lime-500', 'font-black');
+                        l.classList.remove('text-gray-600', 'dark:text-gray-400', 'text-gray-900', 'dark:text-white');
                     });
                 } else if (path.startsWith('/players')) {
                     document.querySelectorAll('[data-nav="players"]').forEach(l => {
-                        l.classList.add('text-lime-500', 'font-black');
-                        l.classList.remove('text-gray-400', 'text-white');
+                        l.classList.add('text-lime-600', 'dark:text-lime-500', 'font-black');
+                        l.classList.remove('text-gray-600', 'dark:text-gray-400', 'text-gray-900', 'dark:text-white');
                     });
                 } else if (path.startsWith('/teams')) {
                     document.querySelectorAll('[data-nav="teams"]').forEach(l => {
-                        l.classList.add('text-lime-500', 'font-black');
-                        l.classList.remove('text-gray-400', 'text-white');
+                        l.classList.add('text-lime-600', 'dark:text-lime-500', 'font-black');
+                        l.classList.remove('text-gray-600', 'dark:text-gray-400', 'text-gray-900', 'dark:text-white');
                     });
                 } else if (path.startsWith('/auction')) {
                     document.querySelectorAll('[data-nav="auction"]').forEach(l => {
-                        l.classList.add('text-lime-500', 'font-black');
-                        l.classList.remove('text-gray-400', 'text-white');
+                        l.classList.add('text-lime-600', 'dark:text-lime-500', 'font-black');
+                        l.classList.remove('text-gray-600', 'dark:text-gray-400', 'text-gray-900', 'dark:text-white');
                     });
                 }
             };
@@ -154,21 +151,21 @@
                             if (id === 'about') {
                                 links.forEach(l => {
                                     if (l.getAttribute('data-nav') === 'about') {
-                                        l.classList.add('text-lime-500', 'font-black');
-                                        l.classList.remove('text-gray-400', 'text-white');
+                                        l.classList.add('text-lime-600', 'dark:text-lime-500', 'font-black');
+                                        l.classList.remove('text-gray-600', 'dark:text-gray-400', 'text-gray-900', 'dark:text-white');
                                     } else if (l.getAttribute('data-nav') === 'home') {
-                                        l.classList.remove('text-lime-500', 'text-white', 'font-black');
-                                        l.classList.add('text-gray-400');
+                                        l.classList.remove('text-lime-600', 'dark:text-lime-500', 'text-gray-900', 'dark:text-white', 'font-black');
+                                        l.classList.add('text-gray-600', 'dark:text-gray-400');
                                     }
                                 });
                             } else if (id === 'home' || entry.target.tagName === 'HEADER') {
                                 links.forEach(l => {
                                     if (l.getAttribute('data-nav') === 'home') {
-                                        l.classList.add('text-lime-500', 'font-black');
-                                        l.classList.remove('text-gray-400', 'text-white');
+                                        l.classList.add('text-lime-600', 'dark:text-lime-500', 'font-black');
+                                        l.classList.remove('text-gray-600', 'dark:text-gray-400', 'text-gray-900', 'dark:text-white');
                                     } else if (l.getAttribute('data-nav') === 'about') {
-                                        l.classList.remove('text-lime-500', 'text-white', 'font-black');
-                                        l.classList.add('text-gray-400');
+                                        l.classList.remove('text-lime-600', 'dark:text-lime-500', 'text-gray-900', 'dark:text-white', 'font-black');
+                                        l.classList.add('text-gray-600', 'dark:text-gray-400');
                                     }
                                 });
                             }

@@ -12,7 +12,7 @@
 <body class="bg-gray-900 min-h-screen flex items-center justify-center relative font-sans antialiased">
 
   <div class="absolute top-8 right-8">
-    <a href="/auth/owner/signin" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group">
+    <a href="/auth/owner/login" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group">
       <span class="font-medium">Owner Sign In</span>
       <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
     </a>
@@ -27,7 +27,7 @@
         <p class="text-gray-400 mt-2">Please sign in to your dashboard</p>
       </div>
 
-      <form action="/auth/admin/signin" method="POST" class="space-y-5">
+      <form action="/auth/admin/login" method="POST" class="space-y-5">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
         <div>
@@ -58,8 +58,7 @@
 
         <div class="flex flex-col pl-4">
           <span class="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Franchise Owner</span>
-          <a href="/auth/owner/signin"
-            class="text-sm text-blue-500 hover:text-blue-400 font-semibold transition-colors">
+          <a href="/auth/owner/login" class="text-sm text-blue-500 hover:text-blue-400 font-semibold transition-colors">
             Owner Sign Up
           </a>
         </div>
@@ -69,4 +68,3 @@
 </body>
 
 </html>
-
