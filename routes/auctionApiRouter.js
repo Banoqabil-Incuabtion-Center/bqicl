@@ -21,5 +21,4 @@ router.post('/bid', requireOwnerAuth, auctionApiController.placeBid);
 
 // Bid history
 router.get('/bid-history/:playerId', auctionApiController.getBidHistory);
-
 export default router;
