@@ -43,7 +43,7 @@ authController.handleRegister = async (req, res) => {
 
 
       req.flash('success', 'Registration successful! Please log in.');
-      return res.redirect('/auth/admin/signin');
+      return res.redirect('/auth/admin/login');
 
    } catch (error) {
       console.error("Error creating admin:", error);
@@ -75,7 +75,7 @@ authController.handleSignin = async (req, res) => {
 
       if (!admin) {
          req.flash('error', 'Invalid email or password.');
-         return res.status(400).redirect('/auth/admin/signin');
+         return res.status(400).redirect('/auth/admin/login');
       }
       // console.log(admin.id)
 
@@ -83,7 +83,7 @@ authController.handleSignin = async (req, res) => {
       if (!validPassword) {
          // console.log("Password did not match");
          req.flash('error', 'Invalid email or password.');
-         return res.status(400).redirect('/auth/admin/signin');
+         return res.status(400).redirect('/auth/admin/login');
       }
       // console.log("Password matched");
 
@@ -150,16 +150,36 @@ authController.handleResetPassword = (req, res) => {
 
 authController.handleSignout = async (req, res) => {
    const userType = res.locals.userType;
+   // Always clear cookies first
    res.clearCookie("accessToken");
+   const refreshToken = req.cookies.refreshToken;
    res.clearCookie("refreshToken");
-   const { id } = req.user;
-   await RefreshToken.destroy({ where: { userId: id, userType: userType } });
+
+   try {
+      let userId = req.user ? req.user.id : null;
+
+      // If req.user is missing (session expired), try to get ID from refresh token to clean up DB
+      if (!userId && refreshToken) {
+         const decoded = jwt.decode(refreshToken);
+         if (decoded && decoded.id) {
+            userId = decoded.id;
+         }
+      }
+
+      if (userId && userType) {
+         await RefreshToken.destroy({ where: { userId: userId, userType: userType } });
+      }
+   } catch (error) {
+      console.error("Error during signout cleanup:", error);
+      // Continue to logout even if DB cleanup fails
+   }
+
    req.flash('success', 'You have been signed out successfully.');
 
    if (userType === 'owner') {
-      return res.redirect('/auth/owner/signin');
+      return res.redirect('/auth/owner/login');
    }
-   return res.redirect('/auth/admin/signin');
+   return res.redirect('/auth/admin/login');
 }
 
 
@@ -186,22 +206,26 @@ authController.refreshToken = async (req, res, originalUrl) => {
          return res.status(401).json({ success: false, message: 'Invalid refresh token' });
       }
       req.flash('error', 'Invalid refresh token. Please login again.');
-      return res.status(403).redirect('/auth/admin/signin');
+      return res.status(403).redirect('/auth/admin/login');
    }
    try {
       const decoded = jwt.verify(refreshTokenFromCookie, process.env.REFRESH_TOKEN_SECRET);
-      const storedToken = await RefreshToken.findOne({ where: { userId: decoded.id, userType: 'admin' } });
+      // Use role from token instead of hardcoding 'admin'
+      const userType = decoded.role || 'admin';
+
+      const storedToken = await RefreshToken.findOne({ where: { userId: decoded.id, userType: userType } });
 
       if (!storedToken || storedToken.token !== tokenHash(refreshTokenFromCookie) || storedToken.expiryDate < new Date()) {
          if (req.xhr || req.path.startsWith('/api/') || (req.headers.accept && req.headers.accept.includes('application/json'))) {
             return res.status(401).json({ success: false, message: 'Session expired or invalid' });
          }
          req.flash('error', 'Session expired. Please login again.');
-         return res.status(403).redirect('/auth/admin/signin');
+         // Redirect based on user type
+         return res.status(403).redirect(userType === 'owner' ? '/auth/owner/login' : '/auth/admin/login');
       }
 
-      const newAccessToken = generateAccessToken(decoded, 'admin');
-      const newRefreshToken = generateRefreshToken(decoded, 'admin');
+      const newAccessToken = generateAccessToken(decoded, userType);
+      const newRefreshToken = generateRefreshToken(decoded, userType);
 
       storedToken.token = tokenHash(newRefreshToken);
       storedToken.expiryDate = new Date(Date.now() + parseInt(process.env.REFRESH_TOKEN_LIFE));
@@ -220,15 +244,18 @@ authController.refreshToken = async (req, res, originalUrl) => {
          sameSite: "lax",
          maxAge: 15 * 60 * 1000
       });
-      req.flash('success', 'User verified!');
-      const redirectUrl = originalUrl && originalUrl !== '/auth/admin/signin'
+      // req.flash('success', 'User verified!'); // No need to flash on silent refresh
+
+      const redirectUrl = originalUrl && !originalUrl.includes('login') && !originalUrl.includes('signin')
          ? originalUrl
-         : '/admin/dashboard';
+         : (userType === 'owner' ? '/owner/dashboard' : '/admin/dashboard');
+
       return res.redirect(redirectUrl);
    }
    catch (error) {
       console.error("Error in refreshing token:", error);
       req.flash('error', 'An error occurred while verifying user. Please login again.');
+      return res.redirect('/auth/admin/login');
    }
 
 }

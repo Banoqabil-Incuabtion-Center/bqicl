@@ -80,7 +80,7 @@ ownerController.handleSignin = async (req, res) => {
 
       if (!owner) {
          req.flash('error', 'Invalid email or password.');
-         return res.status(400).redirect('/auth/owner/signin');
+         return res.status(400).redirect('/auth/owner/login');
       }
 
 
@@ -88,7 +88,7 @@ ownerController.handleSignin = async (req, res) => {
       const validPassword = await bcrypt.compare(password, owner.password);
       if (!validPassword) {
          req.flash("error", "Invalid email or password.");
-         return res.status(400).redirect("/auth/owner/signin");
+         return res.status(400).redirect("/auth/owner/login");
       }
       const accessToken = generateAccessToken(owner, "owner");
 
@@ -132,8 +132,8 @@ ownerController.handleSignin = async (req, res) => {
    }
    catch (error) {
       console.error("Error in POST /signin:", error);
-      req.flash('error', 'An error occurred during sign in. Please try again.');
-      return res.status(500).redirect('/auth/owner/signin');
+      req.flash('error', 'An error occurred during log in. Please try again.');
+      return res.status(500).redirect('/auth/owner/login');
    }
 }
 

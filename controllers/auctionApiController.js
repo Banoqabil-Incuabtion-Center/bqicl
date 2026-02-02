@@ -149,6 +149,20 @@ auctionApiController.callPlayer = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Auction session not active' });
         }
 
+        // Check if there's already an active auction - only one player can be bid on at a time
+        const existingActiveAuction = await Auction.findOne({
+            where: { status: 'active' },
+            include: [{ model: Player, as: 'currentPlayer' }]
+        });
+
+        if (existingActiveAuction) {
+            const currentPlayerName = existingActiveAuction.currentPlayer ? existingActiveAuction.currentPlayer.name : 'Unknown Player';
+            return res.status(400).json({
+                success: false,
+                message: `Cannot call a new player. "${currentPlayerName}" is currently being auctioned. Please mark them as Sold or Unsold first.`
+            });
+        }
+
         const player = await Player.findByPk(playerId);
         if (!player) {
             return res.status(404).json({ success: false, message: 'Player not found' });
@@ -157,9 +171,6 @@ auctionApiController.callPlayer = async (req, res) => {
         if (player.status !== 'available') {
             return res.status(400).json({ success: false, message: 'Player not available for auction' });
         }
-
-        // End any existing active auction
-        await Auction.update({ status: 'completed' }, { where: { status: 'active' } });
 
         // Create new auction for this player
         const auction = await Auction.create({
@@ -179,9 +190,9 @@ auctionApiController.callPlayer = async (req, res) => {
             image: player.playerImage,
             basePrice: player.basePrice,
             category: player.category,
-          
+
         });
-        console.log("controllers",player.campus)
+        console.log("controllers", player.campus)
 
         res.json({
             success: true,
@@ -191,7 +202,7 @@ auctionApiController.callPlayer = async (req, res) => {
                 playerName: player.name,
                 basePrice: player.basePrice,
                 currentBid: player.basePrice,
-                
+
             }
         });
     } catch (error) {
@@ -325,6 +336,7 @@ auctionApiController.markSold = async (req, res) => {
             name: player.name,
             playerImage: player.playerImage,
             teamName: team.name,
+            teamLogo: team.teamLogo,
             amount: auction.currentBid
         });
 
@@ -408,13 +420,13 @@ auctionApiController.getBidHistory = async (req, res) => {
     }
 };
 
-auctionApiController.renderAuctionPage = async (req,res) => {
-     try {
-      res.render("audienceAuction", { title: "Audience Auciton" });
-   } catch (error) {
-      console.error("Error in GET /audeince auction:", error);
-      res.status(500).json({ message: "Internal server error" });
-   }
+auctionApiController.renderAuctionPage = async (req, res) => {
+    try {
+        res.render("audienceAuction", { title: "Audience Auciton" });
+    } catch (error) {
+        console.error("Error in GET /audeince auction:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 }
 
 
