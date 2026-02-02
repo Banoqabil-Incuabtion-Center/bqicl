@@ -1,0 +1,150 @@
+<!-- Reusable Confirmation Modal Component -->
+<!-- Usage: Include this partial once, then call showConfirmModal() from JavaScript -->
+
+<div id="confirmModal" class="fixed inset-0 z-[9999] hidden">
+    <!-- Backdrop -->
+    <div id="confirmModalBackdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Modal Content -->
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div id="confirmModalContent"
+            class="relative bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-md transform scale-95 opacity-0 transition-all duration-200 border border-gray-200 dark:border-gray-700">
+            <!-- Icon -->
+            <div class="pt-8 pb-4 flex justify-center">
+                <div id="confirmModalIconWrapper" class="h-16 w-16 rounded-full flex items-center justify-center">
+                    <i id="confirmModalIcon" class="text-3xl"></i>
+                </div>
+            </div>
+
+            <!-- Text -->
+            <div class="px-8 pb-6 text-center">
+                <h3 id="confirmModalTitle" class="text-xl font-black text-gray-900 dark:text-white mb-2"></h3>
+                <p id="confirmModalMessage" class="text-sm text-gray-500 dark:text-gray-400"></p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="px-6 pb-8 flex gap-3">
+                <button id="confirmModalCancel"
+                    class="flex-1 py-3 px-6 rounded-xl font-bold text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all">
+                    Cancel
+                </button>
+                <button id="confirmModalConfirm" class="flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Global confirmation modal handler
+    window.showConfirmModal = function (options) {
+        const modal = document.getElementById('confirmModal');
+        const backdrop = document.getElementById('confirmModalBackdrop');
+        const content = document.getElementById('confirmModalContent');
+        const iconWrapper = document.getElementById('confirmModalIconWrapper');
+        const icon = document.getElementById('confirmModalIcon');
+        const title = document.getElementById('confirmModalTitle');
+        const message = document.getElementById('confirmModalMessage');
+        const cancelBtn = document.getElementById('confirmModalCancel');
+        const confirmBtn = document.getElementById('confirmModalConfirm');
+
+        // Default options
+        const config = {
+            title: options.title || 'Confirm Action',
+            message: options.message || 'Are you sure you want to proceed?',
+            confirmText: options.confirmText || 'Confirm',
+            cancelText: options.cancelText || 'Cancel',
+            type: options.type || 'warning', // 'warning', 'danger', 'info', 'success'
+            onConfirm: options.onConfirm || (() => { }),
+            onCancel: options.onCancel || (() => { })
+        };
+
+        // Set content
+        title.textContent = config.title;
+        message.textContent = config.message;
+        confirmBtn.textContent = config.confirmText;
+        cancelBtn.textContent = config.cancelText;
+
+        // Set styling based on type
+        const types = {
+            warning: {
+                iconClass: 'fas fa-exclamation-triangle text-amber-500',
+                iconBg: 'bg-amber-500/10',
+                btnClass: 'bg-amber-500 hover:bg-amber-600 text-white'
+            },
+            danger: {
+                iconClass: 'fas fa-exclamation-circle text-red-500',
+                iconBg: 'bg-red-500/10',
+                btnClass: 'bg-red-500 hover:bg-red-600 text-white'
+            },
+            info: {
+                iconClass: 'fas fa-info-circle text-blue-500',
+                iconBg: 'bg-blue-500/10',
+                btnClass: 'bg-blue-500 hover:bg-blue-600 text-white'
+            },
+            success: {
+                iconClass: 'fas fa-check-circle text-green-500',
+                iconBg: 'bg-green-500/10',
+                btnClass: 'bg-green-500 hover:bg-green-600 text-white'
+            }
+        };
+
+        const typeConfig = types[config.type] || types.warning;
+        icon.className = typeConfig.iconClass + ' text-3xl';
+        iconWrapper.className = 'h-16 w-16 rounded-full flex items-center justify-center ' + typeConfig.iconBg;
+        confirmBtn.className = 'flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all ' + typeConfig.btnClass;
+
+        // Show modal
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 10);
+
+        // Close modal function
+        function closeModal() {
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        // Event handlers
+        const handleConfirm = () => {
+            closeModal();
+            config.onConfirm();
+        };
+
+        const handleCancel = () => {
+            closeModal();
+            config.onCancel();
+        };
+
+        // Remove old listeners and add new ones
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        const newCancelBtn = cancelBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+        newConfirmBtn.addEventListener('click', handleConfirm);
+        newCancelBtn.addEventListener('click', handleCancel);
+        backdrop.onclick = handleCancel;
+
+        // Escape key to close
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                handleCancel();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+    };
+
+    // Fix: Move modal to body to avoid clipping by sidebar transform/z-index
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('confirmModal');
+        if (modal && modal.parentElement !== document.body) {
+            document.body.appendChild(modal);
+        }
+    });
+</script>

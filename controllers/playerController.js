@@ -69,31 +69,45 @@ playerController.handleBulkUpload = async (req, res) => {
     .on("data", (data) => results.push(data))
     .on("end", async () => {
       try {
-        console.log("CSV Row Detected:", results[0]); // <--- CHECK THIS IN TERMINAL
-
         const cleanedResults = results.map((row) => ({
           name: row.name,
           email: row.email,
-          campus: row.campus,
-          category: row.category,
+          phoneNumber: row.phoneNumber,
+          playingStyle: row.playingStyle || 'right-handed',
+          category: row.category || 'Batsman',
+          battingOrder: row.battingOrder || 'Top-order',
+          bowlingType: row.bowlingType || null,
+          auctionCategory: row.auctionCategory || 'Silver',
           basePrice: parseInt(row.basePrice) || 0,
+          campus: row.campus,
           status: "available",
+          isSold: false,
+          soldPrice: 0
         }));
 
         const data = await Player.bulkCreate(cleanedResults, {
           ignoreDuplicates: true,
         });
 
-        console.log("Rows actually saved to DB:", data.length); // <--- CHECK THIS
-
         fs.unlinkSync(req.file.path);
-        req.flash("success", `${data.length} Players imported.`);
-        res.redirect("/admin/dashboard");
+        req.flash("success", `${data.length} Players imported successfully.`);
+        res.redirect("/player/playerslist");
       } catch (error) {
-        console.error("DB Error:", error);
+        console.error("Bulk Import DB Error:", error);
+        if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+        req.flash("error", "Import failed: " + error.message);
         res.redirect("back");
       }
     });
+};
+
+playerController.downloadTemplate = (req, res) => {
+  const headers = "name,email,phoneNumber,playingStyle,category,battingOrder,bowlingType,auctionCategory,basePrice,campus\n";
+  const sampleData = "John Doe,john@example.com,1234567890,right-handed,Batsman,Top-order,,Platinum,50000,Bahadurabad";
+
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', 'attachment; filename=player_import_template.csv');
+  res.status(200).send(headers + sampleData);
 };
 
 playerController.renderBulkUpload = (req, res) => {
@@ -176,13 +190,27 @@ playerController.handleRegister = async (req, res) => {
 
 playerController.renderAllPlayers = async (req, res) => {
   try {
-    // Pagination Setup
+    const { Sequelize } = db;
+    const { Op } = Sequelize;
+
+    // Pagination and Search Setup
     const page = parseInt(req.query.page) || 1;
-    const limit = 8; // Number of players per page
+    const search = req.query.search || '';
+    const limit = 8;
     const offset = (page - 1) * limit;
+
+    const whereClause = {};
+    if (search) {
+      whereClause[Op.or] = [
+        { name: { [Op.substring]: search } },
+        { campus: { [Op.substring]: search } },
+        { category: { [Op.substring]: search } }
+      ];
+    }
 
     // Use findAndCountAll to get total count for pagination logic
     const { count, rows: players } = await Player.findAndCountAll({
+      where: whereClause,
       limit: limit,
       offset: offset,
       order: [["createdAt", "DESC"]],
@@ -202,6 +230,7 @@ playerController.renderAllPlayers = async (req, res) => {
       currentPage: page,
       totalPages: totalPages,
       hasPlayers: count > 0,
+      search: search
     });
   } catch (error) {
     console.error("Error fetching players:", error);
@@ -331,7 +360,7 @@ playerController.handleDelete = async (req, res) => {
 
     // Delete player
     await Player.destroy({
-      where: { Id: playerId }, // or hashedId if you store it in db
+      where: { id: playerId }, // fixed Id to id
     });
 
     req.flash("success", "Player deleted successfully!");
@@ -345,11 +374,25 @@ playerController.handleDelete = async (req, res) => {
 
 playerController.renderPublicPlayers = async (req, res) => {
   try {
+    const { Sequelize } = db;
+    const { Op } = Sequelize;
+
     const page = parseInt(req.query.page) || 1;
+    const search = req.query.search || '';
     const limit = 12;
     const offset = (page - 1) * limit;
 
+    const whereClause = {};
+    if (search) {
+      whereClause[Op.or] = [
+        { name: { [Op.substring]: search } },
+        { campus: { [Op.substring]: search } },
+        { category: { [Op.substring]: search } }
+      ];
+    }
+
     const { count, rows: players } = await Player.findAndCountAll({
+      where: whereClause,
       limit: limit,
       offset: offset,
       order: [["createdAt", "DESC"]],
@@ -367,6 +410,7 @@ playerController.renderPublicPlayers = async (req, res) => {
       players: securePlayers,
       currentPage: page,
       totalPages: totalPages,
+      search: search
     });
   } catch (error) {
     console.error("Public players error:", error);
