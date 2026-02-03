@@ -476,6 +476,12 @@
         const iReveal = document.getElementById('impact-reveal-container');
         const sStamp = document.getElementById('sold-stamp');
 
+        // Audio Effects
+        const revealAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        const cheerAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
+        revealAudio.volume = 0.5;
+        cheerAudio.volume = 0.6;
+
         let currentAuctionId = null;
         let allRecentBids = [];
 
@@ -605,6 +611,7 @@
 
             // 2. Start SEQ: Player Reveal
             setTimeout(() => {
+                revealAudio.play().catch(e => console.log("Audio play blocked by browser"));
                 pReveal.classList.add('player-reveal', 'opacity-100');
                 createSparkles(40);
             }, 500);
@@ -616,6 +623,7 @@
 
             // 4. SOLD Impact & Shake
             setTimeout(() => {
+                cheerAudio.play().catch(e => console.log("Audio play blocked by browser"));
                 iReveal.classList.add('opacity-100');
                 sStamp.classList.add('sold-stamp-impact');
                 document.body.classList.add('screen-shake');
