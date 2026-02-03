@@ -38,8 +38,8 @@ const seedFactory = {
                     name: teamNames[index],
                     email: `${teamNames[index].toLowerCase()}@example.com`,
                     ownerId: ownerId,
-                    totalBudget: 10000000,
-                    remainingBudget: 10000000,
+                    totalBudget: 2500000,
+                    remainingBudget: 2500000,
                     createdAt: new Date(),
                     updatedAt: new Date(),
                     playerCount: 0

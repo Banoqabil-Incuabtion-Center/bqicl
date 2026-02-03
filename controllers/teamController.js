@@ -40,7 +40,7 @@ teamController.renderRegister = async (req, res) => {
 
 teamController.handleRegister = async (req, res) => {
   try {
-    const { Name } = req.validatedData;
+    const { Name, email } = req.validatedData;
 
 
     let { ownerId } = req.body;
@@ -49,6 +49,7 @@ teamController.handleRegister = async (req, res) => {
     const imageUrl = req.file ? req.file.path : null;
     await Team.create({
       name: Name,
+      email,
       ownerId,
       teamLogo: imageUrl,
     });
@@ -57,7 +58,7 @@ teamController.handleRegister = async (req, res) => {
     return res.redirect("/admin/dashboard");
   } catch (error) {
     console.error("Error in creating team /POST:", error);
-    req.flash("error", "Unable to load owner list");
+    req.flash("error", error.message || "Unable to load owner list");
     res.redirect("/auth/team/register");
   }
 };
