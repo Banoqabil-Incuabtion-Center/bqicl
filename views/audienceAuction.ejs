@@ -294,7 +294,7 @@
                             <div class="flex flex-col items-center lg:items-start text-center lg:text-left space-y-2">
                                 <span class="text-[10px] font-black uppercase tracking-[0.4em] text-lime-500/80">Live
                                     Valuation</span>
-                                <div id="proj-bid" class="responsive-bid font-black text-lime-500 italic">$0</div>
+                                <div id="proj-bid" class="responsive-bid font-black text-lime-500 italic">0</div>
                                 <div id="bidder-badge"
                                     class="flex items-center gap-3 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 mt-4 opacity-0 transition-opacity duration-500">
                                     <span class="relative flex h-2 w-2">
@@ -315,7 +315,7 @@
                                     class="bg-white/5 p-5 rounded-2xl border border-white/5 hover:bg-white/10 transition-colors">
                                     <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Base
                                         Price</p>
-                                    <p id="proj-base" class="text-2xl font-black text-white">$0</p>
+                                    <p id="proj-base" class="text-2xl font-black text-white">0</p>
                                 </div>
                                 <div
                                     class="bg-white/5 p-5 rounded-2xl border border-white/5 hover:bg-white/10 transition-colors">
@@ -433,7 +433,7 @@
                 <div class="bg-lime-500 text-black px-10 py-3 rounded-xl shadow-[0_0_40px_rgba(163,230,53,0.4)]">
                     <p class="text-[9px] font-black uppercase tracking-[0.4em] mb-0.5 opacity-70">Final Valuation</p>
                     <p id="sold-final-price"
-                        class="text-4xl md:text-5xl font-black italic tracking-tighter leading-none">$0</p>
+                        class="text-4xl md:text-5xl font-black italic tracking-tighter leading-none">0</p>
                 </div>
             </div>
         </div>
@@ -476,6 +476,12 @@
         const iReveal = document.getElementById('impact-reveal-container');
         const sStamp = document.getElementById('sold-stamp');
 
+        // Audio Effects
+        const revealAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        const cheerAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
+        revealAudio.volume = 0.5;
+        cheerAudio.volume = 0.6;
+
         let currentAuctionId = null;
         let allRecentBids = [];
 
@@ -508,7 +514,7 @@
                 projName.textContent = player.name;
                 projCat.textContent = player.category || 'PLAYER';
                 projCampus.textContent = player.campus || 'N/A';
-                projBase.textContent = '$' + (player.basePrice || 0).toLocaleString();
+                projBase.textContent = (player.basePrice || 0).toLocaleString();
                 projImg.src = player.playerImage || '/images/default-player.png';
                 activeUI.classList.add('animate-in', 'fade-in', 'slide-in-from-bottom-4', 'duration-700');
 
@@ -524,7 +530,7 @@
             }
 
             const newBidVal = auction.currentBid || 0;
-            const newBidText = '$' + newBidVal.toLocaleString();
+            const newBidText = newBidVal.toLocaleString();
             if (projBid.textContent !== newBidText) {
                 projBid.textContent = newBidText;
                 projBid.classList.remove('bid-pulse');
@@ -552,7 +558,7 @@
                             <span class="text-sm font-black text-white uppercase tracking-wider">${bid.teamName}</span>
                         </div>
                     </div>
-                    <span class="text-xl font-black text-lime-500 italic bg-lime-500/10 px-4 py-2 rounded-xl border border-lime-500/20 shadow-inner">$${bid.amount.toLocaleString()}</span>
+                    <span class="text-xl font-black text-lime-500 italic bg-lime-500/10 px-4 py-2 rounded-xl border border-lime-500/20 shadow-inner">${bid.amount.toLocaleString()}</span>
                 </div>`).join('');
             } else {
                 allRecentBids = [];
@@ -584,7 +590,7 @@
                             <span class="text-[8px] font-bold text-gray-500 uppercase tracking-widest">${index === 0 ? 'Current Highest' : 'Previous Bid'}</span>
                         </div>
                     </div>
-                    <span class="text-sm font-black ${index === 0 ? 'text-lime-500' : 'text-gray-300'}">$${bid.amount.toLocaleString()}</span>
+                    <span class="text-sm font-black ${index === 0 ? 'text-lime-500' : 'text-gray-300'}">${bid.amount.toLocaleString()}</span>
                 </div>`).join('');
             } else {
                 modalBidsContainer.innerHTML = `<div class="flex flex-col items-center justify-center py-20 text-gray-600 italic"><i class="fas fa-gavel text-3xl mb-4 opacity-20"></i><p class="text-xs font-semibold uppercase tracking-widest">No history recorded yet</p></div>`;
@@ -596,7 +602,7 @@
             soldPlayerImg.src = data.playerImage || '/images/default-player.png';
             soldPlayerName.textContent = data.name;
             soldTeamName.textContent = data.teamName;
-            soldFinalPrice.textContent = '$' + Number(data.amount).toLocaleString();
+            soldFinalPrice.textContent = Number(data.amount).toLocaleString();
 
             // 1. Initial Flash
             fcFlash.style.animation = 'flash-burst 0.5s ease-out forwards';
@@ -605,6 +611,7 @@
 
             // 2. Start SEQ: Player Reveal
             setTimeout(() => {
+                revealAudio.play().catch(e => console.log("Audio play blocked by browser"));
                 pReveal.classList.add('player-reveal', 'opacity-100');
                 createSparkles(40);
             }, 500);
@@ -616,6 +623,7 @@
 
             // 4. SOLD Impact & Shake
             setTimeout(() => {
+                cheerAudio.play().catch(e => console.log("Audio play blocked by browser"));
                 iReveal.classList.add('opacity-100');
                 sStamp.classList.add('sold-stamp-impact');
                 document.body.classList.add('screen-shake');

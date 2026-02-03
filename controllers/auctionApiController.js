@@ -5,6 +5,7 @@ import pusher from '../config/pusher.js';
 
 const auctionApiController = {};
 
+
 // Helper to get session state
 const getSessionState = async () => {
     try {
@@ -241,7 +242,23 @@ auctionApiController.placeBid = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Owner has no team assigned' });
         }
 
-        // Validate bid amount
+        // Validate bid amount and increment
+        const player = auction.currentPlayer;
+        const tier = player.auctionCategory || 'Silver';
+        let requiredIncrement = 5000;
+
+        if (tier === 'Platinum') requiredIncrement = 20000;
+        else if (tier === 'Diamond') requiredIncrement = 15000;
+        else if (tier === 'Gold') requiredIncrement = 10000;
+        else if (tier === 'Silver') requiredIncrement = 5000;
+
+        if (bidAmount < (auction.currentBid + requiredIncrement) && auction.lastBidTeamId !== null) {
+            return res.status(400).json({
+                success: false,
+                message: `Bid must be at least ${requiredIncrement.toLocaleString()} higher than current bid.`
+            });
+        }
+
         if (bidAmount <= auction.currentBid) {
             return res.status(400).json({
                 success: false,

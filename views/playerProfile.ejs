@@ -143,8 +143,8 @@
                                                 <p
                                                     class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">
                                                     Base Valuation</p>
-                                                <p class="text-3xl font-black text-blue-600 tracking-tighter">$<%=
-                                                        (player.basePrice) ? player.basePrice.toLocaleString() : "0" %>
+                                                <p class="text-3xl font-black text-blue-600 tracking-tighter">
+                                                    <%= (player.basePrice) ? player.basePrice.toLocaleString() : "0" %>
                                                 </p>
                                             </div>
                                             <% if (player.isSold) { %>
@@ -157,8 +157,8 @@
                                                     <p
                                                         class="text-emerald-600 dark:text-emerald-500 text-[10px] font-black uppercase tracking-widest mb-1">
                                                         Acquisition Price</p>
-                                                    <p class="text-3xl font-black tracking-tighter">$<%=
-                                                            (player.soldPrice) ? player.soldPrice.toLocaleString() : "0"
+                                                    <p class="text-3xl font-black tracking-tighter">
+                                                        <%= (player.soldPrice) ? player.soldPrice.toLocaleString() : "0"
                                                             %>
                                                     </p>
                                                 </div>
@@ -365,7 +365,7 @@
                         </td>
                         <td class="px-8 py-5 whitespace-nowrap text-center">
                             <span class="text-lg font-black text-blue-600 dark:text-blue-400">
-                                $${Number(bid.amount).toLocaleString()}
+                                ${Number(bid.amount).toLocaleString()}
                             </span>
                         </td>
                         <td class="px-8 py-5 whitespace-nowrap text-right">

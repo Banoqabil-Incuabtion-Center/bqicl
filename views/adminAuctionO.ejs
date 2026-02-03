@@ -1,0 +1,300 @@
+<%- include('layouts/admin_layout_header', { title: 'Auction Control' , hideNavbar: true, hideHeader: true }) %>
+
+    <div class="px-8 py-6 max-w-7xl mx-auto w-full">
+        <!-- Back Button Area -->
+        <div class="mb-8 relative z-50">
+            <a href="/admin/dashboard"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-800/50 hover:bg-blue-600 text-white transition-all font-black uppercase text-[10px] tracking-widest group border border-white/10">
+                <i class="fas fa-chevron-left group-hover:-translate-x-1 transition-transform"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Pusher Script for this page -->
+        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
+        <div id="session-controls-top" class="mb-6 flex justify-end">
+            <% if (!isSessionActive) { %>
+                <button onclick="initSession()" id="init-btn"
+                    class="bg-blue-600 hover:bg-blue-700 px-4 md:px-6 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 text-white">
+                    <i class="fas fa-play text-xs"></i> <span>Start Session</span>
+                </button>
+                <% } else { %>
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <span class="flex h-3 w-3 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="text-green-400 font-bold uppercase text-sm tracking-widest">Live Session
+                            Active</span>
+                        <button onclick="endSession()"
+                            class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/50 px-4 py-2 rounded-lg text-xs font-bold transition-all">
+                            End Session
+                        </button>
+                    </div>
+                    <% } %>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Players List -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+                <h3 class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase mb-4 tracking-wider">Available
+                    Players</h3>
+                <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                    <% players.forEach(player=> { %>
+                        <% console.log("PLAYER ",player) %>
+                        <div
+                            class=" flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/30 rounded-xl
+                            border border-gray-100 dark:border-gray-600 group hover:border-blue-500 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden ring-2 ring-blue-500/20">
+                                    <img src="<%= player.playerImage %>" class="object-cover h-full w-full"
+                                        alt="<%= player.name %>">
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-sm font-bold truncate text-gray-900 dark:text-white">
+                                        <%= player.name %>
+                                    </p>
+                                    <p class="text-[11px] text-gray-500 font-medium">Base: <%= player.basePrice %>
+                                    </p>
+                                </div>
+                            </div>
+                            <button onclick="pushToAuction('<%= player.id %>')"
+                                class="<%= isSessionActive && !activeAuction ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed' %> px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all"
+                                <%=(!isSessionActive || activeAuction) ? 'disabled' : '' %>
+                                title="<%= activeAuction ? 'Complete current auction first' : (!isSessionActive
+                                    ? 'Start session first' : 'Call player to auction' ) %>">
+                                    Call
+                            </button>
+                </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <!-- Main Display -->
+        <div class="lg:col-span-2">
+            <div id="main-display-area"
+                class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 p-8 min-h-[500px] flex flex-col justify-center items-center text-center relative overflow-hidden shadow-xl">
+
+                <% if (!isSessionActive) { %>
+                    <div id="state-no-session" class="animate-in fade-in duration-500">
+                        <div
+                            class="h-24 w-24 bg-gray-100 dark:bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-power-off text-4xl text-gray-400"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-gray-400">System Offline</h2>
+                        <p class="text-gray-500 text-sm max-w-xs mx-auto mt-3">Start a session to begin the bidding
+                            process.</p>
+                    </div>
+                    <% } else if (!activeAuction) { %>
+                        <div id="state-waiting-player" class="animate-in zoom-in-95 duration-500">
+                            <div class="relative mb-8">
+                                <div class="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
+                                <i
+                                    class="fas fa-hourglass-start text-6xl text-blue-500 relative z-10 animate-spin-slow"></i>
+                            </div>
+                            <h2 class="text-2xl font-black text-gray-900 dark:text-white">Ready for Bidding</h2>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm mt-3 font-medium">Select a player
+                                from
+                                the left panel to start their auction.</p>
+                        </div>
+                        <% } else { %>
+                            <div id="state-active-bidding"
+                                class="w-full animate-in slide-in-from-bottom-4 duration-500">
+                                <div class="flex flex-col md:flex-row items-center justify-between gap-8 mb-12">
+                                    <div class="text-center md:text-left">
+                                        <span
+                                            class="inline-block px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-[10px] font-black uppercase tracking-widest mb-4">Currently
+                                            Bidding</span>
+                                        <h2
+                                            class="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 dark:text-white leading-tight">
+                                            <%= activeAuction.currentPlayer.name %>
+                                        </h2>
+                                        <p
+                                            class="text-blue-500 font-bold uppercase tracking-[0.2em] text-sm md:text-base mt-2">
+                                            <%= activeAuction.currentPlayer.category %>
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="bg-gray-50 dark:bg-gray-700/50 px-10 py-8 rounded-3xl border border-gray-100 dark:border-gray-600 min-w-[280px] shadow-inner">
+                                        <p class="text-gray-400 text-xs font-black uppercase tracking-widest mb-2">
+                                            Current Bid</p>
+                                        <p class="text-5xl md:text-6xl font-black text-green-500">
+                                            <%= activeAuction.currentBid %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <button id="markSoldBtn" onclick="markSold()"
+                                        class="group relative py-5 rounded-2xl font-black text-2xl transition-all overflow-hidden <%= activeAuction.lastBidTeamId ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/20 active:scale-95' : 'bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed' %>"
+                                        <%=!activeAuction.lastBidTeamId ? 'disabled' : '' %>
+                                        title="<%= !activeAuction.lastBidTeamId ? 'No bids placed yet'
+                                            : 'Mark player as sold' %>">
+                                            <span class="relative z-10">Mark Sold</span>
+                                            <div
+                                                class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                                            </div>
+                                    </button>
+                                    <button onclick="markUnsold()"
+                                        class="bg-red-500/10 text-red-500 border-2 border-red-500/20 hover:bg-red-500 hover:text-white py-5 rounded-2xl font-black text-2xl transition-all active:scale-95">
+                                        Mark Unsold
+                                    </button>
+                                </div>
+                            </div>
+                            <% } %>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-spin-slow {
+            animation: spin-slow 12s linear infinite;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 10px;
+        }
+    </style>
+
+    <%- include('partials/confirmModal') %>
+
+        <script>
+            // Init Pusher
+            const pusherKey = "<%= process.env.PUSHER_KEY %>";
+            const pusher = new Pusher(pusherKey, { cluster: '<%= process.env.PUSHER_CLUSTER || "ap2" %>' });
+            const channel = pusher.subscribe('auction-channel');
+
+            channel.bind('bid-placed', (data) => {
+                // Update bid amount
+                const bidEl = document.querySelector('.text-green-500');
+                if (bidEl && data.amount) bidEl.textContent = Number(data.amount).toLocaleString();
+
+                // Enable Mark Sold button immediately
+                const markSoldBtn = document.getElementById('markSoldBtn');
+                if (markSoldBtn) {
+                    markSoldBtn.disabled = false;
+                    markSoldBtn.classList.remove('bg-gray-300', 'dark:bg-gray-700', 'text-gray-500', 'cursor-not-allowed');
+                    markSoldBtn.classList.add('bg-green-500', 'hover:bg-green-600', 'text-white', 'shadow-lg', 'shadow-green-500/20', 'active:scale-95');
+                    markSoldBtn.title = 'Mark player as sold';
+                }
+            });
+
+            channel.bind('new-player', () => location.reload());
+            channel.bind('player-sold', (data) => {
+                location.reload();
+            });
+            channel.bind('player-unsold', () => location.reload());
+
+            async function initSession() {
+                try {
+                    await fetch('/api/auction/session/start', { method: 'POST' });
+                    location.reload();
+                } catch (e) {
+                    console.error("Session start failed", e);
+                }
+            }
+
+            async function endSession() {
+                showConfirmModal({
+                    title: 'End Auction Session',
+                    message: 'Are you sure you want to end the current auction session? All bidding will be paused.',
+                    confirmText: 'End Session',
+                    cancelText: 'Cancel',
+                    type: 'danger',
+                    onConfirm: async () => {
+                        try {
+                            await fetch('/api/auction/session/end', { method: 'POST' });
+                            location.reload();
+                        } catch (e) {
+                            console.error("Session end failed", e);
+                        }
+                    }
+                });
+            }
+
+            async function pushToAuction(playerId) {
+                try {
+                    const res = await fetch('/api/auction/player/call', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ playerId })
+                    });
+                    const data = await res.json();
+                    if (!data.success) {
+                        alert(data.message);
+                    } else {
+                        location.reload();
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Failed to call player. Please try again.');
+                }
+            }
+
+            async function markSold() {
+                showConfirmModal({
+                    title: 'Confirm Sale',
+                    message: 'Mark this player as SOLD to the highest bidder?',
+                    confirmText: 'Confirm Sale',
+                    cancelText: 'Cancel',
+                    type: 'success',
+                    onConfirm: async () => {
+                        try {
+                            await fetch('/api/auction/sold', { method: 'POST' });
+                        } catch (e) {
+                            console.error("Mark sold failed", e);
+                        }
+                    }
+                });
+            }
+
+            async function markUnsold() {
+                showConfirmModal({
+                    title: 'Mark Unsold',
+                    message: 'Mark this player as UNSOLD? They will be removed from bidding.',
+                    confirmText: 'Mark Unsold',
+                    cancelText: 'Cancel',
+                    type: 'warning',
+                    onConfirm: async () => {
+                        try {
+                            const res = await fetch('/api/auction/unsold', { method: 'POST' });
+                            const data = await res.json();
+                            if (!data.success) alert(data.message);
+                        } catch (err) { console.error(err); }
+                    }
+                });
+            }
+
+            async function pollState() {
+                try {
+                    const res = await fetch('/api/auction/state');
+                    const data = await res.json();
+                    if (data.auction) {
+                        const bidEl = document.querySelector('.text-green-500');
+                        if (bidEl) bidEl.textContent = data.auction.currentBid.toLocaleString();
+                    }
+                } catch (err) { }
+            }
+
+            setInterval(pollState, 5000);
+        </script>
+
+        </div>
+        <%- include('layouts/admin_layout_footer') %>
