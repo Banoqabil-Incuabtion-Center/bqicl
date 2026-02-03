@@ -8,97 +8,143 @@ import { encodeId, decodeId } from "../utils/idHasher.js";
 
 import fs from "fs";
 import csv from "csv-parser";
+import { cloudinary } from '../config/cloudinary.js';
+
 
 const playerController = {};
 
-// playerController.handleBulkUpload = async (req, res) => {
-//   if (!req.file) {
-//     req.flash("error", "Please upload a CSV file.");
-//     return res.redirect("/auth/player/register");
-//   }
+const getDriveDirectLink = (driveLink) => {
+    try {
+        if (!driveLink) return null;
 
-//   const results = [];
-//   fs.createReadStream(req.file.path)
-//     .pipe(csv())
-//     .on("data", (data) => results.push(data))
-//     .on("end", async () => {
-//       try {
-//         // CLEAN THE DATA: Convert empty strings to null
-//         const cleanedResults = results.map((player) => ({
-//           ...player,
-//           // If bowlingType is "", change it to null
-//           bowlingType: player.bowlingType === "" ? null : player.bowlingType,
+        let fileId = null;
 
-//           // Set default values for auction logic if not in CSV
-//           status: "available",
-//           isSold: false,
-//           soldPrice: 0,
-//         }));
+        // Pattern 1: Standard URL (.../d/FILE_ID/...)
+        const pathMatch = driveLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (pathMatch && pathMatch[1]) {
+            fileId = pathMatch[1];
+        }
 
-//         // Insert the cleaned data
-//         await Player.bulkCreate(cleanedResults);
+        // Pattern 2: Query Parameter (...open?id=FILE_ID)
+        if (!fileId) {
+            const queryMatch = driveLink.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            if (queryMatch && queryMatch[1]) {
+                fileId = queryMatch[1];
+            }
+        }
 
-//         await Player.bulkCreate(cleanedResults, {
-//           ignoreDuplicates: true,
-//         });
+        if (fileId) {
+            // Log the ID found to ensure regex is working
+            // console.log(`      > ID Extracted: ${fileId}`);
+            return `https://drive.google.com/uc?export=download&id=${fileId}`;
+        }
 
-//         fs.unlinkSync(req.file.path);
-//         req.flash(
-//           "success",
-//           `${cleanedResults.length} players imported successfully!`,
-//         );
-//         res.redirect("/admin/dashboard");
-//       } catch (error) {
-//         console.error("Bulk Upload Error:", error);
-//         if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
-//         req.flash("error", "Import failed: " + error.message);
-//         res.redirect("/player/playerslist");
-//       }
-//     });
-// };
+        // console.log(`      > ❌ No valid ID pattern found in: ${driveLink}`);
+        return null;
 
+    } catch (error) {
+        // console.error('      > ❌ Error extracting link:', error.message);
+        return null;
+    }
+};
+
+// --- Main Controller Function ---
 playerController.handleBulkUpload = async (req, res) => {
-  if (!req.file) {
-    req.flash("error", "No file uploaded.");
-    return res.redirect("back");
-  }
+    
+    if (!req.file) {
+        req.flash("error", "No file uploaded.");
+        return res.redirect("back");
+    }
 
-  const results = [];
-  fs.createReadStream(req.file.path)
-    .pipe(csv())
-    .on("data", (data) => results.push(data))
-    .on("end", async () => {
-      try {
-        const cleanedResults = results.map((row) => ({
-          name: row.name,
-          email: row.email,
-          phoneNumber: row.phoneNumber,
-          playingStyle: row.playingStyle || 'right-handed',
-          category: row.category || 'Batsman',
-          battingOrder: row.battingOrder || 'Top-order',
-          bowlingType: row.bowlingType || null,
-          auctionCategory: row.auctionCategory || 'Silver',
-          basePrice: parseInt(row.basePrice) || 0,
-          campus: row.campus,
-          status: "available",
-          isSold: false,
-          soldPrice: 0
-        }));
+    const results = [];
 
-        const data = await Player.bulkCreate(cleanedResults, {
-          ignoreDuplicates: true,
+    fs.createReadStream(req.file.path)
+        .pipe(csv())
+        .on("data", (data) => results.push(data))
+        .on("end", async () => {
+            try {
+                // console.log(`\n========== STARTED BULK IMPORT: ${results.length} ROWS ==========`);
+                
+                const cleanedResults = [];
+
+                for (const [index, row] of results.entries()) {
+                    
+                    // Add spacing for readability
+                    // console.log(`\n--- [Row ${index + 1}] Processing: ${row.name} ---`);
+
+                    let playerImageUrl = '/default-player.png'; 
+                    const driveUrl = row['Players Image URL']; 
+
+                    if (driveUrl) {
+                        // console.log(`   1. Drive Link Found: ${driveUrl}`);
+
+                        try {
+                            const directLink = getDriveDirectLink(driveUrl);
+
+                            if (directLink) {
+                                // console.log(`   2. Generated Direct Link: ${directLink}`);
+                                // console.log(`   3. Uploading to Cloudinary...`);
+
+                                // Upload to Cloudinary
+                                const uploadResult = await cloudinary.uploader.upload(directLink, {
+                                    folder: "auction_players", 
+                                    resource_type: "image"
+                                });
+                                
+                                playerImageUrl = uploadResult.secure_url;
+                                // console.log(`   ✅ Upload Success! URL: ${playerImageUrl}`);
+                            } else {
+                                // console.log(`   ⚠️ Skipped Upload: Could not generate direct link.`);
+                            }
+
+                        } catch (imgError) {
+                            // console.error(`   ❌ Upload Failed: ${imgError.message}`);
+                        }
+                    } else {
+                        // console.log(`   ℹ️ No Image Link provided. Using default.`);
+                    }
+
+                    // Build the Player Object
+                    cleanedResults.push({
+                        name: row.name,
+                        email: row.email,
+                        phoneNumber: row.phoneNumber,
+                        playerImage: playerImageUrl,
+                        playingStyle: row.playingStyle || 'right-handed',
+                        category: row.category || 'Batsman',
+                        battingOrder: row.battingOrder || 'Top-order',
+                        bowlingType: row.bowlingType || null,
+                        auctionCategory: row.auctionCategory || 'Silver',
+                        basePrice: parseInt(row.basePrice) || 0,
+                        campus: row.campus,
+                        status: "available",
+                        isSold: false,
+                        soldPrice: 0
+                    });
+                }
+
+                console.log(`\n========== SAVING TO DATABASE ==========`);
+                
+                const data = await Player.bulkCreate(cleanedResults, {
+                    ignoreDuplicates: true,
+                });
+
+                console.log(`✅ Database Update Complete. Inserted/Updated: ${data.length} records.`);
+                console.log(`====================================================\n`);
+
+                fs.unlinkSync(req.file.path);
+                req.flash("success", `${data.length} Players imported successfully.`);
+                res.redirect("/player/playerslist");
+
+            } catch (error) {
+                console.error("\n❌ CRITICAL IMPORT ERROR:", error);
+                
+                if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+                
+                req.flash("error", "Import failed: " + error.message);
+                res.redirect("back");
+            }
         });
-
-        fs.unlinkSync(req.file.path);
-        req.flash("success", `${data.length} Players imported successfully.`);
-        res.redirect("/player/playerslist");
-      } catch (error) {
-        console.error("Bulk Import DB Error:", error);
-        if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
-        req.flash("error", "Import failed: " + error.message);
-        res.redirect("back");
-      }
-    });
 };
 
 playerController.downloadTemplate = (req, res) => {
