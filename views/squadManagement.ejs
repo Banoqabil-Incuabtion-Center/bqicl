@@ -29,8 +29,8 @@
             </div>
             <p class="text-gray-400 dark:text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-3">Available
                 Budget</p>
-            <p class="text-4xl font-black text-emerald-500 tracking-tighter">$<%= team.remainingBudget ?
-                    team.remainingBudget.toLocaleString() : '0' %>
+            <p class="text-4xl font-black text-emerald-500 tracking-tighter">
+                <%= team.remainingBudget ? team.remainingBudget.toLocaleString() : '0' %>
             </p>
         </div>
         <div
@@ -51,8 +51,8 @@
             </div>
             <p class="text-gray-400 dark:text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-3">Total
                 Investment</p>
-            <p class="text-4xl font-black text-purple-600 tracking-tighter">$<%= team.totalBudget ?
-                    team.totalBudget.toLocaleString() : '0' %>
+            <p class="text-4xl font-black text-purple-600 tracking-tighter">
+                <%= team.totalBudget ? team.totalBudget.toLocaleString() : '0' %>
             </p>
         </div>
     </div>
@@ -135,7 +135,7 @@
                                 </td>
                                 <td class="px-8 py-5">
                                     <div class="text-sm font-black text-emerald-500 font-mono">
-                                        $<%= player.soldPrice ? player.soldPrice.toLocaleString() : '0' %>
+                                        <%= player.soldPrice ? player.soldPrice.toLocaleString() : '0' %>
                                     </div>
                                 </td>
                                 <td class="px-8 py-5">

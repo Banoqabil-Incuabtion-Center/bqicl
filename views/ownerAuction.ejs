@@ -59,7 +59,7 @@
                                     <span id="display-playing-style" class="flex items-center gap-2"><i
                                             class="fas fa-bolt text-yellow-500"></i> ---</span>
                                     <span id="display-base" class="flex items-center gap-2"><i
-                                            class="fas fa-tag text-emerald-500"></i> Base: $0</span>
+                                            class="fas fa-tag text-emerald-500"></i> Base: 0</span>
                                 </div>
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                                 <div class="flex flex-col sm:flex-row items-center sm:items-baseline gap-4">
                                     <p id="current-bid-amount"
                                         class="text-6xl md:text-8xl font-black text-emerald-500 leading-none drop-shadow-sm">
-                                        $0</p>
+                                        0</p>
                                     <div
                                         class="sm:border-l-2 sm:border-gray-200 dark:sm:border-gray-700 sm:pl-6 text-center sm:text-left">
                                         <p id="highest-bidder-name"
@@ -93,7 +93,7 @@
                                     Next Minimum Bid</p>
                                 <p id="next-bid-val"
                                     class="text-2xl font-black text-gray-900 dark:text-white text-center">
-                                    $0</p>
+                                    0</p>
                             </div>
                         </div>
 
@@ -121,7 +121,7 @@
                         </div>
                         <p id="wallet-amount"
                             class="text-4xl font-black text-gray-900 dark:text-white tracking-tighter">
-                            $<%= team.remainingBudget.toLocaleString() %>
+                            <%= team.remainingBudget.toLocaleString() %>
                         </p>
                         <div class="mt-6">
                             <div
@@ -285,7 +285,7 @@
 
                         displayTier.className = tierClasses;
                         displayStyle.innerHTML = `<i class="fas fa-bolt text-yellow-500"></i> ${player.playingStyle || '---'}`;
-                        displayBase.innerHTML = `<i class="fas fa-tag text-emerald-500"></i> Base: $${player.basePrice.toLocaleString()}`;
+                        displayBase.innerHTML = `<i class="fas fa-tag text-emerald-500"></i> Base: ${player.basePrice.toLocaleString()}`;
                         if (player.playerImage) {
                             displayImg.src = player.playerImage;
                             displayImg.classList.remove('hidden');
@@ -297,17 +297,17 @@
                     }
 
                     currentBidAmount = data.auction.currentBid;
-                    currentBidDisplay.textContent = '$' + currentBidAmount.toLocaleString();
+                    currentBidDisplay.textContent = currentBidAmount.toLocaleString();
                     highestBidderDisplay.textContent = data.auction.highestBidder ? data.auction.highestBidder.name : '';
 
                     const nextBid = currentBidAmount + bidIncrement;
-                    nextBidVal.textContent = '$' + nextBid.toLocaleString();
+                    nextBidVal.textContent = nextBid.toLocaleString();
 
                     const isWinning = data.auction.highestBidder && String(data.auction.highestBidder.id) === String(teamId);
 
                     if (nextBid <= remainingBudget && !isWinning) {
                         bidBtn.disabled = false;
-                        bidBtn.innerHTML = `<i class="fas fa-hammer"></i> <span>BID $${nextBid.toLocaleString()}</span>`;
+                        bidBtn.innerHTML = `<i class="fas fa-hammer"></i> <span>BID ${nextBid.toLocaleString()}</span>`;
                         bidBtn.className = "w-full py-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-3xl font-black uppercase cursor-pointer transition-all transform active:scale-95 shadow-xl shadow-emerald-500/40 border-b-4 border-emerald-800";
                     } else {
                         bidBtn.disabled = true;
@@ -327,7 +327,7 @@
                         <div class="h-3 w-3 rounded-full ${bid.teamName === teamName ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]'}"></div>
                         <span class="font-black text-sm tracking-tight text-gray-900 dark:text-white">${bid.teamName}</span>
                     </div>
-                    <span class="text-gray-900 dark:text-white font-black">$${bid.amount.toLocaleString()}</span>
+                    <span class="text-gray-900 dark:text-white font-black">${bid.amount.toLocaleString()}</span>
                 </div>
             `).join('');
                     }
@@ -341,7 +341,7 @@
                 channel.bind('bid-placed', (data) => {
                     // Optimistic update
                     currentBidAmount = data.amount;
-                    currentBidDisplay.textContent = '$' + Number(currentBidAmount).toLocaleString();
+                    currentBidDisplay.textContent = Number(currentBidAmount).toLocaleString();
                     highestBidderDisplay.textContent = data.teamName;
 
                     const isMyTeam = data.teamName === teamName;
@@ -353,7 +353,7 @@
                     <div class="h-3 w-3 rounded-full ${isMyTeam ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]'}"></div>
                     <span class="font-black text-sm tracking-tight text-gray-900 dark:text-white">${data.teamName}</span>
                 </div>
-                <span class="text-gray-900 dark:text-white font-black">$${Number(data.amount).toLocaleString()}</span>
+                <span class="text-gray-900 dark:text-white font-black">${Number(data.amount).toLocaleString()}</span>
             </div>
         `;
 
@@ -362,11 +362,11 @@
 
                     // Update local button state
                     const nextBid = currentBidAmount + bidIncrement;
-                    nextBidVal.textContent = '$' + nextBid.toLocaleString();
+                    nextBidVal.textContent = nextBid.toLocaleString();
 
                     if (nextBid <= remainingBudget && !isMyTeam) {
                         bidBtn.disabled = false;
-                        bidBtn.innerHTML = `<i class="fas fa-hammer"></i> <span>BID $${nextBid.toLocaleString()}</span>`;
+                        bidBtn.innerHTML = `<i class="fas fa-hammer"></i> <span>BID ${nextBid.toLocaleString()}</span>`;
                         bidBtn.className = "w-full py-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-3xl font-black uppercase cursor-pointer transition-all transform active:scale-95 shadow-xl shadow-emerald-500/40 border-b-4 border-emerald-800";
                     } else {
                         bidBtn.disabled = true;
@@ -385,7 +385,7 @@
                     if (data.teamName === teamName) {
                         remainingBudget -= data.amount;
                         const walletAmountEl = document.getElementById('wallet-amount');
-                        if (walletAmountEl) walletAmountEl.textContent = '$' + remainingBudget.toLocaleString();
+                        if (walletAmountEl) walletAmountEl.textContent = remainingBudget.toLocaleString();
 
                         const percent = (remainingBudget / totalBudget) * 100;
                         const walletBarEl = document.getElementById('wallet-bar');

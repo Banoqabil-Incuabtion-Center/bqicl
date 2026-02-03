@@ -36,7 +36,7 @@
                                 <p class="text-[8px] font-black uppercase text-gray-500 tracking-widest mb-1">Squad
                                     Value</p>
                                 <p class="text-3xl font-black italic text-lime-500">
-                                    $<%= team.Players ? team.Players.reduce((s, p)=> s + (p.soldPrice || 0),
+                                    <%= team.Players ? team.Players.reduce((s, p)=> s + (p.soldPrice || 0),
                                         0).toLocaleString() : 0 %>
                                 </p>
                             </div>
@@ -158,7 +158,6 @@
                                             <td class="px-8 py-6 text-right">
                                                 <p
                                                     class="text-sm font-black italic text-gray-900 dark:text-white tracking-tighter">
-                                                    $
                                                     <%= (player.soldPrice || 0).toLocaleString() %>
                                                 </p>
                                                 <p class="text-[8px] font-bold text-gray-500 uppercase">Final Bid

@@ -95,8 +95,8 @@
                                     <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">
                                         Base
                                         Price</p>
-                                    <p class="text-3xl font-black italic icl-gradient-text tracking-tighter">$<%=
-                                            player.basePrice ? player.basePrice.toLocaleString() : '---' %>
+                                    <p class="text-3xl font-black italic icl-gradient-text tracking-tighter">
+                                        <%= player.basePrice ? player.basePrice.toLocaleString() : '---' %>
                                     </p>
                                 </div>
 
@@ -109,7 +109,7 @@
                                         </div>
                                         <p
                                             class="text-3xl font-black italic text-gray-900 dark:text-white tracking-tighter">
-                                            $<%= player.soldPrice ? player.soldPrice.toLocaleString() : '---' %>
+                                            <%= player.soldPrice ? player.soldPrice.toLocaleString() : '---' %>
                                         </p>
                                     </div>
                                     <% } else { %>

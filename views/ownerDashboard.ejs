@@ -8,7 +8,7 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
     <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
         <p class="text-gray-400 text-xs font-bold uppercase mb-1">Remaining Budget</p>
-        <p class="text-3xl font-black text-green-500">$<%= team ? team.remainingBudget.toLocaleString() : ' 0' %>
+        <p class="text-3xl font-black text-green-500"><%= team ? team.remainingBudget.toLocaleString() : ' 0' %>
                 </p>
     </div>
     <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
@@ -19,7 +19,8 @@
     </div>
     <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
         <p class="text-gray-400 text-xs font-bold uppercase mb-1">Total Budget</p>
-        <p class="text-3xl font-black text-purple-500">$<%= team ? team.totalBudget.toLocaleString() : '0' %>
+        <p class="text-3xl font-black text-purple-500">
+            <%= team ? team.totalBudget.toLocaleString() : '0' %>
         </p>
     </div>
     </div>
@@ -111,7 +112,7 @@
                                 </td>
                                 <td class="px-8 py-4">
                                     <div class="text-sm font-black text-gray-900 dark:text-white">
-                                        $<%= player.soldPrice ? player.soldPrice.toLocaleString() : '0' %>
+                                        <%= player.soldPrice ? player.soldPrice.toLocaleString() : '0' %>
                                     </div>
                                 </td>
                                 <td class="px-8 py-4 text-right">
