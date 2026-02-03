@@ -5,6 +5,7 @@ import pusher from '../config/pusher.js';
 
 const auctionApiController = {};
 
+
 // Helper to get session state
 const getSessionState = async () => {
     try {
