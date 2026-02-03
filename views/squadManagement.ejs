@@ -143,6 +143,7 @@
                                         <% if (!player.isCaptain) { %>
                                             <form action="/owner/squad/captain/<%= player.hashedId %>" method="POST"
                                                 class="inline">
+                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                                 <button type="submit" title="Promote to Captain"
                                                     class="h-9 w-9 flex items-center justify-center text-gray-400 hover:text-yellow-500 hover:bg-yellow-500/10 rounded-xl transition-all border border-transparent hover:border-yellow-500/20">
                                                     <i class="fas fa-crown text-sm"></i>
@@ -152,6 +153,7 @@
                                                 <% if (!player.isViceCaptain) { %>
                                                     <form action="/owner/squad/vice-captain/<%= player.hashedId %>"
                                                         method="POST" class="inline">
+                                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                                         <button type="submit" title="Promote to Vice-Captain"
                                                             class="h-9 w-9 flex items-center justify-center text-gray-400 hover:text-blue-500 hover:bg-blue-500/10 rounded-xl transition-all border border-transparent hover:border-blue-500/20">
                                                             <i class="fas fa-star text-sm"></i>
@@ -162,6 +164,8 @@
                                                             <form
                                                                 action="/owner/squad/remove-role/<%= player.hashedId %>"
                                                                 method="POST" class="inline">
+                                                                <input type="hidden" name="_csrf"
+                                                                    value="<%= csrfToken %>">
                                                                 <button type="submit" title="Revoke Status"
                                                                     class="h-9 w-9 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all border border-transparent hover:border-red-500/20">
                                                                     <i class="fas fa-times text-sm"></i>

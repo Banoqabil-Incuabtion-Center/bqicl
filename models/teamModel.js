@@ -4,7 +4,7 @@ const { sequelizeTZ, DataTypes, Model } = dbConfig;
 class teamModel extends Model {
 
     static associate(models) {
-        
+
         teamModel.belongsTo(models.Owner, {
             foreignKey: 'ownerId',
             as: 'owner',
@@ -15,7 +15,7 @@ class teamModel extends Model {
         teamModel.hasMany(models.Player, {
             foreignKey: 'teamId',
             as: 'players',
-            onDelete: 'SET NULL', 
+            onDelete: 'SET NULL',
             onUpdate: 'CASCADE'
         });
     }
@@ -48,17 +48,17 @@ teamModel.init({
     totalBudget: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        defaultValue: 0,
+        defaultValue: 2500000,
     },
     remainingBudget: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        defaultValue: 0,
+        defaultValue: 2500000,
     }
 },
     {
         sequelize: sequelizeTZ,
-        modelName: 'Team', 
+        modelName: 'Team',
         tableName: 'teams',
         timestamps: true,
         paranoid: true

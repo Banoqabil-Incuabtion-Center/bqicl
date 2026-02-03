@@ -201,10 +201,10 @@
             <script>
                 const teamId = '<%= team.id %>';
                 const teamName = '<%= team.name %>';
-                let remainingBudget = <%= team.remainingBudget %>;
-                const totalBudget = <%= team.totalBudget %>;
+                let remainingBudget = <%= team.remainingBudget || 0 %>;
+                const totalBudget = <%= team.totalBudget || 0 %>;
                 let currentBidAmount = 0;
-                const bidIncrement = 100000;
+                let bidIncrement = 5000;
 
                 const displayImg = document.getElementById('display-img');
                 const placeholderContainer = document.getElementById('placeholder-container');
@@ -275,6 +275,13 @@
 
                         const tier = player.auctionCategory || 'STANDARD';
                         displayTier.textContent = tier;
+
+                        // Set Dynamic Bid Increment
+                        if (tier === 'Platinum') bidIncrement = 20000;
+                        else if (tier === 'Diamond') bidIncrement = 15000;
+                        else if (tier === 'Gold') bidIncrement = 10000;
+                        else if (tier === 'Silver') bidIncrement = 5000;
+                        else bidIncrement = 5000;
 
                         let tierClasses = 'px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border transition-all';
                         if (tier === 'Platinum') tierClasses += ' bg-[#E5E4E2]/10 text-[#E5E4E2] border-[#E5E4E2]/20 shadow-[0_0_15px_rgba(229,228,226,0.2)]';
